@@ -11,7 +11,7 @@
     },
     "dependencies": {
         "@repo/shared-types": "workspace:*",
-        "@repo/ui": "workspace:*",
+        "@repo/ui-components": "workspace:*",
         "@repo/utils": "workspace:*",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
@@ -24,6 +24,8 @@
         "@typescript-eslint/eslint-plugin": "^6.0.0",
         "@typescript-eslint/parser": "^6.0.0",
         "@vitejs/plugin-react": "^4.0.3",
+        "eslint": "^9.0.0",
+        "prettier": "^3.0.0",
         "typescript": "^5.0.2",
         "vite": "^4.4.5"
     }

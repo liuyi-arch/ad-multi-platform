@@ -1,11 +1,8 @@
-import React from 'react'
+import React from 'react';
+import Home from './pages/Home';
 
-function App() {
-    return (
-        <div>
-            <h1>Advertiser Web</h1>
-        </div>
-    )
-}
+const App: React.FC = () => {
+    return <Home />;
+};
 
-export default App
+export default App;
