@@ -1,7 +1,7 @@
 ## button组件代码解读
 原生属性：
 - extends React.ButtonHTMLAttributes表示继承原生 button 所有属性（onClick、disabled、type、form 等）
-- 
+
 组件封装时暴露的属性：
 - children：react内置概念
 - className：tailwind供用户输入自定义样式
