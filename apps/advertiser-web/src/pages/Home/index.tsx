@@ -1,25 +1,68 @@
-import React from 'react';
-import { Button } from '@repo/ui-components';
-import './style.css';
 
-const Home: React.FC = () => {
-    return (
-        <div className="home-container">
-            <h1>Button variant初始值为primary，size初始值为md，icon初始值为空，children初始值为按钮，className初始值为空，props初始值为空</h1>
-            <p>1. 使用组件供用户选择的variant、size属性</p>
-            <Button variant="danger">variant="danger"</Button>
-            <Button size="sm">size="sm"</Button>
+import React, { useState, useMemo } from 'react';
+import { Ad } from '../../types';
+import SortSelector from '../../components/SortSelector/SortSelector';
+import AdCard from '../../components/AdCard/AdCard';
+import HomePagination from '../../components/Pagination/HomePagination';
+import { sortAds } from '../../utils/adHelpers';
+import { usePagination } from '../../hooks/hooks';
 
-            <p>2. 使用暴露icon属性，在button子元素中插入icon</p>
-            <Button icon="edit">icon="edit"</Button>
+interface HomeProps {
+  ads: Ad[];
+  onOpenDetail: (ad: Ad) => void;
+  onOpenCreate: () => void;
+}
 
-            <p>3. 使用children自定义button中间文字，默认是按钮</p>
-            <Button>使用children自定义button中间文字</Button>
+const Home: React.FC<HomeProps> = ({ ads, onOpenDetail, onOpenCreate }) => {
+  const [sortBy, setSortBy] = useState('time');
+  
+  const ITEMS_PER_PAGE = 12;
 
-            <p>4. 用户通过className="w-full"自定义样式</p>
-            <Button className="w-full">用户通过className="w-full"自定义样式</Button>
+  const sortedAds = useMemo(() => sortAds(ads, sortBy), [ads, sortBy]);
+
+  const { currentPage, setCurrentPage, pagedItems, totalPages } = usePagination(sortedAds, ITEMS_PER_PAGE);
+
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
+    setCurrentPage(1);
+  };
+
+  return (
+    <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="bg-white p-4 rounded-xl shadow-soft border border-slate-100 flex items-center justify-between">
+        <button 
+          onClick={onOpenCreate}
+          className="bg-[#2563eb] text-white text-sm font-bold px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-all flex items-center gap-2 shadow-lg shadow-blue-500/20 active:scale-95"
+        >
+          <span className="material-symbols-outlined text-sm">add</span>
+          <span>投放新广告</span>
+        </button>
+        <SortSelector 
+          sortBy={sortBy} 
+          onSortChange={handleSortChange} 
+        />
+      </div>
+
+      {pagedItems.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 text-slate-300">
+          <span className="material-symbols-outlined text-6xl mb-4 opacity-20">inventory_2</span>
+          <p>暂无符合条件的广告</p>
         </div>
-    );
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {pagedItems.map(ad => (
+            <AdCard key={ad.id} ad={ad} onClick={onOpenDetail} />
+          ))}
+        </div>
+      )}
+
+      <HomePagination 
+        currentPage={currentPage} 
+        totalPages={totalPages} 
+        onPageChange={setCurrentPage} 
+      />
+    </div>
+  );
 };
 
 export default Home;
