@@ -1,0 +1,8 @@
+{
+  "name": "广告管理后台ui、逻辑分离",
+  "description": "A comprehensive advertisement management dashboard featuring inventory control, real-time analytics, and detailed ad performance tracking.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

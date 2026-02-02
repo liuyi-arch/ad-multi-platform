@@ -1,0 +1,16 @@
+/**
+ * SSR 路由
+ */
+
+import Router from 'koa-router';
+import ssrController from '../modules/ssr/ssr.controller';
+
+const router = new Router({ prefix: '/ssr' });
+
+// 渲染页面
+router.get('/render/*', ssrController.render);
+
+// 预渲染页面
+router.post('/prerender', ssrController.prerender);
+
+export default router;
