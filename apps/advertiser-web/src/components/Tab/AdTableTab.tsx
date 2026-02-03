@@ -39,3 +39,4 @@ const AdTableTab: React.FC<AdTableTabProps> = ({ activeTab, onTabChange }) => (
 );
 
 export default AdTableTab;
+
