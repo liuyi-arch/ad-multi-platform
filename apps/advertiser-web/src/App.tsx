@@ -12,7 +12,6 @@ import {
 } from './components/Modal';
 
 const App: React.FC = () => {
-    console.log('App component is rendering');
     const [view, setView] = useState<ViewType>('GALLERY');
     const [ads, setAds] = useState<Ad[]>(MOCK_ADS);
     const [searchQuery, setSearchQuery] = useState('');

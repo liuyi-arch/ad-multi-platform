@@ -2,9 +2,8 @@
 import React, { useState, useMemo } from 'react';
 import { Ad, AdStatus } from '../../types';
 import StatCard from '../../components/StatCard/StatCard';
-import AdTableTab from '../../components/Tab/AdTableTab';
+import { Pagination, Tab } from '@repo/ui-components';
 import AdTable from '../../components/AdTable/AdTable';
-import TablePagination from '../../components/Pagination/TablePagination';
 import { usePagination } from '../../hooks/hooks';
 
 interface MyAdProps {
@@ -37,6 +36,13 @@ const MyAd: React.FC<MyAdProps> = ({ ads, onOpenEdit, onOpenDelete, onOpenReject
     setCurrentPage(1);
   };
 
+  const tabOptions = [
+    { id: 'ALL', label: '全部广告' },
+    { id: AdStatus.APPROVED, label: '已通过' },
+    { id: AdStatus.PENDING, label: '待审核' },
+    { id: AdStatus.REJECTED, label: '已拒绝' },
+  ];
+
   return (
     <div className="space-y-8 animate-in slide-in-from-bottom-2 duration-500">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -47,7 +53,12 @@ const MyAd: React.FC<MyAdProps> = ({ ads, onOpenEdit, onOpenDelete, onOpenReject
       </div>
 
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
-        <AdTableTab activeTab={activeTab} onTabChange={handleTabChange} />
+        <Tab 
+          options={tabOptions} 
+          activeId={activeTab} 
+          onTabChange={(id) => handleTabChange(id as any)} 
+          variant="soft"
+        />
         
         <AdTable 
           ads={pagedItems} 
@@ -57,7 +68,8 @@ const MyAd: React.FC<MyAdProps> = ({ ads, onOpenEdit, onOpenDelete, onOpenReject
           onOpenDetail={onOpenDetail}
         />
 
-        <TablePagination 
+        <Pagination 
+          variant="table"
           currentPage={currentPage}
           totalPages={totalPages}
           totalItems={totalItems}

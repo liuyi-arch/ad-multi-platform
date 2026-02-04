@@ -1,9 +1,8 @@
 
 import React, { useState, useMemo } from 'react';
 import { Ad } from '../../types';
-import SortSelector from '../../components/SortSelector/SortSelector';
+import { Pagination, SortSelector } from '@repo/ui-components';
 import AdCard from '../../components/AdCard/AdCard';
-import HomePagination from '../../components/Pagination/HomePagination';
 import { sortAds } from '../../utils/adHelpers';
 import { usePagination } from '../../hooks/hooks';
 
@@ -38,8 +37,14 @@ const Home: React.FC<HomeProps> = ({ ads, onOpenDetail, onOpenCreate }) => {
           <span>投放新广告</span>
         </button>
         <SortSelector 
-          sortBy={sortBy} 
-          onSortChange={handleSortChange} 
+          value={sortBy} 
+          onChange={handleSortChange}
+          variant="sort"
+          options={[
+            { value: 'time', label: '按时间排序' },
+            { value: 'bid_desc', label: '按出价降序' },
+            { value: 'heat_desc', label: '按热度降序' },
+          ]}
         />
       </div>
 
@@ -56,7 +61,7 @@ const Home: React.FC<HomeProps> = ({ ads, onOpenDetail, onOpenCreate }) => {
         </div>
       )}
 
-      <HomePagination 
+      <Pagination 
         currentPage={currentPage} 
         totalPages={totalPages} 
         onPageChange={setCurrentPage} 

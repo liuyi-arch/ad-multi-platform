@@ -8,7 +8,7 @@ import ssrController from '../modules/ssr/ssr.controller';
 const router = new Router({ prefix: '/ssr' });
 
 // 渲染页面
-router.get('/render/*', ssrController.render);
+router.get('/render/:path(.*)', ssrController.render);
 
 // 预渲染页面
 router.post('/prerender', ssrController.prerender);

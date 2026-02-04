@@ -1,13 +1,13 @@
-import React from 'react';
+import type { ButtonHTMLAttributes, ReactNode } from 'react';
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'success' | 'reject';
     size?: 'sm' | 'md' | 'lg';
-    icon?: React.ReactNode;
-    children?: React.ReactNode;
+    icon?: ReactNode;
+    children?: ReactNode;
 }
 
-export const Button: React.FC<ButtonProps> = ({
+export const Button = ({
     children = '按钮',
     variant = 'primary',
     size = 'md',

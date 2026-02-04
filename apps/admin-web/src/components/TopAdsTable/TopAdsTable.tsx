@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { AdItem, AdStatus } from '../../types/index';
-import StatusLabel from '../StatusLabel';
+import { AdItem, AdStatus as LocalAdStatus } from '../../types/index';
+import { StatusLabel } from '@repo/ui-components';
 
 interface TopAdsTableProps {
   ads: AdItem[];
@@ -43,7 +43,7 @@ const TopAdsTable: React.FC<TopAdsTableProps> = ({ ads, onDetailClick }) => {
                 </div>
               </td>
               <td className="px-6 py-4">
-                <StatusLabel status={ad.status} />
+                <StatusLabel status={ad.status} variant="table" />
               </td>
               <td className="px-6 py-4 text-sm font-medium text-text-main">
                 {/* Use a placeholder for impressions if not available in data */}

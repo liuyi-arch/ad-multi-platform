@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { AdItem, AdStatus } from '../../types/index';
-import StatusLabel from '../StatusLabel';
+import { AdItem, AdStatus as LocalAdStatus } from '../../types/index';
+import { StatusLabel } from '@repo/ui-components';
 
 /**
  * 广告管理页表格组件
@@ -55,19 +55,19 @@ export const ManagementAdTable: React.FC<ManagementAdTableProps> = ({
                 </div>
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
-                <StatusLabel status={ad.status} />
+                <StatusLabel status={ad.status} variant="table" />
               </td>
               <td className="px-6 py-4 text-xs text-text-muted whitespace-nowrap">{ad.date}</td>
               <td className="px-6 py-4 text-right">
                 <div className="flex items-center justify-end gap-2 whitespace-nowrap">
-                  {ad.status === AdStatus.PENDING && onApprove && onReject && (
+                  {ad.status === LocalAdStatus.PENDING && onApprove && onReject && (
                     <>
                       <button onClick={() => onApprove(ad)} className="bg-primary hover:bg-blue-700 text-white px-3 py-1.5 rounded text-xs font-bold transition-colors shadow-sm">通过</button>
                       <button onClick={() => onReject(ad)} className="bg-rose-50 hover:bg-rose-100 text-rose-600 border border-rose-200 px-3 py-1.5 rounded text-xs font-bold transition-colors">驳回</button>
                       <span className="text-slate-300 mx-1">|</span>
                     </>
                   )}
-                  {ad.status === AdStatus.REJECTED && onViewRejectReason && (
+                  {ad.status === LocalAdStatus.REJECTED && onViewRejectReason && (
                     <>
                       <button onClick={() => onViewRejectReason(ad)} className="flex items-center gap-1 text-slate-500 font-bold hover:text-slate-700 transition-colors text-sm" title="查看原因">
                         <span className="material-symbols-outlined text-sm">info</span>
@@ -143,7 +143,7 @@ export const DashboardAdTable: React.FC<DashboardAdTableProps> = ({ ads, onDetai
                 </div>
               </td>
               <td className="px-6 py-4">
-                <StatusLabel status={ad.status} />
+                <StatusLabel status={ad.status} variant="table" />
               </td>
               <td className="px-6 py-4 text-sm font-medium text-text-main">
                 {(Math.random() * 500000 + 100000).toLocaleString(undefined, { maximumFractionDigits: 0 })}

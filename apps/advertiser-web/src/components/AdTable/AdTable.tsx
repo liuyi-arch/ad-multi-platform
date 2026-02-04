@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Ad, AdStatus } from '../../types';
-import StatusLabel from '../StatusLabel/StatusLabel';
+import { StatusLabel } from '@repo/ui-components';
 
 interface AdTableProps {
   ads: Ad[];

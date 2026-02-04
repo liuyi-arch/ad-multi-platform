@@ -38,7 +38,7 @@ export const AdFormModal: React.FC<{
       return;
     }
     setAiLoading(true);
-    const suggestion = await generateAdCopySuggestion(formData.title, formData.description);
+    const suggestion = await generateAdCopySuggestion(`${formData.title} - ${formData.description}`);
     setFormData(prev => ({ ...prev, description: suggestion }));
     setAiLoading(false);
   };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
-import Footer from './components/Footer';
+import { Footer } from '@repo/ui-components';
 import DashboardPage from './pages/DashboardPage';
 import AdManagementPage from './pages/AdManagementPage';
 import MediaPage from './pages/MediaPage';
@@ -78,7 +78,7 @@ const App: React.FC = () => {
                     {currentView === 'analytics' && <AnalyticsPage />}
                     {currentView === 'access' && <AccessControlPage />}
 
-                    <Footer />
+                    <Footer className="mt-12" />
                 </div>
             </main>
 

@@ -2,7 +2,7 @@
 import React from 'react';
 import { ViewType } from '../../types';
 import HeadNav from '../Nav/HeadNav';
-import SearchBox from '../SearchBox/SearchBox';
+import { Footer, SearchBox } from '@repo/ui-components';
 
 interface PageLayoutProps {
   children: React.ReactNode;
@@ -29,7 +29,8 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children, currentView, onViewCh
           <div className="flex items-center gap-4">
             <SearchBox 
               value={searchQuery} 
-              onSearch={onSearch} 
+              onChange={onSearch} 
+              variant="inline"
               placeholder={currentView === 'GALLERY' ? "搜索广告..." : "搜索我的广告..."} 
             />
             <div className="size-10 rounded-full bg-cover bg-center border-2 border-white shadow-md cursor-pointer overflow-hidden bg-slate-100">
@@ -43,16 +44,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children, currentView, onViewCh
         {children}
       </main>
 
-      <footer className="py-12 flex flex-col items-center gap-4 bg-transparent mt-auto">
-        <div className="flex items-center gap-8">
-          <a className="text-sm font-medium text-slate-500 hover:text-[#2563eb] transition-colors" href="#">帮助中心</a>
-          <a className="text-sm font-medium text-slate-500 hover:text-[#2563eb] transition-colors" href="#">服务协议</a>
-          <a className="text-sm font-medium text-slate-500 hover:text-[#2563eb] transition-colors" href="#">隐私政策</a>
-        </div>
-        <p className="text-xs font-medium text-slate-400/80 uppercase tracking-widest">
-          © 2024 ADWALL TECHNOLOGIES. ALL RIGHTS RESERVED.
-        </p>
-      </footer>
+      <Footer className="mt-auto" />
     </div>
   );
 };

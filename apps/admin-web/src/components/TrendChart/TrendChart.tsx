@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { CHART_DATA } from '../../mockData';
-import { TimeframeSelector } from '../SortSelector';
+import { SortSelector } from '@repo/ui-components';
 
 const TrendChart: React.FC = () => {
   const [timeframe, setTimeframe] = useState('1m');
@@ -27,7 +27,16 @@ const TrendChart: React.FC = () => {
           <h3 className="text-lg font-bold text-text-main">流量趋势</h3>
           <p className="text-text-muted text-xs">所有墙面显示屏的每日曝光量统计</p>
         </div>
-        <TimeframeSelector value={timeframe} onChange={setTimeframe} />
+        <SortSelector 
+          value={timeframe} 
+          onChange={setTimeframe} 
+          variant="select"
+          options={[
+            { value: '7d', label: '最近 7 天' },
+            { value: '1m', label: '最近 30 天' },
+            { value: '3m', label: '最近 90 天' },
+          ]}
+        />
       </div>
       <div className="flex-1 h-[300px]">
         <ResponsiveContainer width="100%" height="100%">

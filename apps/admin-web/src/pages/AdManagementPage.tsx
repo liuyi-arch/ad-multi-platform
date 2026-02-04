@@ -3,9 +3,8 @@ import React, { useState, useMemo } from 'react';
 import { MOCK_STATS } from '../mockData';
 import { AdItem, AdStatus } from '../types';
 import { ManagementStatsCard } from '../components/StatsCard';
-import Tab from '../components/Tab';
+import { Pagination, Tab, SortSelector } from '@repo/ui-components';
 import { ManagementAdTable } from '../components/AdTable';
-import Pagination from '../components/Pagination';
 import { usePagination } from '../hooks/usePagination';
 
 interface AdManagementPageProps {
@@ -45,6 +44,13 @@ const AdManagementPage: React.FC<AdManagementPageProps> = ({
     itemsPerPage
   } = usePagination(filteredByStatus, 5);
 
+  const tabOptions = [
+    { id: 'ALL', label: '所有广告' },
+    { id: AdStatus.PENDING, label: '待审核' },
+    { id: AdStatus.ACTIVE, label: '已通过' },
+    { id: AdStatus.REJECTED, label: '已拒绝' },
+  ];
+
   return (
     <div className="space-y-6">
       <nav className="flex text-sm text-text-muted gap-2">
@@ -61,8 +67,11 @@ const AdManagementPage: React.FC<AdManagementPageProps> = ({
 
       <div className="bg-surface border border-border-light shadow-soft rounded-xl overflow-hidden flex flex-col">
         <Tab
-          activeFilter={activeFilter}
-          onFilterChange={setActiveFilter}
+          options={tabOptions}
+          activeId={activeFilter}
+          onTabChange={(id) => setActiveFilter(id as FilterType)}
+          variant="sharp"
+          rightElement={<SortSelector variant="filter" />}
         />
 
         <ManagementAdTable
@@ -76,6 +85,7 @@ const AdManagementPage: React.FC<AdManagementPageProps> = ({
         />
 
         <Pagination
+          variant="table"
           currentPage={currentPage}
           totalPages={totalPages}
           totalItems={totalItems}
