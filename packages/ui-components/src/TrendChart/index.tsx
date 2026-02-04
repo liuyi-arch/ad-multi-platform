@@ -1,46 +1,53 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { CHART_DATA } from '../../mockData';
-import { SortSelector } from '@repo/ui-components';
+import { SortSelector } from '../SortSelector';
 
-const TrendChart: React.FC = () => {
-  const [timeframe, setTimeframe] = useState('1m');
+export interface TrendChartData {
+  name: string;
+  value: number;
+}
 
-  // 模拟基于时间范围的数据处理
-  const displayedData = useMemo(() => {
-    if (timeframe === '7d') return CHART_DATA.slice(0, 3); // 简化模拟
-    if (timeframe === '3m') {
-      // 模拟更长的数据
-      return [
-        ...CHART_DATA.map(d => ({ ...d, name: '9月' + d.name.split('10月')[1] })),
-        ...CHART_DATA
-      ];
-    }
-    return CHART_DATA;
-  }, [timeframe]);
+export interface TrendChartProps {
+  title?: string;
+  subtitle?: string;
+  data: TrendChartData[];
+  timeframe: string;
+  onTimeframeChange: (value: string) => void;
+  timeframeOptions?: { value: string; label: string }[];
+  className?: string;
+}
 
+export const TrendChart: React.FC<TrendChartProps> = ({ 
+  title = "趋势统计", 
+  subtitle, 
+  data, 
+  timeframe,
+  onTimeframeChange,
+  timeframeOptions = [
+    { value: '7d', label: '最近 7 天' },
+    { value: '1m', label: '最近 30 天' },
+    { value: '3m', label: '最近 90 天' },
+  ],
+  className = ""
+}) => {
   return (
-    <div className="lg:col-span-2 bg-surface rounded-xl p-6 border border-border-light shadow-soft flex flex-col">
+    <div className={`lg:col-span-2 bg-surface rounded-xl p-6 border border-border-light shadow-soft flex flex-col ${className}`}>
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h3 className="text-lg font-bold text-text-main">流量趋势</h3>
-          <p className="text-text-muted text-xs">所有墙面显示屏的每日曝光量统计</p>
+          <h3 className="text-lg font-bold text-text-main">{title}</h3>
+          {subtitle && <p className="text-text-muted text-xs">{subtitle}</p>}
         </div>
         <SortSelector 
           value={timeframe} 
-          onChange={setTimeframe} 
+          onChange={onTimeframeChange} 
           variant="select"
-          options={[
-            { value: '7d', label: '最近 7 天' },
-            { value: '1m', label: '最近 30 天' },
-            { value: '3m', label: '最近 90 天' },
-          ]}
+          options={timeframeOptions}
         />
       </div>
       <div className="flex-1 h-[300px]">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={displayedData}>
+          <AreaChart data={data}>
             <defs>
               <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#2563eb" stopOpacity={0.1} />

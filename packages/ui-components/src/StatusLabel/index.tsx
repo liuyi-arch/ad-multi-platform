@@ -1,6 +1,5 @@
 export enum AdStatus {
   PENDING = 'PENDING',
-  ACTIVE = 'ACTIVE',
   REJECTED = 'REJECTED',
   ENDING_SOON = 'ENDING_SOON',
   APPROVED = 'APPROVED'
@@ -21,11 +20,6 @@ export const StatusLabel = ({ status, variant = 'default', className = '' }: Sta
       label: '待审核',
       colorClass: 'bg-amber-50 text-amber-600 border-amber-200',
       dotClass: 'bg-amber-500',
-    },
-    ACTIVE: {
-      label: '已通过',
-      colorClass: 'bg-emerald-50 text-emerald-600 border-emerald-200',
-      dotClass: 'bg-emerald-500',
     },
     APPROVED: {
       label: '已通过',
@@ -52,9 +46,9 @@ export const StatusLabel = ({ status, variant = 'default', className = '' }: Sta
 
   if (variant === 'table') {
     return (
-      <div className={`flex items-center gap-2 ${className}`}>
-        <div className={`size-1.5 rounded-full ${config.dotClass}`}></div>
-        <span className="text-sm font-bold text-slate-700">{config.label}</span>
+      <div className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-bold border ${config.colorClass} ${className}`}>
+        <div className={`size-1 rounded-full ${config.dotClass}`}></div>
+        <span>{config.label}</span>
       </div>
     );
   }

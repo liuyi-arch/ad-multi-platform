@@ -1,7 +1,7 @@
 
 export enum AdStatus {
   PENDING = 'PENDING',
-  ACTIVE = 'ACTIVE',
+  APPROVED = 'APPROVED',
   REJECTED = 'REJECTED',
   ENDING_SOON = 'ENDING_SOON'
 }

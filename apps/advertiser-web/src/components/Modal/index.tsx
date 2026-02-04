@@ -2,8 +2,7 @@
 import React, { useState } from 'react';
 import { Ad } from '../../types';
 import { generateAdCopySuggestion } from '../../api/geminiService';
-import VideoUploader from '../VideoUploader/VideoUploader';
-import VideoPlayer from '../VideoPlayer/VideoPlayer';
+import { VideoUploader, VideoPlayer } from '@repo/ui-components';
 
 const ModalOverlay: React.FC<{ children: React.ReactNode; onClose: () => void }> = ({ children, onClose }) => (
   <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">

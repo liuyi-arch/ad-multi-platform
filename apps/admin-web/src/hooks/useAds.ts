@@ -38,7 +38,7 @@ export const useAds = (initialSearchQuery: string = '') => {
         if (ad) setAds(prev => prev.filter(a => a.id !== ad.id));
         break;
       case 'APPROVE_ACTION':
-        if (ad) setAds(prev => prev.map(a => a.id === ad.id ? { ...a, status: AdStatus.ACTIVE } : a));
+        if (ad) setAds(prev => prev.map(a => a.id === ad.id ? { ...a, status: AdStatus.APPROVED } : a));
         break;
       case 'REJECT_ACTION':
         if (ad) setAds(prev => prev.map(a => a.id === ad.id ? { ...a, status: AdStatus.REJECTED } : a));

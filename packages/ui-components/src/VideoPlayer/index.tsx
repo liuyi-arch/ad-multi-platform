@@ -1,13 +1,14 @@
 
 import React from 'react';
 
-interface VideoPlayerProps {
+export interface VideoPlayerProps {
   imageUrl: string;
+  className?: string;
 }
 
-const VideoPlayer: React.FC<VideoPlayerProps> = ({ imageUrl }) => {
+export const VideoPlayer: React.FC<VideoPlayerProps> = ({ imageUrl, className = "" }) => {
   return (
-    <div className="relative aspect-video bg-black rounded-xl overflow-hidden shadow-sm group">
+    <div className={`relative aspect-video bg-black rounded-xl overflow-hidden shadow-sm group ${className}`}>
       <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url("${imageUrl}")` }}></div>
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20"></div>
       <div className="absolute inset-0 flex items-center justify-center">

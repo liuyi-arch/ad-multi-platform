@@ -1,14 +1,20 @@
 
 import React from 'react';
 
-interface VideoUploaderProps {
+export interface VideoUploaderProps {
   imageUrl?: string;
+  label?: string;
+  className?: string;
 }
 
-const VideoUploader: React.FC<VideoUploaderProps> = ({ imageUrl }) => {
+export const VideoUploader: React.FC<VideoUploaderProps> = ({ 
+  imageUrl, 
+  label = "上传视频",
+  className = "" 
+}) => {
   return (
-    <div className="space-y-3">
-      <label className="block text-sm font-bold text-[#1e293b]">上传视频</label>
+    <div className={`space-y-3 ${className}`}>
+      <label className="block text-sm font-bold text-[#1e293b]">{label}</label>
       <div className="flex flex-wrap gap-4">
         <div className="w-24 h-24 rounded-xl bg-slate-700 flex flex-col items-center justify-center relative overflow-hidden group border border-slate-600">
           <span className="material-symbols-outlined text-slate-400 mb-1">movie</span>

@@ -28,7 +28,7 @@ export const MOCK_ADS: AdItem[] = [
     id: 'AD-8812-PL',
     title: '都市街头时装系列：秋季灵感特辑',
     description: '全球服饰发布，针对年轻潮流群体',
-    status: AdStatus.ACTIVE,
+    status: AdStatus.APPROVED,
     bid: 2800,
     heat: '12.2k',
     date: '2023年10月22日',

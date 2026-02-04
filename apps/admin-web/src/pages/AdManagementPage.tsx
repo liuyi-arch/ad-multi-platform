@@ -47,7 +47,7 @@ const AdManagementPage: React.FC<AdManagementPageProps> = ({
   const tabOptions = [
     { id: 'ALL', label: '所有广告' },
     { id: AdStatus.PENDING, label: '待审核' },
-    { id: AdStatus.ACTIVE, label: '已通过' },
+    { id: AdStatus.APPROVED, label: '已通过' },
     { id: AdStatus.REJECTED, label: '已拒绝' },
   ];
 

@@ -5,3 +5,7 @@ export * from './Pagination';
 export * from './Tab';
 export * from './SearchBox';
 export * from './SortSelector';
+export * from './PieChart';
+export * from './TrendChart';
+export * from './VideoPlayer';
+export * from './VideoUploader';
