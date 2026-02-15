@@ -10,11 +10,13 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@repo/hooks": "workspace:*",
         "@repo/shared-types": "workspace:*",
         "@repo/ui-components": "workspace:*",
         "@repo/utils": "workspace:*",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-router-dom": "^7.13.0",
         "recharts": "^2.12.0"
     },
     "devDependencies": {

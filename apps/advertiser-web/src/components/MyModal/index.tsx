@@ -2,16 +2,7 @@
 import React, { useState } from 'react';
 import { Ad } from '../../types';
 import { generateAdCopySuggestion } from '../../api/geminiService';
-import { VideoUploader, VideoPlayer } from '@repo/ui-components';
-
-const ModalOverlay: React.FC<{ children: React.ReactNode; onClose: () => void }> = ({ children, onClose }) => (
-  <div className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-    <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose}></div>
-    <div className="relative w-full max-w-[720px] bg-white rounded-2xl shadow-2xl max-h-[90vh] overflow-hidden flex flex-col animate-in zoom-in-95 duration-200">
-      {children}
-    </div>
-  </div>
-);
+import { VideoUploader, VideoPlayer, Modal } from '@repo/ui-components';
 
 export const AdFormModal: React.FC<{ 
   mode: 'CREATE' | 'EDIT'; 
@@ -43,15 +34,16 @@ export const AdFormModal: React.FC<{
   };
 
   return (
-    <ModalOverlay onClose={onClose}>
-      <div className="px-8 py-5 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
-        <h3 className="text-xl font-bold text-[#1e293b]">{mode === 'CREATE' ? '投放新广告' : '编辑广告'}</h3>
-        <button onClick={onClose} className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-all">
-          <span className="material-symbols-outlined">close</span>
-        </button>
-      </div>
-
-      <div className="px-8 py-6 overflow-y-auto flex-1 space-y-7 custom-scrollbar">
+    <Modal
+      title={mode === 'CREATE' ? '投放新广告' : '编辑广告'}
+      onClose={onClose}
+      onConfirm={() => onSave(formData)}
+      variant="primary"
+      confirmLabel={mode === 'CREATE' ? '创建广告' : '保存修改'}
+      cancelLabel="取消"
+      maxWidth="max-w-[720px]"
+    >
+      <div className="space-y-7">
         <div className="space-y-2">
           <label className="block text-sm font-bold text-[#1e293b]">广告标题</label>
           <input 
@@ -123,34 +115,19 @@ export const AdFormModal: React.FC<{
           </div>
         </div>
       </div>
-
-      <div className="px-8 py-6 border-t border-slate-100 flex justify-end gap-4 bg-white shrink-0">
-        <button 
-          onClick={onClose} 
-          className="h-12 px-10 text-sm font-bold rounded-xl bg-slate-100 hover:bg-slate-200 text-[#1e293b] transition-all"
-        >
-          取消
-        </button>
-        <button 
-          onClick={() => onSave(formData)}
-          className="h-12 px-10 bg-primary text-white text-sm font-bold rounded-xl shadow-lg shadow-primary/25 hover:bg-primary-hover transition-all active:scale-95"
-        >
-          {mode === 'CREATE' ? '创建广告' : '保存修改'}
-        </button>
-      </div>
-    </ModalOverlay>
+    </Modal>
   );
 };
 
 export const AdDetailModal: React.FC<{ ad: Ad; onClose: () => void }> = ({ ad, onClose }) => (
-  <ModalOverlay onClose={onClose}>
-    <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
-      <h2 className="text-lg font-bold text-[#1e293b]">广告详情</h2>
-      <button onClick={onClose} className="p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-[#1e293b] transition-all">
-        <span className="material-symbols-outlined text-2xl">close</span>
-      </button>
-    </div>
-    <div className="flex-1 overflow-y-auto p-6 space-y-6">
+  <Modal
+    title="广告详情"
+    onClose={onClose}
+    variant="info"
+    cancelLabel="关闭"
+    maxWidth="max-w-[720px]"
+  >
+    <div className="space-y-6">
       <VideoPlayer imageUrl={ad.imageUrl} />
       <h3 className="text-2xl font-bold text-[#1e293b]">{ad.title}</h3>
       <div className="grid grid-cols-2 gap-4">
@@ -189,50 +166,36 @@ export const AdDetailModal: React.FC<{ ad: Ad; onClose: () => void }> = ({ ad, o
         </a>
       )}
     </div>
-    <div className="px-6 py-4 border-t border-slate-100 flex justify-end bg-white shrink-0">
-      <button onClick={onClose} className="min-w-[120px] h-11 text-sm font-bold text-[#0d121b] bg-[#e7ebf3] hover:bg-[#dbe1ee] rounded-lg transition-all active:scale-95">
-        关闭
-      </button>
-    </div>
-  </ModalOverlay>
+  </Modal>
 );
 
 export const RejectionReasonModal: React.FC<{ reason: string; onClose: () => void }> = ({ reason, onClose }) => (
-  <ModalOverlay onClose={onClose}>
-    <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-      <h3 className="text-lg font-bold text-[#1e293b]">驳回原因</h3>
-      <button onClick={onClose} className="size-8 flex items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 transition-colors">
-        <span className="material-symbols-outlined text-xl">close</span>
-      </button>
+  <Modal
+    title="驳回原因"
+    onClose={onClose}
+    variant="info"
+    cancelLabel="关闭"
+    maxWidth="max-w-xl"
+  >
+    <div className="bg-slate-50 rounded-xl p-5 border border-slate-100">
+      <p className="text-sm text-[#64748b] leading-relaxed">{reason}</p>
     </div>
-    <div className="p-6">
-      <div className="bg-slate-50 rounded-xl p-5 border border-slate-100">
-        <p className="text-sm text-[#64748b] leading-relaxed">{reason}</p>
-      </div>
-    </div>
-    <div className="px-6 py-4 border-t border-slate-100 flex justify-end bg-white">
-      <button onClick={onClose} className="min-w-[120px] h-11 text-sm font-bold text-[#0d121b] bg-[#e7ebf3] hover:bg-[#dbe1ee] rounded-lg transition-colors">
-        关闭
-      </button>
-    </div>
-  </ModalOverlay>
+  </Modal>
 );
 
 export const DeleteConfirmModal: React.FC<{ onClose: () => void; onConfirm: () => void }> = ({ onClose, onConfirm }) => (
-  <ModalOverlay onClose={onClose}>
-    <div className="px-6 py-4 flex items-center justify-between border-b border-slate-100">
-      <h3 className="text-lg font-bold text-[#1e293b]">确认删除</h3>
-      <button onClick={onClose} className="p-1.5 text-slate-400 hover:text-[#1e293b] hover:bg-slate-100 rounded-full transition-colors">
-        <span className="material-symbols-outlined text-xl">close</span>
-      </button>
-    </div>
-    <div className="px-6 py-8">
+  <Modal
+    title="确认删除"
+    onClose={onClose}
+    onConfirm={onConfirm}
+    variant="danger"
+    confirmLabel="确认删除"
+    cancelLabel="取消"
+    maxWidth="max-w-[480px]"
+  >
+    <div>
       <p className="text-[#1e293b] font-bold text-base mb-2">您确定要删除此广告吗？</p>
       <p className="text-[#64748b] text-[15px] leading-relaxed">删除后将无法恢复。此项操作将永久从数据库中移除该广告及其关联数据。</p>
     </div>
-    <div className="px-6 py-4 flex justify-end gap-3 border-t border-slate-100">
-      <button onClick={onClose} className="min-w-[100px] h-11 px-6 text-sm font-bold bg-[#e7ebf3] text-[#0d121b] hover:bg-[#dce2ee] rounded-lg transition-colors">取消</button>
-      <button onClick={onConfirm} className="h-11 px-8 text-sm font-bold text-white bg-[#ef4444] hover:bg-red-600 rounded-lg transition-colors shadow-sm">确认删除</button>
-    </div>
-  </ModalOverlay>
+  </Modal>
 );

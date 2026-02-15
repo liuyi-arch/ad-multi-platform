@@ -1,11 +1,11 @@
 
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import { MOCK_STATS } from '../mockData';
 import { AdItem, AdStatus } from '../types';
 import { ManagementStatsCard } from '../components/StatsCard';
 import { Pagination, Tab, SortSelector } from '@repo/ui-components';
 import { ManagementAdTable } from '../components/AdTable';
-import { usePagination } from '../hooks/usePagination';
+import { usePagination, useTabFilter, FilterType } from '@repo/hooks';
 
 interface AdManagementPageProps {
   ads: AdItem[];
@@ -17,8 +17,6 @@ interface AdManagementPageProps {
   onViewRejectReason: (ad: AdItem) => void;
 }
 
-type FilterType = 'ALL' | AdStatus;
-
 const AdManagementPage: React.FC<AdManagementPageProps> = ({
   ads,
   onDetail,
@@ -28,12 +26,7 @@ const AdManagementPage: React.FC<AdManagementPageProps> = ({
   onEdit,
   onViewRejectReason
 }) => {
-  const [activeFilter, setActiveFilter] = useState<FilterType>('ALL');
-
-  const filteredByStatus = useMemo(() => {
-    if (activeFilter === 'ALL') return ads;
-    return ads.filter(ad => ad.status === activeFilter);
-  }, [ads, activeFilter]);
+  const { activeTab, setActiveTab, tabfilterAds } = useTabFilter(ads);
 
   const {
     currentPage,
@@ -42,7 +35,7 @@ const AdManagementPage: React.FC<AdManagementPageProps> = ({
     currentItems,
     totalItems,
     itemsPerPage
-  } = usePagination(filteredByStatus, 5);
+  } = usePagination(tabfilterAds, 5);
 
   const tabOptions = [
     { id: 'ALL', label: '所有广告' },
@@ -68,8 +61,8 @@ const AdManagementPage: React.FC<AdManagementPageProps> = ({
       <div className="bg-surface border border-border-light shadow-soft rounded-xl overflow-hidden flex flex-col">
         <Tab
           options={tabOptions}
-          activeId={activeFilter}
-          onTabChange={(id) => setActiveFilter(id as FilterType)}
+          activeId={activeTab}
+          onTabChange={(id) => setActiveTab(id as FilterType)}
           variant="sharp"
           rightElement={<SortSelector variant="filter" />}
         />

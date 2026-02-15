@@ -1,6 +1,7 @@
 export * from './Button';
 export * from './Footer';
 export * from './StatusLabel';
+export * from './Modal';
 export * from './Pagination';
 export * from './Tab';
 export * from './SearchBox';

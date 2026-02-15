@@ -1,10 +1,10 @@
 
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import { Ad } from '../../types';
 import { Pagination, SortSelector } from '@repo/ui-components';
 import AdCard from '../../components/AdCard/AdCard';
-import { sortAds } from '../../utils/adHelpers';
-import { usePagination } from '../../hooks/hooks';
+import { usePagination } from '@repo/hooks';
+import { useSelectFilter } from '../../hooks/useSelectFilter';
 
 interface HomeProps {
   ads: Ad[];
@@ -13,16 +13,13 @@ interface HomeProps {
 }
 
 const Home: React.FC<HomeProps> = ({ ads, onOpenDetail, onOpenCreate }) => {
-  const [sortBy, setSortBy] = useState('time');
-  
   const ITEMS_PER_PAGE = 12;
+  const { activeSelect, selectFilterAds, setActiveSelect } = useSelectFilter(ads);
 
-  const sortedAds = useMemo(() => sortAds(ads, sortBy), [ads, sortBy]);
+  const { currentPage, setCurrentPage, currentItems, totalPages } = usePagination(selectFilterAds, ITEMS_PER_PAGE);
 
-  const { currentPage, setCurrentPage, pagedItems, totalPages } = usePagination(sortedAds, ITEMS_PER_PAGE);
-
-  const handleSortChange = (value: string) => {
-    setSortBy(value);
+  const onSortChange = (value: string) => {
+    setActiveSelect(value);
     setCurrentPage(1);
   };
 
@@ -37,8 +34,8 @@ const Home: React.FC<HomeProps> = ({ ads, onOpenDetail, onOpenCreate }) => {
           <span>投放新广告</span>
         </button>
         <SortSelector 
-          value={sortBy} 
-          onChange={handleSortChange}
+          value={activeSelect} 
+          onChange={onSortChange}
           variant="sort"
           options={[
             { value: 'time', label: '按时间排序' },
@@ -48,14 +45,14 @@ const Home: React.FC<HomeProps> = ({ ads, onOpenDetail, onOpenCreate }) => {
         />
       </div>
 
-      {pagedItems.length === 0 ? (
+      {currentItems.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-slate-300">
           <span className="material-symbols-outlined text-6xl mb-4 opacity-20">inventory_2</span>
           <p>暂无符合条件的广告</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {pagedItems.map(ad => (
+          {currentItems.map(ad => (
             <AdCard key={ad.id} ad={ad} onClick={onOpenDetail} />
           ))}
         </div>

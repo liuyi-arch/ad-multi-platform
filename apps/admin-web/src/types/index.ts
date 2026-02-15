@@ -1,37 +1,29 @@
+import { 
+  Ad as SharedAd, 
+  AdStatus as SharedAdStatus, 
+  ModalType as SharedModalType,
+  StatItem as SharedStatItem,
+  ViewType as SharedViewType
+} from '@repo/shared-types';
 
-export enum AdStatus {
-  PENDING = 'PENDING',
-  APPROVED = 'APPROVED',
-  REJECTED = 'REJECTED',
-  ENDING_SOON = 'ENDING_SOON'
+export { SharedAdStatus as AdStatus };
+export type { SharedModalType as ModalType };
+export type { SharedAd as AdItem };
+export type { SharedStatItem as StatItem };
+
+export interface User {
+  name: string;
+  role: string;
+  email: string;
+  status: '在线' | '离线';
 }
 
-/* Definition for modal state types used across the application */
-export type ModalType = 'DETAIL' | 'DELETE' | 'REJECT_ACTION' | 'APPROVE_ACTION' | 'FORM' | 'REJECT_REASON' | null;
-
-export interface AdItem {
-  id: string;
-  title: string;
-  description: string;
-  status: AdStatus;
-  bid: number;
-  heat: string;
-  date: string;
-  thumbnail: string;
-  category?: string;
-  brand?: string;
-  engagement?: number;
-  publisher?: string;
-  landingPage?: string;
+export interface MediaItem {
+  id: number;
+  url: string;
+  name: string;
+  size: string;
+  type: 'video' | 'image';
 }
 
-export interface StatItem {
-  label: string;
-  value: string;
-  trend: string;
-  isPositive: boolean;
-  icon: string;
-  colorClass: string;
-}
-
-export type ViewType = 'dashboard' | 'ad_management' | 'media' | 'analytics' | 'access';
+export type ViewType = SharedViewType;

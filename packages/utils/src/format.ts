@@ -1,17 +1,16 @@
 
 /**
- * 格式化货币 (CNY)
+ * 货币格式化工具
  */
 export const formatCurrency = (value: number): string => {
   return new Intl.NumberFormat('zh-CN', {
     style: 'currency',
     currency: 'CNY',
-    minimumFractionDigits: 2,
   }).format(value);
 };
 
 /**
- * 格式化大数字 (如 1.2M)
+ * 数字格式化（千分位）
  */
 export const formatNumber = (value: number): string => {
   return new Intl.NumberFormat('zh-CN').format(value);

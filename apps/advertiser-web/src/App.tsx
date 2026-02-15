@@ -1,148 +1,90 @@
-import React, { useState, useMemo } from 'react';
-import { Ad, AdStatus, ViewType } from './types';
-import { MOCK_ADS } from './mockData';
+import React from 'react';
+import { BrowserRouter, useRoutes, useLocation, useNavigate } from 'react-router-dom';
+import { ViewType } from './types';
 import Layout from './components/Layout';
-import Home from './pages/home';
-import MyAd from './pages/myAd';
 import {
     AdDetailModal,
     AdFormModal,
     RejectionReasonModal,
     DeleteConfirmModal
-} from './components/Modal';
+} from './components/MyModal';
+import { useAdsData, useSearch, useAdsModal } from '@repo/hooks';
+import { MOCK_ADS } from './mockData';
+import { getRoutes } from './routes';
 
-const App: React.FC = () => {
-    const [view, setView] = useState<ViewType>('GALLERY');
-    const [ads, setAds] = useState<Ad[]>(MOCK_ADS);
-    const [searchQuery, setSearchQuery] = useState('');
+const AppContent: React.FC = () => {
+    const { ads, ...dataMethods } = useAdsData(MOCK_ADS);
+    const { searchQuery, setSearchQuery, searchResults: searchAds } = useSearch(ads, ['title', 'description']);
+    const { modal, openModal, closeModal, handleConfirm } = useAdsModal(dataMethods);
+    
+    const location = useLocation();
+    const navigate = useNavigate();
 
-    // Modal States
-    const [selectedAd, setSelectedAd] = useState<Ad | null>(null);
-    const [isDetailOpen, setIsDetailOpen] = useState(false);
-    const [isFormOpen, setIsFormOpen] = useState(false);
-    const [formMode, setFormMode] = useState<'CREATE' | 'EDIT'>('CREATE');
-    const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-    const [isRejectionOpen, setIsRejectionOpen] = useState(false);
-
-    const filteredAds = useMemo(() => {
-        return ads.filter(ad =>
-            ad.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            ad.description.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-    }, [ads, searchQuery]);
-
-    // Handlers
-    const handleOpenDetail = (ad: Ad) => {
-        setSelectedAd(ad);
-        setIsDetailOpen(true);
+    // Map current path to ViewType
+    const getCurrentView = (): ViewType => {
+        const path = location.pathname.substring(1); // remove leading slash
+        if (path === '' || path === 'home') return 'GALLERY';
+        if (path === 'my-ads') return 'DASHBOARD';
+        return 'GALLERY';
     };
 
-    const handleOpenCreate = () => {
-        setSelectedAd(null);
-        setFormMode('CREATE');
-        setIsFormOpen(true);
+    const view = getCurrentView();
+
+    const handleViewChange = (v: ViewType) => {
+        const path = v === 'GALLERY' ? '/home' : '/my-ads';
+        navigate(path);
     };
 
-    const handleOpenEdit = (ad: Ad) => {
-        setSelectedAd(ad);
-        setFormMode('EDIT');
-        setIsFormOpen(true);
-    };
-
-    const handleOpenDelete = (ad: Ad) => {
-        setSelectedAd(ad);
-        setIsDeleteConfirmOpen(true);
-    };
-
-    const handleOpenRejection = (ad: Ad) => {
-        setSelectedAd(ad);
-        setIsRejectionOpen(true);
-    };
-
-    const handleDeleteAd = () => {
-        if (selectedAd) {
-            setAds(prev => prev.filter(a => a.id !== selectedAd.id));
-            setIsDeleteConfirmOpen(false);
-            setSelectedAd(null);
-        }
-    };
-
-    const handleSaveAd = (adData: Partial<Ad>) => {
-        if (formMode === 'CREATE') {
-            const newAd: Ad = {
-                id: Math.random().toString(36).substr(2, 9),
-                title: adData.title || '',
-                publisher: adData.publisher || '匿名用户',
-                description: adData.description || '',
-                bid: Number(adData.bid) || 0,
-                heat: 0,
-                status: AdStatus.PENDING,
-                createDate: new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }),
-                imageUrl: adData.imageUrl || 'https://picsum.photos/400/250',
-                category: adData.category || '未分类',
-                landingPage: adData.landingPage || '',
-            };
-            setAds([newAd, ...ads]);
-        } else if (selectedAd) {
-            setAds(prev => prev.map(a => a.id === selectedAd.id ? { ...a, ...adData } : a));
-        }
-        setIsFormOpen(false);
-    };
+    const routing = useRoutes(getRoutes({ ads: searchAds, openModal }));
 
     return (
         <Layout
             currentView={view}
-            onViewChange={setView}
+            onViewChange={handleViewChange}
             onSearch={setSearchQuery}
             searchQuery={searchQuery}
         >
-            {view === 'GALLERY' ? (
-                <Home
-                    ads={filteredAds.filter(a => a.status === AdStatus.APPROVED)}
-                    onOpenDetail={handleOpenDetail}
-                    onOpenCreate={handleOpenCreate}
-                />
-            ) : (
-                <MyAd
-                    ads={filteredAds}
-                    onOpenEdit={handleOpenEdit}
-                    onOpenDelete={handleOpenDelete}
-                    onOpenRejection={handleOpenRejection}
-                    onOpenDetail={handleOpenDetail}
-                />
-            )}
+            {routing}
 
             {/* Modals */}
-            {isDetailOpen && selectedAd && (
+            {modal.type === 'DETAIL' && modal.ad && (
                 <AdDetailModal
-                    ad={selectedAd}
-                    onClose={() => setIsDetailOpen(false)}
+                    ad={modal.ad}
+                    onClose={closeModal}
                 />
             )}
 
-            {isFormOpen && (
+            {modal.type === 'FORM' && (
                 <AdFormModal
-                    mode={formMode}
-                    ad={selectedAd}
-                    onClose={() => setIsFormOpen(false)}
-                    onSave={handleSaveAd}
+                    mode={modal.formMode}
+                    ad={modal.ad}
+                    onClose={closeModal}
+                    onSave={handleConfirm}
                 />
             )}
 
-            {isDeleteConfirmOpen && selectedAd && (
+            {modal.type === 'DELETE' && modal.ad && (
                 <DeleteConfirmModal
-                    onClose={() => setIsDeleteConfirmOpen(false)}
-                    onConfirm={handleDeleteAd}
+                    onClose={closeModal}
+                    onConfirm={handleConfirm}
                 />
             )}
 
-            {isRejectionOpen && selectedAd && (
+            {modal.type === 'REJECT_REASON' && modal.ad && (
                 <RejectionReasonModal
-                    reason={selectedAd.rejectionReason || '未提供具体原因。'}
-                    onClose={() => setIsRejectionOpen(false)}
+                    reason={modal.ad.rejectionReason || '未提供具体原因。'}
+                    onClose={closeModal}
                 />
             )}
         </Layout>
+    );
+};
+
+const App: React.FC = () => {
+    return (
+        <BrowserRouter>
+            <AppContent />
+        </BrowserRouter>
     );
 };
 

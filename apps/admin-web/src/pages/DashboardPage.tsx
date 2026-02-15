@@ -1,10 +1,12 @@
 
-import React, { useState, useMemo } from 'react';
+import React from 'react';
 import StatsGrid from '../components/StatsCard';
 import { TrendChart, PieChart } from '@repo/ui-components';
 import { DashboardAdTable } from '../components/AdTable';
 import { AdItem } from '../types/index';
-import { MOCK_STATS, CHART_DATA, PIE_DATA } from '../mockData';
+import { PIE_DATA } from '../mockData';
+import { useTrendTime } from '../hooks/useTrendTime';
+import { useAdStats } from '@repo/hooks';
 
 interface DashboardPageProps {
   onDetailClick: (ad: AdItem) => void;
@@ -12,31 +14,19 @@ interface DashboardPageProps {
 }
 
 const DashboardPage: React.FC<DashboardPageProps> = ({ onDetailClick, ads }) => {
-  const [timeframe, setTimeframe] = useState('1m');
-
-  // 模拟基于时间范围的数据处理
-  const displayedData = useMemo(() => {
-    if (timeframe === '7d') return CHART_DATA.slice(0, 3); // 简化模拟
-    if (timeframe === '3m') {
-      // 模拟更长的数据
-      return [
-        ...CHART_DATA.map(d => ({ ...d, name: '9月' + d.name.split('10月')[1] })),
-        ...CHART_DATA
-      ];
-    }
-    return CHART_DATA;
-  }, [timeframe]);
+  const { timeRange, setTimeRange, trendResData } = useTrendTime();
+  const { stats } = useAdStats(ads);
 
   return (
     <div className="space-y-8">
-      <StatsGrid stats={MOCK_STATS} variant="dashboard" />
+      <StatsGrid stats={stats} variant="dashboard" />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <TrendChart 
           title="流量趋势"
           subtitle="所有墙面显示屏的每日曝光量统计"
-          data={displayedData}
-          timeframe={timeframe}
-          onTimeframeChange={setTimeframe}
+          data={trendResData}
+          timeframe={timeRange}
+          onTimeframeChange={setTimeRange}
         />
         <PieChart 
           title="广告分布"

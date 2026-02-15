@@ -33,6 +33,12 @@
             ],
             "@repo/utils/*": [
                 "./packages/utils/*"
+            ],
+            "@repo/hooks": [
+                "./packages/hooks/src/index.ts"
+            ],
+            "@repo/hooks/*": [
+                "./packages/hooks/src/*"
             ]
         }
     },

@@ -1,14 +1,14 @@
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { MediaItem } from '../types';
+import { fetchMediaItems } from '../api/mediaApi';
 
 const MediaPage: React.FC = () => {
-  const mediaItems = Array.from({ length: 8 }, (_, i) => ({
-    id: i,
-    url: `https://picsum.photos/seed/media${i}/400/225`,
-    name: `素材_${i + 1}.mp4`,
-    size: '12.4 MB',
-    type: i % 2 === 0 ? 'video' : 'image'
-  }));
+  const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
+
+  useEffect(() => {
+    fetchMediaItems().then(setMediaItems);
+  }, []);
 
   return (
     <div className="space-y-6">
