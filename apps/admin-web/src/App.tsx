@@ -5,7 +5,6 @@ import Header from './components/Header';
 import { Footer } from '@repo/ui-components';
 import MyModal from './components/MyModal';
 import { useAdsData, useSearch, useAdsModal } from '@repo/hooks';
-import { MOCK_ADS } from './mockData';
 import { ViewType } from './types';
 import { getRoutes } from './routes';
 
@@ -19,7 +18,7 @@ const AppLayout: React.FC<{
     onOpenCreate: () => void;
     children: React.ReactNode;
 }> = ({ headTitle, searchQuery, setSearchQuery, currentNav, setCurrentNav, onOpenCreate, children }) => {
-    
+
     const headerAction = currentNav === 'ad_management' ? (
         <button
             onClick={onOpenCreate}
@@ -53,10 +52,10 @@ const AppLayout: React.FC<{
 
 // Wrapper to handle navigation logic
 const AppContent: React.FC = () => {
-    const { ads, ...dataMethods } = useAdsData(MOCK_ADS);
+    const { ads, loading, error, ...dataMethods } = useAdsData();
     const { searchQuery, setSearchQuery, searchResults: searchAds } = useSearch(ads, ['id', 'title', 'description']);
     const { modal, openModal, closeModal, handleConfirm } = useAdsModal(dataMethods);
-    
+
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -98,7 +97,17 @@ const AppContent: React.FC = () => {
                 setCurrentNav={handleNavChange}
                 onOpenCreate={() => openModal('FORM', null, 'CREATE')}
             >
-                {routing}
+                {loading ? (
+                    <div className="flex items-center justify-center h-64">
+                        <div className="text-gray-500 text-lg">加载中...</div>
+                    </div>
+                ) : error ? (
+                    <div className="flex items-center justify-center h-64">
+                        <div className="text-red-500 text-lg">加载失败: {error}</div>
+                    </div>
+                ) : (
+                    routing
+                )}
             </AppLayout>
 
             <MyModal

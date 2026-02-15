@@ -4,52 +4,67 @@
  */
 
 import { Context } from 'koa';
+import adService from './ad.service';
 import { success } from '../../utils';
 import { SuccessMessages } from '../../constants';
 
 export class AdController {
     /**
      * 获取广告列表
+     * GET /api/ads?page=1&pageSize=20&status=PENDING&keyword=科技
      */
     async list(ctx: Context) {
-        // TODO: 实现获取广告列表逻辑
-        success(ctx, [], '获取成功');
+        const { page, pageSize, status, category, keyword, sortBy, sortOrder } = ctx.query;
+        const result = await adService.getList({
+            page: page ? Number(page) : undefined,
+            pageSize: pageSize ? Number(pageSize) : undefined,
+            status: status as string,
+            category: category as string,
+            keyword: keyword as string,
+            sortBy: sortBy as string,
+            sortOrder: sortOrder as 'asc' | 'desc',
+        });
+        success(ctx, result, '获取成功');
     }
 
     /**
      * 获取广告详情
+     * GET /api/ads/:id
      */
     async getById(ctx: Context) {
         const { id } = ctx.params;
-        // TODO: 实现获取广告详情逻辑
-        success(ctx, { id }, '获取成功');
+        const ad = await adService.getById(id);
+        success(ctx, ad, '获取成功');
     }
 
     /**
      * 创建广告
+     * POST /api/ads
      */
     async create(ctx: Context) {
-        const data = ctx.request.body;
-        // TODO: 实现创建广告逻辑
-        success(ctx, data, SuccessMessages.CREATED);
+        const data = ctx.request.body as any;
+        const ad = await adService.create(data);
+        success(ctx, ad, SuccessMessages.CREATED);
     }
 
     /**
      * 更新广告
+     * PUT /api/ads/:id
      */
     async update(ctx: Context) {
         const { id } = ctx.params;
-        const data = ctx.request.body;
-        // TODO: 实现更新广告逻辑
-        success(ctx, { id, ...data }, SuccessMessages.UPDATED);
+        const data = ctx.request.body as any;
+        const ad = await adService.update(id, data);
+        success(ctx, ad, SuccessMessages.UPDATED);
     }
 
     /**
      * 删除广告
+     * DELETE /api/ads/:id
      */
     async delete(ctx: Context) {
         const { id } = ctx.params;
-        // TODO: 实现删除广告逻辑
+        await adService.delete(id);
         success(ctx, null, SuccessMessages.DELETED);
     }
 }

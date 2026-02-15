@@ -9,14 +9,13 @@ import {
     DeleteConfirmModal
 } from './components/MyModal';
 import { useAdsData, useSearch, useAdsModal } from '@repo/hooks';
-import { MOCK_ADS } from './mockData';
 import { getRoutes } from './routes';
 
 const AppContent: React.FC = () => {
-    const { ads, ...dataMethods } = useAdsData(MOCK_ADS);
+    const { ads, loading, error, ...dataMethods } = useAdsData();
     const { searchQuery, setSearchQuery, searchResults: searchAds } = useSearch(ads, ['title', 'description']);
     const { modal, openModal, closeModal, handleConfirm } = useAdsModal(dataMethods);
-    
+
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -44,7 +43,17 @@ const AppContent: React.FC = () => {
             onSearch={setSearchQuery}
             searchQuery={searchQuery}
         >
-            {routing}
+            {loading ? (
+                <div className="flex items-center justify-center h-64">
+                    <div className="text-gray-500 text-lg">加载中...</div>
+                </div>
+            ) : error ? (
+                <div className="flex items-center justify-center h-64">
+                    <div className="text-red-500 text-lg">加载失败: {error}</div>
+                </div>
+            ) : (
+                routing
+            )}
 
             {/* Modals */}
             {modal.type === 'DETAIL' && modal.ad && (

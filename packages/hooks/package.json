@@ -12,6 +12,7 @@
     "react": "^18.0.0"
   },
   "dependencies": {
+    "@repo/api": "workspace:*",
     "@repo/shared-types": "workspace:*",
     "@repo/utils": "workspace:*"
   },
