@@ -52,10 +52,8 @@ const AdSchema = new Schema<IAdDocument>(
         toJSON: {
             // 将 _id 映射为 id，移除 __v
             transform(_doc, ret) {
-                ret.id = ret._id.toString();
-                delete ret._id;
-                delete ret.__v;
-                return ret;
+                const { _id, __v, ...rest } = ret;
+                return { id: _id.toString(), ...rest };
             },
         },
     }
