@@ -87,6 +87,12 @@ const AppContent: React.FC = () => {
 
     const routing = useRoutes(getRoutes({ ads: searchAds, openModal }));
 
+    const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+
+    if (isAuthPage) {
+        return <>{routing}</>;
+    }
+
     return (
         <>
             <AppLayout

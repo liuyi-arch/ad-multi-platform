@@ -1,8 +1,4 @@
-/**
- * @repo/api 统一导出
- */
-
-export { default as httpClient } from './httpClient';
-export { adService } from './adService';
-export type { AdListParams, PaginatedResponse } from './adService';
-export { approvalService } from './approvalService';
+export * from './adService';
+export * from './approvalService';
+export * from './uploadService';
+export * from './httpClient';

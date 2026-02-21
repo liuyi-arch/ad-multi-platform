@@ -36,6 +36,24 @@ const AppContent: React.FC = () => {
 
     const routing = useRoutes(getRoutes({ ads: searchAds, openModal }));
 
+    const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+
+    if (isAuthPage) {
+        return (
+            <>
+                {routing}
+
+                {/* Modals - register might need alert modal etc */}
+                {modal.type === 'DETAIL' && modal.ad && (
+                    <AdDetailModal
+                        ad={modal.ad}
+                        onClose={closeModal}
+                    />
+                )}
+            </>
+        );
+    }
+
     return (
         <Layout
             currentView={view}

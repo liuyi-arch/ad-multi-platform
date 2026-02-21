@@ -4,11 +4,11 @@ import { Ad } from '../../types';
 import { generateAdCopySuggestion } from '../../api/geminiService';
 import { VideoUploader, VideoPlayer, Modal } from '@repo/ui-components';
 
-export const AdFormModal: React.FC<{ 
-  mode: 'CREATE' | 'EDIT'; 
-  ad: Ad | null; 
-  onClose: () => void; 
-  onSave: (data: Partial<Ad>) => void 
+export const AdFormModal: React.FC<{
+  mode: 'CREATE' | 'EDIT';
+  ad: Ad | null;
+  onClose: () => void;
+  onSave: (data: Partial<Ad>) => void
 }> = ({ mode, ad, onClose, onSave }) => {
   const [formData, setFormData] = useState({
     title: ad?.title || '',
@@ -16,6 +16,7 @@ export const AdFormModal: React.FC<{
     description: ad?.description || '',
     bid: ad?.bid || 0,
     imageUrl: ad?.imageUrl || '',
+    videoUrls: ad?.videoUrls || [], // 增加视频列表映射
     landingPage: ad?.landingPage || '',
     category: ad?.category || '电子商务',
   });
@@ -46,8 +47,8 @@ export const AdFormModal: React.FC<{
       <div className="space-y-7">
         <div className="space-y-2">
           <label className="block text-sm font-bold text-[#1e293b]">广告标题</label>
-          <input 
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400" 
+          <input
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400"
             placeholder="输入广告名称"
             value={formData.title}
             onChange={e => setFormData({ ...formData, title: e.target.value })}
@@ -56,8 +57,8 @@ export const AdFormModal: React.FC<{
 
         <div className="space-y-2">
           <label className="block text-sm font-bold text-[#1e293b]">发布人</label>
-          <input 
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400" 
+          <input
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400"
             placeholder="署名或机构名称"
             value={formData.publisher}
             onChange={e => setFormData({ ...formData, publisher: e.target.value })}
@@ -67,14 +68,14 @@ export const AdFormModal: React.FC<{
         <div className="space-y-2">
           <label className="block text-sm font-bold text-[#1e293b]">内容文案</label>
           <div className="relative group">
-            <textarea 
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400 resize-none" 
-              placeholder="编写吸引人的广告语..." 
+            <textarea
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400 resize-none"
+              placeholder="编写吸引人的广告语..."
               rows={4}
               value={formData.description}
               onChange={e => setFormData({ ...formData, description: e.target.value })}
             />
-            <button 
+            <button
               type="button"
               onClick={handleAiSuggest}
               disabled={aiLoading}
@@ -86,14 +87,17 @@ export const AdFormModal: React.FC<{
           </div>
         </div>
 
-        <VideoUploader imageUrl={formData.imageUrl} />
+        <VideoUploader
+          value={formData.videoUrls}
+          onChange={urls => setFormData({ ...formData, videoUrls: urls })}
+        />
 
         <div className="space-y-2">
           <label className="block text-sm font-bold text-[#1e293b]">落地页</label>
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-lg">link</span>
-            <input 
-              className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400" 
+            <input
+              className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400"
               placeholder="https://..."
               value={formData.landingPage}
               onChange={e => setFormData({ ...formData, landingPage: e.target.value })}
@@ -105,9 +109,9 @@ export const AdFormModal: React.FC<{
           <label className="block text-sm font-bold text-[#1e293b]">出价</label>
           <div className="relative">
             <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 font-bold text-sm">¥</span>
-            <input 
-              type="number" 
-              className="w-full pl-9 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm font-bold tabular-nums" 
+            <input
+              type="number"
+              className="w-full pl-9 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm font-bold tabular-nums"
               placeholder="0.00"
               value={formData.bid || ''}
               onChange={e => setFormData({ ...formData, bid: Number(e.target.value) })}
@@ -128,7 +132,7 @@ export const AdDetailModal: React.FC<{ ad: Ad; onClose: () => void }> = ({ ad, o
     maxWidth="max-w-[720px]"
   >
     <div className="space-y-6">
-      <VideoPlayer imageUrl={ad.imageUrl} />
+      <VideoPlayer imageUrl={(ad.videoUrls && ad.videoUrls.length > 0) ? ad.videoUrls[0] : (ad.imageUrl || '')} />
       <h3 className="text-2xl font-bold text-[#1e293b]">{ad.title}</h3>
       <div className="grid grid-cols-2 gap-4">
         <div className="bg-blue-50 rounded-xl p-4 flex flex-col gap-1 border border-blue-100">
@@ -156,9 +160,9 @@ export const AdDetailModal: React.FC<{ ad: Ad; onClose: () => void }> = ({ ad, o
         </div>
       </div>
       {ad.landingPage && (
-        <a 
-          href={ad.landingPage} 
-          target="_blank" 
+        <a
+          href={ad.landingPage}
+          target="_blank"
           rel="noopener noreferrer"
           className="block w-full text-center bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary-hover transition-all shadow-lg shadow-primary/20"
         >

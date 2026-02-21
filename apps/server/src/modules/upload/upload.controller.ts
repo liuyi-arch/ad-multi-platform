@@ -6,32 +6,53 @@
 import { Context } from 'koa';
 import { success } from '../../utils';
 import { SuccessMessages } from '../../constants';
+import uploadService from './upload.service';
 
 export class UploadController {
     /**
      * 上传视频
      */
     async uploadVideo(ctx: Context) {
-        // TODO: 实现视频上传逻辑
         const file = (ctx.request as any).files?.video;
-        success(ctx, { url: '/uploads/video.mp4' }, SuccessMessages.UPLOADED);
+        if (!file) {
+            throw new Error('未发现视频文件');
+        }
+        const result = await uploadService.handleUpload(file, 'video');
+        success(ctx, result, SuccessMessages.UPLOADED);
     }
 
     /**
      * 上传图片
      */
     async uploadImage(ctx: Context) {
-        // TODO: 实现图片上传逻辑
         const file = (ctx.request as any).files?.image;
-        success(ctx, { url: '/uploads/image.jpg' }, SuccessMessages.UPLOADED);
+        if (!file) {
+            throw new Error('未发现图片文件');
+        }
+        const result = await uploadService.handleUpload(file, 'image');
+        success(ctx, result, SuccessMessages.UPLOADED);
     }
 
     /**
      * 批量上传
      */
     async uploadMultiple(ctx: Context) {
-        // TODO: 实现批量上传逻辑
-        success(ctx, { urls: [] }, SuccessMessages.UPLOADED);
+        const files = (ctx.request as any).files;
+        if (!files) {
+            throw new Error('未发现上传文件');
+        }
+
+        const results = [];
+        const fileList = Array.isArray(files.files) ? files.files : [files.files];
+
+        for (const file of fileList) {
+            if (file) {
+                const res = await uploadService.handleUpload(file, 'image');
+                results.push(res);
+            }
+        }
+
+        success(ctx, { urls: results.map(r => r.url), details: results }, SuccessMessages.UPLOADED);
     }
 
     /**

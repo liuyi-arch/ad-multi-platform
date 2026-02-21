@@ -10,3 +10,4 @@ export * from './PieChart';
 export * from './TrendChart';
 export * from './VideoPlayer';
 export * from './VideoUploader';
+export * from './Auth';

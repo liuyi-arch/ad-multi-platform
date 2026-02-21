@@ -14,7 +14,8 @@
         "allowImportingTsExtensions": true,
         "resolveJsonModule": true,
         "isolatedModules": true,
-        "noEmit": true,
+        "noEmit": false,
+        "emitDeclarationOnly": true,
         "jsx": "react-jsx",
         "strict": true,
         "noUnusedLocals": true,
@@ -28,8 +29,20 @@
             "@repo/shared-types/*": [
                 "./packages/shared-types/*"
             ],
+            "@repo/api": [
+                "./packages/api/src/index.ts"
+            ],
+            "@repo/api/*": [
+                "./packages/api/src/*"
+            ],
             "@repo/ui/*": [
                 "./packages/ui-components/*"
+            ],
+            "@repo/ui-components": [
+                "./packages/ui-components/src/index.ts"
+            ],
+            "@repo/ui-components/*": [
+                "./packages/ui-components/src/*"
             ],
             "@repo/utils/*": [
                 "./packages/utils/*"

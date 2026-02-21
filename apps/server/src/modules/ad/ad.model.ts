@@ -19,6 +19,7 @@ export interface IAdDocument extends Document {
     brand?: string;
     engagement?: number;
     rejectionReason?: string;
+    videoUrls?: string[];
     date?: string;
     createDate?: string;
     createdAt: Date;
@@ -44,6 +45,7 @@ const AdSchema = new Schema<IAdDocument>(
         brand: { type: String, trim: true },
         engagement: { type: Number, default: 0 },
         rejectionReason: { type: String, trim: true },
+        videoUrls: { type: [String], default: [] },
         date: { type: String },
         createDate: { type: String },
     },

@@ -20,13 +20,13 @@ export enum AdStatus {
 /**
  * 弹窗类型定义
  */
-export type ModalType = 
-  | 'DETAIL' 
-  | 'DELETE' 
-  | 'REJECT_ACTION' 
-  | 'APPROVE_ACTION' 
-  | 'FORM' 
-  | 'REJECT_REASON' 
+export type ModalType =
+  | 'DETAIL'
+  | 'DELETE'
+  | 'REJECT_ACTION'
+  | 'APPROVE_ACTION'
+  | 'FORM'
+  | 'REJECT_REASON'
   | null;
 
 /**
@@ -51,6 +51,7 @@ export interface Ad {
   brand?: string;
   engagement?: number;
   rejectionReason?: string;
+  videoUrls?: string[];
 }
 
 /**
@@ -73,19 +74,19 @@ export type BaseAd = Ad;
 
 // 表单字段配置类型
 export interface FormField {
-    name: keyof Ad;
-    label: string;
-    type: string;
-    required?: boolean;
-    placeholder?: string;
-    maxLength?: number;
-    min?: number;
-    step?: number | string;
-    suffix?: string;
-    pattern?: string;
+  name: keyof Ad;
+  label: string;
+  type: string;
+  required?: boolean;
+  placeholder?: string;
+  maxLength?: number;
+  min?: number;
+  step?: number | string;
+  suffix?: string;
+  pattern?: string;
 }
 
 // 表单配置类型
 export interface FormConfig {
-    fields: FormField[];
+  fields: FormField[];
 }

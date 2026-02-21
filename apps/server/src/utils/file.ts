@@ -36,6 +36,23 @@ export const saveFile = async (
 };
 
 /**
+ * 移动文件 (从临时目录到正式目录)
+ */
+export const moveFile = async (
+    tempPath: string,
+    filename: string,
+    subDir: string = ''
+): Promise<string> => {
+    const uploadDir = path.join(uploadConfig.storage.uploadDir, subDir);
+    await ensureDir(uploadDir);
+
+    const targetPath = path.join(uploadDir, filename);
+    await fs.rename(tempPath, targetPath);
+
+    return `${uploadConfig.storage.staticPath}/${subDir ? subDir + '/' : ''}${filename}`;
+};
+
+/**
  * 删除文件
  */
 export const deleteFile = async (filePath: string): Promise<void> => {

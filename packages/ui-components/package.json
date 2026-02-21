@@ -11,9 +11,13 @@
     "peerDependencies": {
         "react": "^18.2.0"
     },
+    "dependencies": {
+        "@repo/api": "workspace:*",
+        "@repo/hooks": "workspace:*",
+        "recharts": "^2.12.0"
+    },
     "devDependencies": {
         "@types/react": "^18.2.0",
-        "@types/react-dom": "^18.2.0",
-        "recharts": "^2.12.0"
+        "@types/react-dom": "^18.2.0"
     }
 }

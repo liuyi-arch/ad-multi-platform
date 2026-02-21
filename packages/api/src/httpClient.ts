@@ -21,9 +21,12 @@ const httpClient: AxiosInstance = axios.create({
 // 请求拦截器
 httpClient.interceptors.request.use(
     (config) => {
-        // TODO: 后续实现认证后，在此添加 JWT token
-        // const token = localStorage.getItem('token');
-        // if (token) config.headers.Authorization = `Bearer ${token}`;
+        if (typeof window !== 'undefined') {
+            const token = localStorage.getItem('auth_token');
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
+        }
         return config;
     },
     (error) => Promise.reject(error)

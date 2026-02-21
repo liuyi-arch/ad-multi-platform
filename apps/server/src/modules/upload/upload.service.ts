@@ -2,22 +2,23 @@
  * 上传业务逻辑层
  */
 
-import { generateFilename, saveFile, deleteFile } from '../../utils';
+import { generateFilename, moveFile, deleteFile } from '../../utils';
 
 export class UploadService {
     /**
      * 处理文件上传
      */
     async handleUpload(file: any, type: 'video' | 'image') {
-        // TODO: 实现文件上传逻辑
-        const filename = generateFilename(file.name);
-        const path = await saveFile(file.data, filename, type);
+        // 从临时路径移动到正式路径
+        const originalName = file.originalFilename || file.name || 'file';
+        const filename = generateFilename(originalName);
+        const url = await moveFile(file.filepath || file.path, filename, type);
 
         return {
-            url: `/uploads/${type}/${filename}`,
+            url,
             filename,
             size: file.size,
-            mimeType: file.type,
+            mimeType: file.mimetype || file.type,
         };
     }
 

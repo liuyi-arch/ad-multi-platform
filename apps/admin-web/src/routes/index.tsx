@@ -6,6 +6,7 @@ import AdManagementPage from '../pages/AdManagementPage';
 import MediaPage from '../pages/MediaPage';
 import AnalyticsPage from '../pages/AnalyticsPage';
 import AccessControlPage from '../pages/AccessControlPage';
+import AuthPage from '../pages/AuthPage';
 import { AdItem } from '../types';
 
 interface RouteConfigProps {
@@ -14,6 +15,14 @@ interface RouteConfigProps {
 }
 
 export const getRoutes = ({ ads, openModal }: RouteConfigProps): RouteObject[] => [
+  {
+    path: '/login',
+    element: <AuthPage />,
+  },
+  {
+    path: '/register',
+    element: <AuthPage />,
+  },
   {
     path: '/',
     element: (

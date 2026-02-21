@@ -4,3 +4,4 @@ export * from './useAdStats';
 export * from './useTabFilter';
 export * from './useAdsModal';
 export * from './useAdsData';
+export * from './useAuth';
