@@ -33,6 +33,7 @@ export const error = (
     message: string,
     errors?: any[]
 ): void => {
+    ctx.status = code; // 设置 HTTP 状态码
     const response: ErrorResponse = {
         code,
         message,

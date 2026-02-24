@@ -1,5 +1,6 @@
 import React from 'react';
-import { AuthRole } from '@repo/hooks';
+import { AuthRole } from '@repo/shared-types';
+import { Tab } from '../Tab';
 
 interface AuthTabsProps {
     currentRole: AuthRole;
@@ -10,27 +11,18 @@ interface AuthTabsProps {
 const AuthTabs: React.FC<AuthTabsProps> = ({ currentRole, onRoleChange, mode }) => {
     const label = mode === 'LOGIN' ? '登录' : '注册';
 
+    const options = [
+        { id: 'ADVERTISER', label: `广告主${label}` },
+        { id: 'ADMIN', label: `管理者${label}` }
+    ];
+
     return (
-        <div className="flex border-b border-[#eef0f2]">
-            <button
-                onClick={() => onRoleChange('ADVERTISER')}
-                className={`flex-1 relative px-6 py-4 text-[15px] font-medium transition-all duration-200 border-b-2 ${currentRole === 'ADVERTISER'
-                        ? 'border-[#135bec] text-[#135bec]'
-                        : 'border-transparent text-[#8a94a6] hover:text-[#1a1d23]'
-                    }`}
-            >
-                广告主{label}
-            </button>
-            <button
-                onClick={() => onRoleChange('ADMIN')}
-                className={`flex-1 relative px-6 py-4 text-[15px] font-medium transition-all duration-200 border-b-2 ${currentRole === 'ADMIN'
-                        ? 'border-[#135bec] text-[#135bec]'
-                        : 'border-transparent text-[#8a94a6] hover:text-[#1a1d23]'
-                    }`}
-            >
-                管理者{label}
-            </button>
-        </div>
+        <Tab
+            options={options}
+            activeId={currentRole}
+            onTabChange={(id) => onRoleChange(id as AuthRole)}
+            variant="line"
+        />
     );
 };
 

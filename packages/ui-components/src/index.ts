@@ -11,3 +11,4 @@ export * from './TrendChart';
 export * from './VideoPlayer';
 export * from './VideoUploader';
 export * from './Auth';
+export * from './Toast';

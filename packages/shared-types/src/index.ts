@@ -90,3 +90,9 @@ export interface FormField {
 export interface FormConfig {
   fields: FormField[];
 }
+
+/**
+ * 认证相关类型
+ */
+export type AuthRole = 'ADVERTISER' | 'ADMIN';
+export type AuthMode = 'LOGIN' | 'REGISTER';

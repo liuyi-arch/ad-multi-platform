@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter, useRoutes, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
-import { Footer } from '@repo/ui-components';
+import { Footer, ToastContainer } from '@repo/ui-components';
 import MyModal from './components/MyModal';
 import { useAdsData, useSearch, useAdsModal } from '@repo/hooks';
 import { ViewType } from './types';
@@ -89,40 +89,45 @@ const AppContent: React.FC = () => {
 
     const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
-    if (isAuthPage) {
-        return <>{routing}</>;
-    }
-
     return (
         <>
-            <AppLayout
-                headTitle={getPageTitle(currentNav)}
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                currentNav={currentNav}
-                setCurrentNav={handleNavChange}
-                onOpenCreate={() => openModal('FORM', null, 'CREATE')}
-            >
-                {loading ? (
-                    <div className="flex items-center justify-center h-64">
-                        <div className="text-gray-500 text-lg">加载中...</div>
-                    </div>
-                ) : error ? (
-                    <div className="flex items-center justify-center h-64">
-                        <div className="text-red-500 text-lg">加载失败: {error}</div>
-                    </div>
-                ) : (
-                    routing
-                )}
-            </AppLayout>
+            {isAuthPage ? (
+                <>
+                    {routing}
+                </>
+            ) : (
+                <>
+                    <AppLayout
+                        headTitle={getPageTitle(currentNav)}
+                        searchQuery={searchQuery}
+                        setSearchQuery={setSearchQuery}
+                        currentNav={currentNav}
+                        setCurrentNav={handleNavChange}
+                        onOpenCreate={() => openModal('FORM', null, 'CREATE')}
+                    >
+                        {loading ? (
+                            <div className="flex items-center justify-center h-64">
+                                <div className="text-gray-500 text-lg">加载中...</div>
+                            </div>
+                        ) : error ? (
+                            <div className="flex items-center justify-center h-64">
+                                <div className="text-red-500 text-lg">加载失败: {error}</div>
+                            </div>
+                        ) : (
+                            routing
+                        )}
+                    </AppLayout>
 
-            <MyModal
-                type={modal.type}
-                ad={modal.ad}
-                formMode={modal.formMode}
-                onClose={closeModal}
-                onConfirm={handleConfirm}
-            />
+                    <MyModal
+                        type={modal.type}
+                        ad={modal.ad}
+                        formMode={modal.formMode}
+                        onClose={closeModal}
+                        onConfirm={handleConfirm}
+                    />
+                </>
+            )}
+            <ToastContainer />
         </>
     );
 };

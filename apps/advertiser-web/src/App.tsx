@@ -10,6 +10,7 @@ import {
 } from './components/MyModal';
 import { useAdsData, useSearch, useAdsModal } from '@repo/hooks';
 import { getRoutes } from './routes';
+import { ToastContainer } from '@repo/ui-components';
 
 const AppContent: React.FC = () => {
     const { ads, loading, error, ...dataMethods } = useAdsData();
@@ -38,72 +39,72 @@ const AppContent: React.FC = () => {
 
     const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
-    if (isAuthPage) {
-        return (
-            <>
-                {routing}
-
-                {/* Modals - register might need alert modal etc */}
-                {modal.type === 'DETAIL' && modal.ad && (
-                    <AdDetailModal
-                        ad={modal.ad}
-                        onClose={closeModal}
-                    />
-                )}
-            </>
-        );
-    }
-
     return (
-        <Layout
-            currentView={view}
-            onViewChange={handleViewChange}
-            onSearch={setSearchQuery}
-            searchQuery={searchQuery}
-        >
-            {loading ? (
-                <div className="flex items-center justify-center h-64">
-                    <div className="text-gray-500 text-lg">加载中...</div>
-                </div>
-            ) : error ? (
-                <div className="flex items-center justify-center h-64">
-                    <div className="text-red-500 text-lg">加载失败: {error}</div>
-                </div>
+        <>
+            {isAuthPage ? (
+                <>
+                    {routing}
+                    {modal.type === 'DETAIL' && modal.ad && (
+                        <AdDetailModal
+                            ad={modal.ad}
+                            onClose={closeModal}
+                        />
+                    )}
+                </>
             ) : (
-                routing
-            )}
+                <Layout
+                    currentView={view}
+                    onViewChange={handleViewChange}
+                    onSearch={setSearchQuery}
+                    searchQuery={searchQuery}
+                >
+                    {loading ? (
+                        <div className="flex items-center justify-center h-64">
+                            <div className="text-gray-500 text-lg">加载中...</div>
+                        </div>
+                    ) : error ? (
+                        <div className="flex items-center justify-center h-64">
+                            <div className="text-red-500 text-lg">加载失败: {error}</div>
+                        </div>
+                    ) : (
+                        routing
+                    )}
 
-            {/* Modals */}
-            {modal.type === 'DETAIL' && modal.ad && (
-                <AdDetailModal
-                    ad={modal.ad}
-                    onClose={closeModal}
-                />
-            )}
+                    {/* Modals */}
+                    {modal.type === 'DETAIL' && modal.ad && (
+                        <AdDetailModal
+                            ad={modal.ad}
+                            onClose={closeModal}
+                        />
+                    )}
 
-            {modal.type === 'FORM' && (
-                <AdFormModal
-                    mode={modal.formMode}
-                    ad={modal.ad}
-                    onClose={closeModal}
-                    onSave={handleConfirm}
-                />
-            )}
+                    {modal.type === 'FORM' && (
+                        <AdFormModal
+                            mode={modal.formMode}
+                            ad={modal.ad}
+                            onClose={closeModal}
+                            onSave={handleConfirm}
+                        />
+                    )}
 
-            {modal.type === 'DELETE' && modal.ad && (
-                <DeleteConfirmModal
-                    onClose={closeModal}
-                    onConfirm={handleConfirm}
-                />
-            )}
+                    {modal.type === 'DELETE' && modal.ad && (
+                        <DeleteConfirmModal
+                            onClose={closeModal}
+                            onConfirm={handleConfirm}
+                        />
+                    )}
 
-            {modal.type === 'REJECT_REASON' && modal.ad && (
-                <RejectionReasonModal
-                    reason={modal.ad.rejectionReason || '未提供具体原因。'}
-                    onClose={closeModal}
-                />
+                    {modal.type === 'REJECT_REASON' && modal.ad && (
+                        <RejectionReasonModal
+                            reason={modal.ad.rejectionReason || '未提供具体原因。'}
+                            onClose={closeModal}
+                        />
+                    )}
+                </Layout>
             )}
-        </Layout>
+            {/* 真正且唯一的全局 Toast 容器，位于渲染树的最外层逻辑之外 */}
+            <ToastContainer />
+        </>
     );
 };
 
