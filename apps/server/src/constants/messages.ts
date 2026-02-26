@@ -37,13 +37,3 @@ export const ErrorMessages = {
     ALREADY_APPROVED: '已审批,无法重复操作',
 } as const;
 
-// 验证消息
-export const ValidationMessages = {
-    REQUIRED: '此字段为必填项',
-    INVALID_EMAIL: '邮箱格式不正确',
-    INVALID_URL: 'URL 格式不正确',
-    MIN_LENGTH: '长度不能少于 {min} 个字符',
-    MAX_LENGTH: '长度不能超过 {max} 个字符',
-    MIN_VALUE: '值不能小于 {min}',
-    MAX_VALUE: '值不能大于 {max}',
-} as const;

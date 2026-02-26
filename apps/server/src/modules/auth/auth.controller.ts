@@ -5,13 +5,14 @@
 import { Context } from 'koa';
 import { success, error } from '../../utils';
 import { AuthModel } from './auth.model';
+import { LoginDto, RegisterDto } from './auth.types';
 
 export class AuthController {
     /**
      * 用户登录
      */
     async login(ctx: Context) {
-        const { phone, password, role } = ctx.request.body as any;
+        const { phone, password, role } = ctx.request.body as LoginDto;
         console.log(`[Auth Login Attempt] Phone: ${phone}, Role: ${role}`);
 
         const user = await AuthModel.findOne({ phone, role });
@@ -42,7 +43,7 @@ export class AuthController {
      * 用户注册
      */
     async register(ctx: Context) {
-        const { phone, password, role } = ctx.request.body as any;
+        const { phone, password, role } = ctx.request.body as RegisterDto;
         console.log(`[Auth Register Attempt] Phone: ${phone}, Role: ${role}`);
 
         // 校验重复注册

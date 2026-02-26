@@ -3,9 +3,10 @@
  * 验证 JWT token 并提取用户信息
  */
 
-import { Context, Next } from 'koa';
+import { Next } from 'koa';
 import { HttpStatus, BusinessStatus, ErrorMessages } from '../constants';
 import { ExtendedContext } from '../types';
+import { AuthRole } from '@repo/shared-types';
 
 /**
  * JWT 认证中间件
@@ -26,13 +27,13 @@ export const authenticate = async (ctx: ExtendedContext, next: Next) => {
     try {
         // TODO: 实现 JWT 验证逻辑
         // const decoded = jwt.verify(token, appConfig.jwt.secret);
-        // ctx.user = decoded;
+        // ctx.user = decoded as UserPayload;
 
         // 临时模拟用户信息
         ctx.user = {
             id: '1',
-            email: 'user@example.com',
-            role: 'advertiser',
+            phone: '13800138000',
+            role: 'ADVERTISER' as AuthRole,
         };
 
         await next();
@@ -49,7 +50,7 @@ export const authenticate = async (ctx: ExtendedContext, next: Next) => {
  * 权限检查中间件
  * 检查用户是否有指定角色
  */
-export const authorize = (...roles: string[]) => {
+export const authorize = (...roles: AuthRole[]) => {
     return async (ctx: ExtendedContext, next: Next) => {
         if (!ctx.user) {
             ctx.status = HttpStatus.UNAUTHORIZED;

@@ -44,10 +44,3 @@ export const ApprovalStatus = {
     REJECTED: 'REJECTED',     // 已驳回
 } as const;
 
-// 上传状态
-export const UploadStatus = {
-    PENDING: 'PENDING',       // 等待上传
-    UPLOADING: 'UPLOADING',   // 上传中
-    SUCCESS: 'SUCCESS',       // 上传成功
-    FAILED: 'FAILED',         // 上传失败
-} as const;

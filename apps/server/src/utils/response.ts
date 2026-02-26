@@ -5,7 +5,7 @@
 
 import { Context } from 'koa';
 import { BusinessStatus, SuccessMessages } from '../constants';
-import { SuccessResponse, ErrorResponse } from '../types';
+import { SuccessResponse, ErrorResponse, ValidationError } from '../types';
 
 /**
  * 成功响应
@@ -31,7 +31,7 @@ export const error = (
     ctx: Context,
     code: number,
     message: string,
-    errors?: any[]
+    errors?: ValidationError[]
 ): void => {
     ctx.status = code; // 设置 HTTP 状态码
     const response: ErrorResponse = {

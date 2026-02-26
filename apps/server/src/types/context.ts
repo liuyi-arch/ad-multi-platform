@@ -4,12 +4,13 @@
  */
 
 import { Context } from 'koa';
+import { AuthRole } from '@repo/shared-types';
 
-// 扩展的用户信息
+// 扩展的用户信息（与 auth.model 对齐）
 export interface UserPayload {
     id: string;
-    email: string;
-    role: 'admin' | 'advertiser';
+    phone: string;
+    role: AuthRole;
 }
 
 // 扩展 Koa Context

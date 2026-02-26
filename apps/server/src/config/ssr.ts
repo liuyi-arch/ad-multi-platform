@@ -1,6 +1,9 @@
 /**
  * SSR (服务端渲染) 配置
  * 用于配置 React SSR 相关参数
+ *
+ * TODO: 此配置为框架预留，当前版本未实际消费。
+ * 启用 SSR 时需在 bootstrap.ts 中接入渲染中间件。
  */
 
 export const ssrConfig = {
