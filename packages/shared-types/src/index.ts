@@ -94,5 +94,4 @@ export interface FormConfig {
 /**
  * 认证相关类型
  */
-export type AuthRole = 'ADVERTISER' | 'ADMIN';
-export type AuthMode = 'LOGIN' | 'REGISTER';
+export * from './auth';

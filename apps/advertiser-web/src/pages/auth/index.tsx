@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@repo/hooks';
-import { AuthLayout, AuthTabs, LoginForm, RegisterForm, ToastContainer, toast } from '@repo/ui-components';
+import { AuthLayout, AuthTabs, LoginForm, RegisterForm, toast } from '@repo/ui-components';
 
 const AuthPage: React.FC = () => {
     const navigate = useNavigate();
@@ -30,7 +30,7 @@ const AuthPage: React.FC = () => {
 
     return (
         <>
-            <AuthLayout title="Advertiser">
+            <AuthLayout title={auth.role === 'ADMIN' ? 'Admin' : 'Advertiser'}>
                 <AuthTabs
                     currentRole={auth.role}
                     onRoleChange={auth.setRole}

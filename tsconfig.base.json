@@ -7,14 +7,15 @@
             "ESNext"
         ],
         "module": "ESNext",
+        "moduleResolution": "bundler",
         "skipLibCheck": true,
-        "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "allowImportingTsExtensions": true,
         "resolveJsonModule": true,
         "isolatedModules": true,
         "noEmit": false,
+        "declaration": true,
         "emitDeclarationOnly": true,
         "jsx": "react-jsx",
         "strict": true,
@@ -26,8 +27,11 @@
             "@/*": [
                 "./src/*"
             ],
+            "@repo/shared-types": [
+                "./packages/shared-types/src/index.ts"
+            ],
             "@repo/shared-types/*": [
-                "./packages/shared-types/*"
+                "./packages/shared-types/src/*"
             ],
             "@repo/api": [
                 "./packages/api/src/index.ts"

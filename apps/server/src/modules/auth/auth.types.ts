@@ -1,12 +1,15 @@
 /**
- * 用户类型定义
+ * 认证相关类型定义
+ * 同步自 @repo/shared-types 规范
  */
 
-export interface User {
+import { AuthRole } from '@repo/shared-types';
+
+export interface AuthInfo {
     id: string;
-    email: string;
+    phone: string;
     password: string;
-    role: 'admin' | 'advertiser';
+    role: AuthRole;
     name?: string;
     avatar?: string;
     createdAt: Date;
@@ -14,18 +17,20 @@ export interface User {
 }
 
 export interface LoginDto {
-    email: string;
+    phone: string;
     password: string;
+    role: AuthRole;
 }
 
 export interface RegisterDto {
-    email: string;
+    phone: string;
     password: string;
+    role: AuthRole;
     name?: string;
-    role: 'admin' | 'advertiser';
 }
 
 export interface UpdateProfileDto {
     name?: string;
     avatar?: string;
+    phone?: string;
 }

@@ -8,7 +8,7 @@ import adRoutes from './ad.routes';
 import approvalRoutes from './approval.routes';
 import uploadRoutes from './upload.routes';
 import formRoutes from './form.routes';
-import userRoutes from './user.routes';
+import authRoutes from './auth.routes';
 import ssrRoutes from './ssr.routes';
 import { appConfig } from '../config';
 
@@ -24,7 +24,7 @@ router.use(adRoutes.routes(), adRoutes.allowedMethods());
 router.use(approvalRoutes.routes(), approvalRoutes.allowedMethods());
 router.use(uploadRoutes.routes(), uploadRoutes.allowedMethods());
 router.use(formRoutes.routes(), formRoutes.allowedMethods());
-router.use(userRoutes.routes(), userRoutes.allowedMethods());
+router.use(authRoutes.routes(), authRoutes.allowedMethods());
 router.use(ssrRoutes.routes(), ssrRoutes.allowedMethods());
 
 export default router;

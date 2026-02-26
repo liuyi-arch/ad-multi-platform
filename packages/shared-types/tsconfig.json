@@ -9,11 +9,6 @@
     "include": [
         "src"
     ],
-    "references": [
-        {
-            "path": "../shared-types"
-        }
-    ],
     "exclude": [
         "node_modules",
         "dist"

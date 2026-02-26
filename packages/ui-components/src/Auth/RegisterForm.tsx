@@ -1,7 +1,9 @@
 import React from 'react';
 
+import { AuthFormData } from '@repo/shared-types';
+
 interface RegisterFormProps {
-    formData: any;
+    formData: AuthFormData; // 消除 any
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleSubmit: (e: React.FormEvent) => void;
     showPassword?: boolean;

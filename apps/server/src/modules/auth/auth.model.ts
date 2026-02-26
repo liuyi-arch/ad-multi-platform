@@ -1,10 +1,10 @@
 /**
- * 用户 Mongoose Model
+ * 认证 Mongoose Model
  */
 
 import mongoose, { Schema, Document } from 'mongoose';
 
-export interface IUserDocument extends Document {
+export interface IAuthDocument extends Document {
     username?: string;
     phone: string;
     password: string;
@@ -13,10 +13,10 @@ export interface IUserDocument extends Document {
     updatedAt: Date;
 }
 
-const UserSchema = new Schema<IUserDocument>(
+const AuthSchema = new Schema<IAuthDocument>(
     {
         username: { type: String, trim: true },
-        phone: { type: String, required: true, unique: true, trim: true },
+        phone: { type: String, required: true, trim: true },
         password: { type: String, required: true },
         role: {
             type: String,
@@ -35,7 +35,7 @@ const UserSchema = new Schema<IUserDocument>(
     }
 );
 
-// 索引
-UserSchema.index({ phone: 1 }, { unique: true });
+// 索引：手机号 + 角色 联合唯一，允许一个手机号在不同角色下注册
+AuthSchema.index({ phone: 1, role: 1 }, { unique: true });
 
-export const UserModel = mongoose.model<IUserDocument>('User', UserSchema);
+export const AuthModel = mongoose.model<IAuthDocument>('Auth', AuthSchema);

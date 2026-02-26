@@ -30,7 +30,7 @@ const AuthPage: React.FC = () => {
     }, []);
 
     return (
-        <AuthLayout title="Admin">
+        <AuthLayout title={auth.role === 'ADMIN' ? 'Admin' : 'Advertiser'}>
             <AuthTabs
                 currentRole={auth.role}
                 onRoleChange={auth.setRole}

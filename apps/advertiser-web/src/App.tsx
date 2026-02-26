@@ -20,6 +20,10 @@ const AppContent: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
+    const routing = useRoutes(getRoutes({ ads: searchAds, openModal }));
+
+    const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+
     // Map current path to ViewType
     const getCurrentView = (): ViewType => {
         const path = location.pathname.substring(1); // remove leading slash
@@ -34,10 +38,6 @@ const AppContent: React.FC = () => {
         const path = v === 'GALLERY' ? '/home' : '/my-ads';
         navigate(path);
     };
-
-    const routing = useRoutes(getRoutes({ ads: searchAds, openModal }));
-
-    const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
     return (
         <>

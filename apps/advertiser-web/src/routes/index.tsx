@@ -3,7 +3,7 @@ import React from 'react';
 import { Navigate, RouteObject } from 'react-router-dom';
 import Home from '../pages/home';
 import MyAd from '../pages/myAd';
-import AuthPage from '../pages/AuthPage';
+import AuthPage from '../pages/auth';
 import { Ad, AdStatus } from '../types';
 
 interface RouteConfigProps {

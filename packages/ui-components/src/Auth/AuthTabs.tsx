@@ -1,11 +1,11 @@
 import React from 'react';
-import { AuthRole } from '@repo/shared-types';
+import { AuthRole, AuthMode } from '@repo/shared-types';
 import { Tab } from '../Tab';
 
 interface AuthTabsProps {
     currentRole: AuthRole;
     onRoleChange: (role: AuthRole) => void;
-    mode: 'LOGIN' | 'REGISTER';
+    mode: AuthMode; // 使用标准 AuthMode
 }
 
 const AuthTabs: React.FC<AuthTabsProps> = ({ currentRole, onRoleChange, mode }) => {

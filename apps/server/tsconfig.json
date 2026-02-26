@@ -1,27 +1,30 @@
 {
+    "extends": "../../tsconfig.base.json",
     "compilerOptions": {
-        "target": "ESNext",
-        "module": "CommonJS",
-        "lib": [
-            "ESNext"
-        ],
-        "moduleResolution": "node",
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "strict": true,
         "outDir": "dist",
+        "rootDir": "src",
+        "module": "CommonJS",
+        "moduleResolution": "node", // 回退到经典模式，解决 ts-node-dev 的兼容性问题
         "baseUrl": ".",
-        "paths": {
-            "@/*": [
-                "src/*"
-            ]
-        }
+        "noEmit": false,
+        "declaration": false,
+        "emitDeclarationOnly": false,
+        "composite": false,
+        "allowImportingTsExtensions": false
     },
+    "references": [
+        {
+            "path": "../../packages/shared-types"
+        },
+        {
+            "path": "../../packages/api"
+        }
+    ],
     "include": [
         "src/**/*"
     ],
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "dist"
     ]
 }

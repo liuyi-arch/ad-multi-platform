@@ -1,33 +1,33 @@
 /**
- * 用户控制器
+ * 认证控制器
  */
 
 import { Context } from 'koa';
 import { success, error } from '../../utils';
-import { UserModel } from './user.model';
+import { AuthModel } from './auth.model';
 
-export class UserController {
+export class AuthController {
     /**
      * 用户登录
      */
     async login(ctx: Context) {
         const { phone, password, role } = ctx.request.body as any;
-        console.log(`[Login Attempt] Phone: ${phone}, Role: ${role}`);
+        console.log(`[Auth Login Attempt] Phone: ${phone}, Role: ${role}`);
 
-        const user = await UserModel.findOne({ phone, role });
+        const user = await AuthModel.findOne({ phone, role });
 
         if (!user) {
-            console.log(`[Login Failed] User not found: ${phone}`);
+            console.log(`[Auth Login Failed] User not found: ${phone}`);
             return error(ctx, 404, '用户不存在或角色不匹配');
         }
 
         // 简化的密码校验
         if (user.password !== password) {
-            console.log(`[Login Failed] Password mismatch: ${phone}`);
+            console.log(`[Auth Login Failed] Password mismatch: ${phone}`);
             return error(ctx, 401, '密码错误');
         }
 
-        console.log(`[Login Success] User: ${user.id}`);
+        console.log(`[Auth Login Success] User: ${user.id}`);
         success(ctx, {
             token: `jwt-token-${user.id}`,
             user: {
@@ -43,30 +43,30 @@ export class UserController {
      */
     async register(ctx: Context) {
         const { phone, password, role } = ctx.request.body as any;
-        console.log(`[Register Attempt] Phone: ${phone}, Role: ${role}`);
+        console.log(`[Auth Register Attempt] Phone: ${phone}, Role: ${role}`);
 
         // 校验重复注册
         try {
-            const existingUser = await UserModel.findOne({ phone });
+            const existingUser = await AuthModel.findOne({ phone, role }); // 同角色手机号唯一
             if (existingUser) {
-                console.log(`[Register Failed] Duplicate phone: ${phone}`);
-                return error(ctx, 400, '该手机号已被注册');
+                console.log(`[Auth Register Failed] Duplicate phone for role ${role}: ${phone}`);
+                return error(ctx, 400, '该手机号已在该角色下注册');
             }
 
-            const user = await UserModel.create({
+            const user = await AuthModel.create({
                 phone,
                 password,
                 role
             });
 
-            console.log(`[Register Success] New user ID: ${user.id}`);
+            console.log(`[Auth Register Success] New user ID: ${user.id}`);
             success(ctx, {
                 id: user.id,
                 phone: user.phone,
                 role: user.role
             }, '注册成功');
         } catch (err: any) {
-            console.error(`[Register Error]`, err);
+            console.error(`[Auth Register Error]`, err);
             error(ctx, 500, err.message || '注册失败');
         }
     }
@@ -87,4 +87,4 @@ export class UserController {
     }
 }
 
-export default new UserController();
+export default new AuthController();

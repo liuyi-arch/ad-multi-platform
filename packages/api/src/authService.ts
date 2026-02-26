@@ -15,7 +15,7 @@ export const authService = {
      * 用户登录
      */
     login: async (formData: any) => {
-        const response = await httpClient.post<AuthResponse>('/users/login', formData);
+        const response = await httpClient.post<AuthResponse>('/auth/login', formData);
         return response.data;
     },
 
@@ -23,7 +23,7 @@ export const authService = {
      * 用户注册
      */
     register: async (formData: any) => {
-        const response = await httpClient.post<AuthResponse>('/users/register', formData);
+        const response = await httpClient.post<AuthResponse>('/auth/register', formData);
         return response.data;
     },
 
@@ -31,7 +31,7 @@ export const authService = {
      * 获取当前用户信息
      */
     getMe: async () => {
-        const response = await httpClient.get<AuthResponse['user']>('/users/me');
+        const response = await httpClient.get<AuthResponse['user']>('/auth/me');
         return response.data;
     }
 };
