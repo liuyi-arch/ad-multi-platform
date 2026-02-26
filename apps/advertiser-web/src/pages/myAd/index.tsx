@@ -4,7 +4,7 @@ import { Ad, AdStatus, ViewType } from '../../types';
 import StatCard from '../../components/StatCard/StatCard';
 import { Pagination, Tab } from '@repo/ui-components';
 import AdTable from '../../components/AdTable/AdTable';
-import { usePagination, useTabFilter, useAdStats, useAdsData, useAdsModal } from '@repo/hooks';
+import { usePagination, useTabFilter, useAdStats, useAdsData, useAdsModal, useSearch } from '@repo/hooks';
 import Layout from '../../components/Layout';
 import { AdDetailModal, AdFormModal, DeleteConfirmModal, RejectionReasonModal } from '../../components/MyModal';
 import { useNavigate } from 'react-router-dom';
@@ -12,9 +12,10 @@ import { useNavigate } from 'react-router-dom';
 const MyAd: React.FC = () => {
   const navigate = useNavigate();
   const { ads, loading, error, ...dataMethods } = useAdsData();
+  const { searchQuery, setSearchQuery, searchResults: searchAds } = useSearch(ads, ['title', 'description']);
   const { modal, openModal, closeModal, handleConfirm } = useAdsModal(dataMethods);
 
-  const { activeTab, setActiveTab, tabfilterAds } = useTabFilter(ads);
+  const { activeTab, setActiveTab, tabfilterAds } = useTabFilter(searchAds);
   const { statCardState } = useAdStats(ads);
   const ITEMS_PER_PAGE = 10;
 
@@ -41,8 +42,8 @@ const MyAd: React.FC = () => {
     <Layout
       currentView="DASHBOARD"
       onViewChange={handleViewChange}
-      onSearch={() => { }} // Search not used here in current design
-      searchQuery=""
+      onSearch={setSearchQuery}
+      searchQuery={searchQuery}
     >
       {loading ? (
         <div className="flex items-center justify-center h-64">

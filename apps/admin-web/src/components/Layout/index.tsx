@@ -3,6 +3,7 @@ import Sidebar from '../Sidebar';
 import Header from '../Header';
 import { Footer } from '@repo/ui-components';
 import { ViewType } from '../../types';
+import { useNavigate } from 'react-router-dom';
 
 interface LayoutProps {
     title: string;
@@ -10,7 +11,6 @@ interface LayoutProps {
     searchQuery: string;
     onSearchChange: (query: string) => void;
     currentNav: ViewType;
-    onNavChange: (nav: ViewType) => void;
     children: React.ReactNode;
 }
 
@@ -20,17 +20,23 @@ const Layout: React.FC<LayoutProps> = ({
     searchQuery,
     onSearchChange,
     currentNav,
-    onNavChange,
     children
 }) => {
+    const navigate = useNavigate();
+
+    const handleNavChange = (nav: ViewType) => {
+        const path = nav === 'dashboard' ? '/' : nav === 'ad_management' ? '/ads' : `/${nav}`;
+        navigate(path);
+    };
+
     return (
         <div className="flex min-h-screen overflow-hidden font-sans bg-background-base text-text-main">
-            <Sidebar currentView={currentNav} onViewChange={onNavChange} />
+            <Sidebar currentView={currentNav} onViewChange={handleNavChange} />
 
             <main className="flex-1 flex flex-col h-screen overflow-hidden">
                 <Header
                     title={title}
-                    action={action}
+                    action={action || title}
                     searchQuery={searchQuery}
                     onSearchChange={onSearchChange}
                 />

@@ -1,41 +1,47 @@
 
 import React from 'react';
 import { AdItem, ModalType } from '../../types/index';
-import { Modal, VideoPlayer } from '@repo/ui-components';
+import { Modal, VideoPlayer, VideoUploader } from '@repo/ui-components';
 
 /**
  * 广告详情弹窗
  */
-export const DetailModal: React.FC<{ ad: AdItem; onClose: () => void }> = ({ ad, onClose }) => {
-  const videoUrl = (ad.videoUrls && ad.videoUrls.length > 0) ? ad.videoUrls[0] : (ad.imageUrl || ad.thumbnail || '');
-
+export const DetailModal: React.FC<{ ad: AdItem; onClose: () => void }> = ({ ad }) => {
   return (
     <Modal
       title="广告详情"
       onClose={onClose}
       variant="info"
       cancelLabel="关闭"
-      maxWidth="max-w-[640px]"
+      maxWidth="max-w-[720px]"
     >
       <div className="space-y-6">
-        <VideoPlayer imageUrl={videoUrl} />
-        <h2 className="text-2xl font-bold text-[#1e293b]">{ad.title}</h2>
+        <VideoPlayer imageUrl={(ad.videoUrls && ad.videoUrls.length > 0) ? ad.videoUrls[0] : (ad.imageUrl || ad.thumbnail || '')} />
+        <h3 className="text-2xl font-bold text-[#1e293b]">{ad.title}</h3>
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
-            <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1">广告出价</p>
-            <p className="text-lg font-bold text-blue-900">¥{ad.bid.toFixed(2)}</p>
+          <div className="bg-blue-50 rounded-xl p-4 flex flex-col gap-1 border border-blue-100">
+            <div className="flex items-center gap-2 text-primary">
+              <span className="material-symbols-outlined text-lg">payments</span>
+              <span className="text-xs font-bold uppercase tracking-wider">广告出价</span>
+            </div>
+            <p className="text-lg font-bold text-[#1e293b]">{ad.bid.toFixed(2)}<span className="text-xs font-medium text-slate-500 ml-0.5">元</span></p>
           </div>
-          <div className="bg-orange-50 border border-orange-100 rounded-xl p-4">
-            <p className="text-[10px] font-bold text-orange-600 uppercase tracking-widest mb-1">广告热度</p>
-            <p className="text-lg font-bold text-orange-900">{ad.heat}</p>
+          <div className="bg-orange-50 rounded-xl p-4 flex flex-col gap-1 border border-orange-100">
+            <div className="flex items-center gap-2 text-orange-600">
+              <span className="material-symbols-outlined text-lg">local_fire_department</span>
+              <span className="text-xs font-bold uppercase tracking-wider">广告热度</span>
+            </div>
+            <p className="text-lg font-bold text-[#1e293b]">{ad.heat.toLocaleString()} <span className="text-xs font-medium text-slate-500">热度值</span></p>
           </div>
         </div>
-        <div className="space-y-4">
-          <h4 className="text-sm font-bold text-[#1e293b] flex items-center gap-2">
-            <span className="w-1 h-4 bg-primary rounded-full"></span>
-            广告文案
-          </h4>
-          <p className="text-sm text-[#64748b] leading-relaxed">{ad.description}</p>
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <div className="w-1 h-4 bg-primary rounded-full"></div>
+            <h4 className="text-sm font-bold text-[#1e293b]">广告文案</h4>
+          </div>
+          <div className="space-y-4 text-[#64748b]">
+            <p className="text-sm leading-relaxed">{ad.description}</p>
+          </div>
         </div>
       </div>
     </Modal>
@@ -45,7 +51,7 @@ export const DetailModal: React.FC<{ ad: AdItem; onClose: () => void }> = ({ ad,
 /**
  * 删除确认弹窗
  */
-export const DeleteModal: React.FC<{ ad: AdItem; onClose: () => void; onConfirm: () => void }> = ({ ad, onClose, onConfirm }) => (
+export const DeleteModal: React.FC<{ ad: AdItem; onClose: () => void; onConfirm: () => void }> = ({ onClose, onConfirm }) => (
   <Modal
     title="确认删除"
     onClose={onClose}
@@ -56,9 +62,8 @@ export const DeleteModal: React.FC<{ ad: AdItem; onClose: () => void; onConfirm:
     maxWidth="max-w-[480px]"
   >
     <div>
-      <p className="text-base font-bold text-[#1e293b]">您确定要删除此广告吗？</p>
-      <p className="text-sm text-[#64748b] mt-2 font-medium">广告 ID: <span className="font-mono text-primary">{ad.id}</span></p>
-      <p className="text-sm text-[#64748b] mt-2">删除后将无法恢复，此操作将永久移除该数据。</p>
+      <p className="text-[#1e293b] font-bold text-base mb-2">您确定要删除此广告吗？</p>
+      <p className="text-[#64748b] text-[15px] leading-relaxed">删除后将无法恢复。此项操作将永久从数据库中移除该广告及其关联数据。</p>
     </div>
   </Modal>
 );
@@ -81,7 +86,7 @@ export const RejectActionModal: React.FC<{ onClose: () => void; onConfirm: (reas
       <div className="space-y-2">
         <label className="block text-sm font-bold text-text-main">驳回原因</label>
         <textarea
-          className="form-input min-h-[160px] resize-none"
+          className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400 min-h-[160px] resize-none"
           placeholder="请填写驳回原因，以便广告主修改..."
           value={reason}
           onChange={(e) => setReason(e.target.value)}
@@ -124,9 +129,9 @@ export const RejectReasonModal: React.FC<{ onClose: () => void; onConfirm: (reas
       maxWidth="max-w-lg"
     >
       <div>
-        <label className="form-label">修改驳回理由</label>
+        <label className="block text-sm font-bold text-[#1e293b] mb-2">修改驳回理由</label>
         <textarea
-          className="form-input h-32 resize-none"
+          className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400 h-32 resize-none"
           value={reason}
           onChange={(e) => setReason(e.target.value)}
         />
@@ -144,55 +149,110 @@ export const RejectReasonModal: React.FC<{ onClose: () => void; onConfirm: (reas
 export const AdFormModal: React.FC<{ ad: AdItem | null; formMode: 'CREATE' | 'EDIT'; onClose: () => void; onConfirm: (data: any) => void }> = ({ ad, formMode, onClose, onConfirm }) => {
   const [formData, setFormData] = React.useState({
     title: ad?.title || '',
-    publisher: ad?.publisher || 'Alex Rivera',
+    publisher: ad?.publisher || '',
     description: ad?.description || '',
     landingPage: ad?.landingPage || '',
     bid: ad?.bid || 0,
+    videoUrls: ad?.videoUrls || [],
   });
+
+  const [aiLoading, setAiLoading] = React.useState(false);
+
+  const handleAiSuggest = async () => {
+    if (!formData.title) {
+      alert("请先填写广告标题，以便 AI 生成更有针对性的文案。");
+      return;
+    }
+    setAiLoading(true);
+    // Mocking AI service
+    setTimeout(() => {
+      setFormData(prev => ({ ...prev, description: "这是一个经过 AI 优化的高端广告文案，旨在提升点击率和转化。" }));
+      setAiLoading(false);
+    }, 1000);
+  };
 
   return (
     <Modal
-      title={formMode === 'EDIT' ? '编辑广告' : '创建新广告'}
+      title={formMode === 'EDIT' ? '编辑广告' : '投放新广告'}
       onClose={onClose}
       onConfirm={() => onConfirm(formData)}
       variant="primary"
       confirmLabel={formMode === 'EDIT' ? '保存修改' : '立即创建'}
       cancelLabel="取消"
-      maxWidth="max-w-xl"
+      maxWidth="max-w-[720px]"
     >
-      <div className="space-y-5">
-        <div>
-          <label className="form-label">广告标题</label>
-          <input className="form-input" placeholder="请输入广告标题" type="text" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} />
+      <div className="space-y-7">
+        <div className="space-y-2">
+          <label className="block text-sm font-bold text-[#1e293b]">广告标题</label>
+          <input
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400"
+            placeholder="请输入广告标题"
+            type="text"
+            value={formData.title}
+            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+          />
         </div>
-        <div>
-          <label className="form-label">发布人</label>
-          <input className="form-input" placeholder="请输入发布人姓名" type="text" value={formData.publisher} onChange={(e) => setFormData({ ...formData, publisher: e.target.value })} />
+        <div className="space-y-2">
+          <label className="block text-sm font-bold text-[#1e293b]">发布人</label>
+          <input
+            className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400"
+            placeholder="请输入发布人姓名"
+            type="text"
+            value={formData.publisher}
+            onChange={(e) => setFormData({ ...formData, publisher: e.target.value })}
+          />
         </div>
-        <div>
-          <label className="form-label">内容文案</label>
-          <textarea className="form-input resize-none" placeholder="请输入广告内容描述..." rows={4} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} />
-        </div>
-        <div>
-          <label className="form-label">上传视频 (最多3个)</label>
-          <div className="flex gap-3">
-            <div className="relative size-20 rounded-lg border border-border-light overflow-hidden bg-slate-100 group">
-              <img alt="Thumbnail" className="w-full h-full object-cover" src={ad?.thumbnail || "https://picsum.photos/seed/form1/400/225"} />
-            </div>
-            <button className="size-20 rounded-lg border-2 border-dashed border-slate-300 hover:border-primary hover:bg-blue-50 transition-all flex flex-col items-center justify-center text-text-muted hover:text-primary">
-              <span className="material-symbols-outlined">add</span>
+        <div className="space-y-2">
+          <label className="block text-sm font-bold text-[#1e293b]">内容文案</label>
+          <div className="relative group">
+            <textarea
+              className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400 resize-none"
+              placeholder="请输入广告内容描述..."
+              rows={4}
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            />
+            <button
+              type="button"
+              onClick={handleAiSuggest}
+              disabled={aiLoading}
+              className="absolute bottom-3 right-3 flex items-center gap-1.5 px-3 py-1.5 bg-white text-primary rounded-lg text-xs font-bold hover:bg-blue-50 transition-all border border-blue-100 shadow-sm disabled:opacity-50"
+            >
+              <span className="material-symbols-outlined text-sm">{aiLoading ? 'autorenew' : 'auto_fix'}</span>
+              {aiLoading ? 'AI 生成中...' : 'AI 优化建议'}
             </button>
           </div>
         </div>
-        <div>
-          <label className="form-label">落地页</label>
-          <input className="form-input" placeholder="https://" type="url" value={formData.landingPage} onChange={(e) => setFormData({ ...formData, landingPage: e.target.value })} />
-        </div>
-        <div>
-          <label className="form-label">出价 (CNY)</label>
+
+        <VideoUploader
+          value={formData.videoUrls}
+          onChange={(urls) => setFormData({ ...formData, videoUrls: urls })}
+        />
+
+        <div className="space-y-2">
+          <label className="block text-sm font-bold text-[#1e293b]">落地页</label>
           <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted text-sm font-bold">¥</span>
-            <input className="form-input pl-8" placeholder="0.00" type="number" value={formData.bid} onChange={(e) => setFormData({ ...formData, bid: parseFloat(e.target.value) || 0 })} />
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-lg">link</span>
+            <input
+              className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400"
+              placeholder="https://"
+              type="url"
+              value={formData.landingPage}
+              onChange={(e) => setFormData({ ...formData, landingPage: e.target.value })}
+            />
+          </div>
+        </div>
+        <div className="space-y-2">
+          <label className="block text-sm font-bold text-[#1e293b]">出价 (CNY)</label>
+          <div className="relative">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 font-bold text-sm">¥</span>
+            <input
+              className="w-full pl-9 pr-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm font-bold tabular-nums"
+              placeholder="0.00"
+              type="number"
+              value={formData.bid || ''}
+              onChange={(e) => setFormData({ ...formData, bid: parseFloat(e.target.value) || 0 })}
+            />
           </div>
         </div>
       </div>

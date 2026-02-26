@@ -7,6 +7,7 @@ export interface PaginationProps {
   totalItems?: number;
   itemsPerPage?: number;
   className?: string;
+  hideOnSinglePage?: boolean;
 }
 
 export const Pagination = ({
@@ -17,6 +18,7 @@ export const Pagination = ({
   totalItems = 0,
   itemsPerPage = 10,
   className = '',
+  hideOnSinglePage = true,
 }: PaginationProps) => {
   if (totalPages <= 0) return null;
 
@@ -35,11 +37,10 @@ export const Pagination = ({
           <button
             key={i + 1}
             onClick={() => onPageChange(i + 1)}
-            className={`size-9 flex items-center justify-center text-sm font-bold rounded-lg transition-all ${
-              currentPage === i + 1
-                ? 'bg-[#2563eb] text-white shadow-md shadow-blue-500/20'
-                : 'border border-slate-200 text-slate-500 hover:bg-slate-50'
-            }`}
+            className={`size-9 flex items-center justify-center text-sm font-bold rounded-lg transition-all ${currentPage === i + 1
+              ? 'bg-[#2563eb] text-white shadow-md shadow-blue-500/20'
+              : 'border border-slate-200 text-slate-500 hover:bg-slate-50'
+              }`}
           >
             {i + 1}
           </button>
@@ -70,7 +71,8 @@ export const Pagination = ({
   }
 
   // Default 'float' variant
-  if (totalPages <= 1) return null;
+  if (hideOnSinglePage && totalPages <= 1) return null;
+  if (!hideOnSinglePage && totalPages < 1) return null;
   return (
     <div className={`flex items-center justify-center gap-2 pt-10 ${className}`}>
       {renderPageButtons()}

@@ -1,11 +1,10 @@
 
 import React from 'react';
-import { MOCK_STATS } from '../../mockData';
-import { AdStatus, ViewType } from '../../types';
+import { AdStatus } from '../../types';
 import { ManagementStatsCard } from '../../components/StatsCard';
 import { Pagination, Tab, SortSelector } from '@repo/ui-components';
 import { ManagementAdTable } from '../../components/AdTable';
-import { usePagination, useTabFilter, FilterType, useAdsData, useSearch, useAdsModal } from '@repo/hooks';
+import { usePagination, useTabFilter, FilterType, useAdsData, useSearch, useAdsModal, useAdStats } from '@repo/hooks';
 import Layout from '../../components/Layout';
 import MyModal from '../../components/MyModal';
 
@@ -15,6 +14,7 @@ const AdManagementPage: React.FC = () => {
   const { modal, openModal, closeModal, handleConfirm } = useAdsModal(dataMethods);
 
   const { activeTab, setActiveTab, tabfilterAds } = useTabFilter(searchAds);
+  const { stats } = useAdStats(ads);
 
   const {
     currentPage,
@@ -49,7 +49,6 @@ const AdManagementPage: React.FC = () => {
       searchQuery={searchQuery}
       onSearchChange={setSearchQuery}
       currentNav="ad_management"
-      onNavChange={() => { }} // Navigation is handled by routes, but Layout needs it. 
     >
       {loading ? (
         <div className="flex items-center justify-center h-64">
@@ -68,7 +67,7 @@ const AdManagementPage: React.FC = () => {
           </nav>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {MOCK_STATS.map((stat, idx) => (
+            {stats.map((stat, idx) => (
               <ManagementStatsCard key={idx} stat={stat} />
             ))}
           </div>

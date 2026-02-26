@@ -18,7 +18,7 @@ const Home: React.FC = () => {
   const ITEMS_PER_PAGE = 12;
   const { activeSelect, selectFilterAds, setActiveSelect } = useSelectFilter(searchAds);
 
-  const { currentPage, setCurrentPage, currentItems, totalPages } = usePagination(selectFilterAds, ITEMS_PER_PAGE);
+  const { currentPage, setCurrentPage, currentItems, totalPages, totalItems } = usePagination(selectFilterAds, ITEMS_PER_PAGE);
 
   const onSortChange = (value: string) => {
     setActiveSelect(value);
@@ -81,9 +81,13 @@ const Home: React.FC = () => {
           )}
 
           <Pagination
+            variant="float"
             currentPage={currentPage}
             totalPages={totalPages}
+            totalItems={totalItems}
+            itemsPerPage={ITEMS_PER_PAGE}
             onPageChange={setCurrentPage}
+            hideOnSinglePage={false}
           />
         </div>
       )}
