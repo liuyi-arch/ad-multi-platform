@@ -45,7 +45,8 @@ app.use(koaBody({
 }));
 
 // 路由中间件
-app.use(router.routes()).use(router.allowedMethods());
+app.use(router.routes())
+    .use(router.allowedMethods());
 
 export default app;
 

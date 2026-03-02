@@ -12,7 +12,7 @@ export class FormController {
      * 获取表单配置
      */
     async getConfig(ctx: Context) {
-        const { formId } = ctx.params;
+        const { formId: _formId } = ctx.params;
         // TODO: 实现获取表单配置逻辑
         success(ctx, {}, '获取成功');
     }

@@ -17,21 +17,3 @@ export interface AuthFormData {
     password: string;
     confirmPassword?: string;
 }
-
-/**
- * 登录请求对象
- */
-export interface LoginDto {
-    phone: string;
-    password: string;
-    role: AuthRole;
-}
-
-/**
- * 注册请求对象
- */
-export interface RegisterDto {
-    phone: string;
-    password: string;
-    role: AuthRole;
-}

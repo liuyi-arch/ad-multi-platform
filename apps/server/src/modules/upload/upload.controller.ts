@@ -59,7 +59,7 @@ export class UploadController {
      * 删除文件
      */
     async deleteFile(ctx: Context) {
-        const { filename } = ctx.params;
+        const { filename: _filename } = ctx.params;
         // TODO: 实现删除文件逻辑
         success(ctx, null, SuccessMessages.DELETED);
     }

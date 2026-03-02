@@ -2,16 +2,9 @@
  * 认证 Mongoose Model
  */
 
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
-export interface IAuthDocument extends Document {
-    username?: string;
-    phone: string;
-    password: string;
-    role: 'ADVERTISER' | 'ADMIN';
-    createdAt: Date;
-    updatedAt: Date;
-}
+import { IAuthDocument } from './auth.types';
 
 const AuthSchema = new Schema<IAuthDocument>(
     {

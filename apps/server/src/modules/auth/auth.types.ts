@@ -1,17 +1,11 @@
-/**
- * 认证相关类型定义
- * 同步自 @repo/shared-types 规范
- */
-
+import { Document } from 'mongoose';
 import { AuthRole } from '@repo/shared-types';
 
-export interface AuthInfo {
-    id: string;
+export interface IAuthDocument extends Document {
+    username?: string;
     phone: string;
     password: string;
     role: AuthRole;
-    name?: string;
-    avatar?: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -26,11 +20,22 @@ export interface RegisterDto {
     phone: string;
     password: string;
     role: AuthRole;
-    name?: string;
+    username?: string;
 }
 
-export interface UpdateProfileDto {
-    name?: string;
-    avatar?: string;
-    phone?: string;
+export interface LoginResponse {
+    token: string;
+    user: {
+        id: string;
+        phone: string;
+        role: AuthRole;
+        username?: string;
+        avatar?: string;
+    };
+}
+
+export interface RegisterResponse {
+    id: string;
+    phone: string;
+    role: AuthRole;
 }

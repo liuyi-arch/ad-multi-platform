@@ -1,19 +1,16 @@
-/**
- * 认证中间件
- * 验证 JWT token 并提取用户信息
- */
-
+import jwt from 'jsonwebtoken';
 import { Next } from 'koa';
-import { HttpStatus, BusinessStatus, ErrorMessages } from '../constants';
-import { ExtendedContext } from '../types';
+import { AUTH_CONFIG, HttpStatus, BusinessStatus, ErrorMessages } from '../constants';
+import { ExtendedContext, UserPayload } from '../types';
 import { AuthRole } from '@repo/shared-types';
+import { appConfig } from '../config';
 
 /**
  * JWT 认证中间件
  * 从请求头中提取 token 并验证
  */
 export const authenticate = async (ctx: ExtendedContext, next: Next) => {
-    const token = ctx.headers.authorization?.replace('Bearer ', '');
+    const token = ctx.headers.authorization?.replace(AUTH_CONFIG.HEADER_PREFIX, '');
 
     if (!token) {
         ctx.status = HttpStatus.UNAUTHORIZED;
@@ -25,23 +22,15 @@ export const authenticate = async (ctx: ExtendedContext, next: Next) => {
     }
 
     try {
-        // TODO: 实现 JWT 验证逻辑
-        // const decoded = jwt.verify(token, appConfig.jwt.secret);
-        // ctx.user = decoded as UserPayload;
-
-        // 临时模拟用户信息
-        ctx.user = {
-            id: '1',
-            phone: '13800138000',
-            role: 'ADVERTISER' as AuthRole,
-        };
+        const decoded = jwt.verify(token, appConfig.jwt.secret) as UserPayload;
+        ctx.user = decoded;
 
         await next();
     } catch (err) {
         ctx.status = HttpStatus.UNAUTHORIZED;
         ctx.body = {
             code: BusinessStatus.UNAUTHORIZED,
-            message: ErrorMessages.UNAUTHORIZED,
+            message: ErrorMessages.AUTH_TOKEN_INVALID,
         };
     }
 };

@@ -1,85 +1,95 @@
-/**
- * 认证业务逻辑层
- * 处理登录、注册等核心业务，与 HTTP 层解耦
- */
 
-import { AuthModel } from './auth.model';
-import { LoginDto, RegisterDto } from './auth.types';
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import { appConfig } from '../../config';
+import authRepository from './auth.repository';
+import { LoginDto, RegisterDto, LoginResponse, RegisterResponse, IAuthDocument } from './auth.types';
+import { BusinessStatus, ErrorMessages, AUTH_CONFIG } from '../../constants';
 
-/** 登录成功返回的数据结构 */
-interface AuthResult {
-    token: string;
-    user: {
-        id: string;
-        phone: string;
-        role: string;
-    };
-}
-
-/** 自定义业务错误 */
-class AuthError extends Error {
-    status: number;
-    constructor(message: string, status: number) {
+/** 业务自定义错误封装 */
+export class AuthBusinessError extends Error {
+    constructor(public message: string, public code: number = BusinessStatus.FAILED) {
         super(message);
-        this.status = status;
     }
 }
 
 export class AuthService {
     /**
      * 用户登录
+     * @param dto 登录参数
      */
-    async login(dto: LoginDto): Promise<AuthResult> {
+    async login(dto: LoginDto): Promise<LoginResponse> {
         const { phone, password, role } = dto;
-        console.log(`[Auth Login Attempt] Phone: ${phone}, Role: ${role}`);
 
-        const user = await AuthModel.findOne({ phone, role });
-
+        // 1. 查找用户
+        const user = await authRepository.findByPhoneAndRole(phone, role);
         if (!user) {
-            console.log(`[Auth Login Failed] User not found: ${phone}`);
-            throw new AuthError('用户不存在或角色不匹配', 404);
+            throw new AuthBusinessError(ErrorMessages.AUTH_USER_NOT_FOUND, BusinessStatus.NOT_FOUND);
         }
 
-        // TODO: 替换为 bcrypt 比对
-        if (user.password !== password) {
-            console.log(`[Auth Login Failed] Password mismatch: ${phone}`);
-            throw new AuthError('密码错误', 401);
+        // 2. 校验密码
+        const isPasswordMatch = await bcrypt.compare(password, user.password);
+        if (!isPasswordMatch) {
+            throw new AuthBusinessError(ErrorMessages.AUTH_INVALID_CREDENTIALS, BusinessStatus.UNAUTHORIZED);
         }
 
-        console.log(`[Auth Login Success] User: ${user.id}`);
+        // 3. 签发 Token
+        // jwt.sign 接受 string | number 作为 expiresIn
+        const token = jwt.sign(
+            { id: user.id, phone: user.phone, role: user.role },
+            appConfig.jwt.secret as string,
+            { expiresIn: appConfig.jwt.expiresIn as any }
+        );
 
-        // TODO: 替换为真实 JWT 签发
         return {
-            token: `jwt-token-${user.id}`,
+            token,
             user: {
                 id: user.id,
                 phone: user.phone,
                 role: user.role,
+                username: user.username,
             },
         };
     }
 
     /**
      * 用户注册
+     * @param dto 注册参数
      */
-    async register(dto: RegisterDto): Promise<{ id: string; phone: string; role: string }> {
+    async register(dto: RegisterDto): Promise<RegisterResponse> {
         const { phone, password, role } = dto;
-        console.log(`[Auth Register Attempt] Phone: ${phone}, Role: ${role}`);
 
-        const existingUser = await AuthModel.findOne({ phone, role });
+        // 1. 检查重复注册
+        const existingUser = await authRepository.findByPhoneAndRole(phone, role);
         if (existingUser) {
-            console.log(`[Auth Register Failed] Duplicate phone for role ${role}: ${phone}`);
-            throw new AuthError('该手机号已在该角色下注册', 400);
+            throw new AuthBusinessError(ErrorMessages.AUTH_DUPLICATE_PHONE, BusinessStatus.DUPLICATE);
         }
 
-        const user = await AuthModel.create({ phone, password, role });
+        // 2. 密码加密 (使用统一配置的哈希强度)
+        const hashedPassword = await bcrypt.hash(password, AUTH_CONFIG.SALT_ROUNDS);
 
-        console.log(`[Auth Register Success] New user ID: ${user.id}`);
+        // 3. 创建用户
+        const user = await authRepository.create({
+            ...dto,
+            password: hashedPassword,
+        });
+
         return {
             id: user.id,
             phone: user.phone,
             role: user.role,
         };
+    }
+
+    /**
+     * 获取当前用户信息
+     */
+    async getUserById(id: string): Promise<IAuthDocument> {
+        const user = await authRepository.findById(id);
+        if (!user) {
+            throw new AuthBusinessError(ErrorMessages.NOT_FOUND, BusinessStatus.NOT_FOUND);
+        }
+        return user;
     }
 }
 

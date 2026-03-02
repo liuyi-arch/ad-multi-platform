@@ -12,10 +12,10 @@ const router = new Router({ prefix: '/forms' });
 router.get('/:formId', formController.getConfig);
 
 // 创建表单配置 (仅管理员)
-router.post('/', authenticate, authorize('admin'), formController.createConfig);
+router.post('/', authenticate, authorize('ADMIN'), formController.createConfig);
 
 // 更新表单配置 (仅管理员)
-router.put('/:formId', authenticate, authorize('admin'), formController.updateConfig);
+router.put('/:formId', authenticate, authorize('ADMIN'), formController.updateConfig);
 
 // 提交表单数据 (需要认证)
 router.post('/:formId/submit', authenticate, formController.submitData);

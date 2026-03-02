@@ -21,10 +21,9 @@ export const appConfig = {
     },
 
     // JWT 配置
-    // TODO: 当前版本使用临时模拟 token，待接入 jsonwebtoken 库后启用
     jwt: {
         secret: process.env.JWT_SECRET || 'your-secret-key',
-        expiresIn: '7d',
+        expiresIn: '7d' as string | number, // 明确类型以适配 jsonwebtoken
     },
 
     // API 前缀

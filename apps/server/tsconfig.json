@@ -4,22 +4,31 @@
         "outDir": "dist",
         "rootDir": "src",
         "module": "CommonJS",
-        "moduleResolution": "node", // 回退到经典模式，解决 ts-node-dev 的兼容性问题
+        "moduleResolution": "node",
         "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ],
+            "@repo/shared-types": [
+                "../../packages/shared-types/dist/index.d.ts"
+            ],
+            "@repo/shared-types/*": [
+                "../../packages/shared-types/dist/*.d.ts"
+            ],
+            "@repo/api": [
+                "../../packages/api/src/index.ts"
+            ],
+            "@repo/api/*": [
+                "../../packages/api/src/*"
+            ]
+        },
         "noEmit": false,
         "declaration": false,
         "emitDeclarationOnly": false,
         "composite": false,
         "allowImportingTsExtensions": false
     },
-    "references": [
-        {
-            "path": "../../packages/shared-types"
-        },
-        {
-            "path": "../../packages/api"
-        }
-    ],
     "include": [
         "src/**/*"
     ],

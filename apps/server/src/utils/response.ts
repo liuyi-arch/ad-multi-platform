@@ -29,13 +29,14 @@ export const success = <T = any>(
  */
 export const error = (
     ctx: Context,
-    code: number,
+    httpStatus: number,
     message: string,
+    businessCode: number = BusinessStatus.FAILED,
     errors?: ValidationError[]
 ): void => {
-    ctx.status = code; // 设置 HTTP 状态码
+    ctx.status = httpStatus; // 设置 HTTP 状态码
     const response: ErrorResponse = {
-        code,
+        code: businessCode,
         message,
         errors,
     };

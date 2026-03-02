@@ -1,10 +1,21 @@
 /**
  * 基础 API 响应格式
  */
-export interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  message?: string;
+export interface ApiResponse<T = any> {
+  code: number;
+  message: string;
+  data?: T;
+}
+
+/**
+ * 分页响应格式
+ */
+export interface PaginatedResponse<T> {
+  data: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
 }
 
 /**

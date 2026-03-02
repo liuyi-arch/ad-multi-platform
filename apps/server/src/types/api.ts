@@ -2,18 +2,16 @@
  * API 相关类型定义
  */
 
+import { ApiResponse as SharedApiResponse } from '@repo/shared-types';
 import { BusinessStatus } from '../constants';
 
 // API 响应基础结构
-export interface ApiResponse<T = any> {
-    code: number;
-    message: string;
-    data?: T;
-}
+export type ApiResponse<T = any> = SharedApiResponse<T>;
 
 // 成功响应
 export interface SuccessResponse<T = any> extends ApiResponse<T> {
     code: typeof BusinessStatus.SUCCESS;
+    message: string;
     data: T;
 }
 

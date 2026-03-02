@@ -1,90 +1,51 @@
-/**
- * 认证控制器
- */
 
 import { Context } from 'koa';
-import { success, error } from '../../utils';
-import { AuthModel } from './auth.model';
-import { LoginDto, RegisterDto } from './auth.types';
+import { success } from '../../utils';
+import authService from './auth.service';
+import { LoginSchema, RegisterSchema } from './auth.schema';
+import { SuccessMessages, ErrorMessages } from '../../constants';
+import { ExtendedContext } from '../../types';
 
 export class AuthController {
     /**
      * 用户登录
      */
     async login(ctx: Context) {
-        const { phone, password, role } = ctx.request.body as LoginDto;
-        console.log(`[Auth Login Attempt] Phone: ${phone}, Role: ${role}`);
-
-        const user = await AuthModel.findOne({ phone, role });
-
-        if (!user) {
-            console.log(`[Auth Login Failed] User not found: ${phone}`);
-            return error(ctx, 404, '用户不存在或角色不匹配');
-        }
-
-        // 简化的密码校验
-        if (user.password !== password) {
-            console.log(`[Auth Login Failed] Password mismatch: ${phone}`);
-            return error(ctx, 401, '密码错误');
-        }
-
-        console.log(`[Auth Login Success] User: ${user.id}`);
-        success(ctx, {
-            token: `jwt-token-${user.id}`,
-            user: {
-                id: user.id,
-                phone: user.phone,
-                role: user.role
-            }
-        }, '登录成功');
+        // 运行时校验，拦截安全隐患 (ZodError 将被全局中间件捕获)
+        const dto = LoginSchema.parse(ctx.request.body);
+        const result = await authService.login(dto);
+        success(ctx, result, SuccessMessages.LOGIN_SUCCESS);
     }
 
     /**
      * 用户注册
      */
     async register(ctx: Context) {
-        const { phone, password, role } = ctx.request.body as RegisterDto;
-        console.log(`[Auth Register Attempt] Phone: ${phone}, Role: ${role}`);
-
-        // 校验重复注册
-        try {
-            const existingUser = await AuthModel.findOne({ phone, role }); // 同角色手机号唯一
-            if (existingUser) {
-                console.log(`[Auth Register Failed] Duplicate phone for role ${role}: ${phone}`);
-                return error(ctx, 400, '该手机号已在该角色下注册');
-            }
-
-            const user = await AuthModel.create({
-                phone,
-                password,
-                role
-            });
-
-            console.log(`[Auth Register Success] New user ID: ${user.id}`);
-            success(ctx, {
-                id: user.id,
-                phone: user.phone,
-                role: user.role
-            }, '注册成功');
-        } catch (err: any) {
-            console.error(`[Auth Register Error]`, err);
-            error(ctx, 500, err.message || '注册失败');
-        }
+        // 运行时校验
+        const dto = RegisterSchema.parse(ctx.request.body);
+        const result = await authService.register(dto);
+        success(ctx, result, SuccessMessages.REGISTER_SUCCESS);
     }
 
     /**
      * 获取当前用户信息
      */
-    async getCurrentUser(ctx: Context) {
-        success(ctx, {}, '获取成功');
+    async getCurrentUser(ctx: ExtendedContext) {
+        if (!ctx.user) {
+            // 业务异常由全局中间件统一处理
+            throw new Error(ErrorMessages.AUTH_UNAUTHORIZED);
+        }
+        const user = await authService.getUserById(ctx.user.id);
+        success(ctx, user, SuccessMessages.GET_SUCCESS);
     }
 
     /**
      * 更新用户信息
      */
-    async updateProfile(ctx: Context) {
+    async updateProfile(ctx: ExtendedContext) {
+        // TODO: 实现更新逻辑
         const data = ctx.request.body;
-        success(ctx, data, '更新成功');
+        success(ctx, data, SuccessMessages.UPDATE_SUCCESS);
     }
 }
 

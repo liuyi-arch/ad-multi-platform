@@ -10,7 +10,7 @@ export class SSRController {
      * 渲染页面
      */
     async render(ctx: Context) {
-        const { path } = ctx.params;
+        const { path: _path } = ctx.params;
         // TODO: 实现 SSR 渲染逻辑
         ctx.type = 'text/html';
         ctx.body = '<html><body><h1>SSR Page</h1></body></html>';

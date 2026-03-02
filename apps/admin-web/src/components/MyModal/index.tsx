@@ -6,7 +6,7 @@ import { Modal, VideoPlayer, VideoUploader } from '@repo/ui-components';
 /**
  * 广告详情弹窗
  */
-export const DetailModal: React.FC<{ ad: AdItem; onClose: () => void }> = ({ ad }) => {
+export const DetailModal: React.FC<{ ad: AdItem; onClose: () => void }> = ({ ad, onClose }) => {
   return (
     <Modal
       title="广告详情"
@@ -43,6 +43,16 @@ export const DetailModal: React.FC<{ ad: AdItem; onClose: () => void }> = ({ ad 
             <p className="text-sm leading-relaxed">{ad.description}</p>
           </div>
         </div>
+        {ad.landingPage && (
+          <a
+            href={ad.landingPage}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full text-center bg-primary text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-primary/20"
+          >
+            查看详情页面
+          </a>
+        )}
       </div>
     </Modal>
   );
@@ -51,7 +61,7 @@ export const DetailModal: React.FC<{ ad: AdItem; onClose: () => void }> = ({ ad 
 /**
  * 删除确认弹窗
  */
-export const DeleteModal: React.FC<{ ad: AdItem; onClose: () => void; onConfirm: () => void }> = ({ onClose, onConfirm }) => (
+export const DeleteModal: React.FC<{ ad: AdItem; onClose: () => void; onConfirm: () => void }> = ({ ad, onClose, onConfirm }) => (
   <Modal
     title="确认删除"
     onClose={onClose}
