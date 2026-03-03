@@ -4,7 +4,7 @@ import { Ad, AdStatus, ViewType } from '../../types';
 import StatCard from '../../components/StatCard/StatCard';
 import { Pagination, Tab } from '@repo/ui-components';
 import AdTable from '../../components/AdTable/AdTable';
-import { usePagination, useTabFilter, useAdStats, useAdsData, useAdsModal, useSearch } from '@repo/hooks';
+import { usePagination, useTabFilter, useAdStats, useAdsData, useAdsModal, useSearch, useAuth } from '@repo/hooks';
 import Layout from '../../components/Layout';
 import { AdDetailModal, AdFormModal, DeleteConfirmModal, RejectionReasonModal } from '../../components/MyModal';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +12,12 @@ import { useNavigate } from 'react-router-dom';
 const MyAd: React.FC = () => {
   const navigate = useNavigate();
   const { ads, loading, error, ...dataMethods } = useAdsData();
-  const { searchQuery, setSearchQuery, searchResults: searchAds } = useSearch(ads, ['title', 'description']);
+  const { user } = useAuth();
+  // 根据当前登录手机号隔离广告，只展示“我的广告”
+  const ownerPhone = user?.phone;
+  const ownAds = ownerPhone ? ads.filter(ad => ad.publisher === ownerPhone) : ads;
+
+  const { searchQuery, setSearchQuery, searchResults: searchAds } = useSearch(ownAds, ['title', 'description']);
   const { modal, openModal, closeModal, handleConfirm } = useAdsModal(dataMethods);
 
   const { activeTab, setActiveTab, tabfilterAds } = useTabFilter(searchAds);

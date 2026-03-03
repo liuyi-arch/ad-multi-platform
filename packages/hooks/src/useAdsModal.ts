@@ -48,13 +48,19 @@ export const useAdsModal = (methods: AdsDataMethods) => {
       case 'REJECT_REASON':
         if (ad && updateAdStatus) updateAdStatus(ad.id, AdStatus.REJECTED);
         break;
-      case 'FORM':
+      case 'FORM': {
         if (formMode === 'EDIT' && ad) {
-          updateAd(ad.id, payload);
+          // 需求：已通过/已拒绝的广告被修改后，状态回退为待审核
+          const nextPayload = { ...payload };
+          if (ad.status === AdStatus.APPROVED || ad.status === AdStatus.REJECTED) {
+            nextPayload.status = AdStatus.PENDING;
+          }
+          updateAd(ad.id, nextPayload);
         } else {
           addAd(payload);
         }
         break;
+      }
     }
     closeModal();
   };

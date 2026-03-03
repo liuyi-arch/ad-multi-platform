@@ -56,6 +56,8 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
     const resolvedPoster = resolveUrl(posterUrl);
     const resolvedVideo = resolveUrl(videoUrl);
     const hasVideo = !!resolvedVideo;
+    // 当没有封面图但有视频时，默认展示视频首帧作为“封面”
+    const shouldShowVideo = hasVideo && (isHovering || !resolvedPoster);
 
     return (
         <div
@@ -79,11 +81,12 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
                 <video
                     ref={videoRef}
                     src={resolvedVideo}
-                    className={`w-full h-full object-cover absolute inset-0 transition-opacity duration-300 ${isHovering ? 'opacity-100' : 'opacity-0'}`}
+                    className={`w-full h-full object-cover absolute inset-0 transition-opacity duration-300 ${shouldShowVideo ? 'opacity-100' : 'opacity-0'}`}
                     muted
                     playsInline
                     loop
                     preload="metadata"
+                    poster={resolvedPoster || undefined}
                     onCanPlay={handleCanPlay}
                 />
             )}
