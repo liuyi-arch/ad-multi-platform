@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { AdItem, AdStatus as LocalAdStatus } from '../../types/index';
-import { StatusLabel } from '@repo/ui-components';
+import { StatusLabel, VideoPreview } from '@repo/ui-components';
 
 /**
  * 广告管理页表格组件
@@ -47,7 +47,11 @@ export const ManagementAdTable: React.FC<ManagementAdTableProps> = ({
               <td className="px-6 py-4 font-mono text-xs text-text-muted whitespace-nowrap">{ad.id}</td>
               <td className="px-6 py-4 max-w-[240px] whitespace-nowrap">
                 <div className="flex items-center gap-3 overflow-hidden cursor-pointer" onClick={() => onDetail(ad)}>
-                  <div className="size-10 rounded-lg bg-slate-100 flex-shrink-0 bg-cover bg-center border border-border-light" style={{ backgroundImage: `url(${ad.thumbnail})` }}></div>
+                  <VideoPreview
+                    videoUrl={ad.videoUrls?.[0]}
+                    posterUrl={ad.thumbnail}
+                    className="size-10 rounded-lg flex-shrink-0 border border-border-light"
+                  />
                   <div className="min-w-0 overflow-hidden">
                     <p className="text-sm font-bold truncate text-text-main">{ad.title}</p>
                     <p className="text-xs text-text-muted truncate">{ad.description}</p>
@@ -129,11 +133,11 @@ export const DashboardAdTable: React.FC<DashboardAdTableProps> = ({ ads, onDetai
             <tr key={ad.id || idx} className="hover:bg-background-base/50 transition-colors">
               <td className="px-6 py-4">
                 <div className="flex items-center gap-3">
-                  <div
-                    className="size-10 rounded-lg bg-background-base border border-border-light flex items-center justify-center overflow-hidden bg-cover bg-center"
-                    style={{ backgroundImage: `url('${ad.thumbnail}')` }}
-                  >
-                  </div>
+                  <VideoPreview
+                    videoUrl={ad.videoUrls?.[0]}
+                    posterUrl={ad.thumbnail}
+                    className="size-10 rounded-lg border border-border-light overflow-hidden"
+                  />
                   <div>
                     <p className="text-sm font-bold text-text-main">{ad.title.split('：')[0]}</p>
                     <p className="text-[10px] text-text-muted">

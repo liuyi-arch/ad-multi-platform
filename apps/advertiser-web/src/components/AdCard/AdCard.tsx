@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Ad } from '../../types';
+import { VideoPreview } from '@repo/ui-components';
 
 interface AdCardProps {
   ad: Ad;
@@ -8,16 +9,16 @@ interface AdCardProps {
 }
 
 const AdCard: React.FC<AdCardProps> = ({ ad, onClick }) => (
-  <div 
+  <div
     onClick={() => onClick(ad)}
     className="group bg-white rounded-xl overflow-hidden shadow-soft hover:shadow-lg transition-all border border-slate-100 flex flex-col cursor-pointer"
   >
     <div className="relative aspect-[16/10] overflow-hidden bg-slate-50">
-      <div 
-        className="w-full h-full bg-center bg-cover transition-transform duration-500 group-hover:scale-105" 
-        style={{ backgroundImage: `url("${ad.imageUrl}")` }}
-      ></div>
-      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors"></div>
+      <VideoPreview
+        videoUrl={ad.videoUrls?.[0]}
+        posterUrl={ad.imageUrl}
+        className="w-full h-full"
+      />
     </div>
     <div className="p-4 flex flex-col flex-1">
       <h3 className="text-[#1e293b] text-base font-bold line-clamp-1 mb-1 group-hover:text-[#2563eb] transition-colors">{ad.title}</h3>

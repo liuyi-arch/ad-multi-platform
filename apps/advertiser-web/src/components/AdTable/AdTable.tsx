@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Ad, AdStatus } from '../../types';
-import { StatusLabel } from '@repo/ui-components';
+import { StatusLabel, VideoPreview } from '@repo/ui-components';
 
 interface AdTableProps {
   ads: Ad[];
@@ -27,10 +27,11 @@ const AdTable: React.FC<AdTableProps> = ({ ads, onOpenEdit, onOpenDelete, onOpen
           <tr key={ad.id} className="hover:bg-slate-50/50 transition-colors group">
             <td className="px-8 py-6">
               <div className="flex items-center gap-4">
-                <div 
+                <VideoPreview
+                  videoUrl={ad.videoUrls?.[0]}
+                  posterUrl={ad.imageUrl}
+                  className="h-14 w-20 rounded-xl flex-shrink-0 shadow-sm border border-slate-200"
                   onClick={() => onOpenDetail(ad)}
-                  className="h-14 w-20 bg-slate-100 rounded-xl overflow-hidden flex-shrink-0 cursor-pointer shadow-sm border border-slate-200"
-                  style={{ backgroundImage: `url('${ad.imageUrl}')`, backgroundSize: 'cover', backgroundPosition: 'center' }}
                 />
                 <div className="flex-1 min-w-0 max-w-[240px]">
                   <p className="text-[#1e293b] font-bold text-sm mb-0.5 line-clamp-1">{ad.title}</p>
@@ -48,7 +49,7 @@ const AdTable: React.FC<AdTableProps> = ({ ads, onOpenEdit, onOpenDelete, onOpen
               <div className="flex justify-end items-center gap-4 flex-wrap">
                 {ad.status === AdStatus.REJECTED && (
                   <>
-                    <button 
+                    <button
                       onClick={() => onOpenRejection(ad)}
                       className="flex items-center gap-1.5 text-slate-500 hover:text-slate-700 font-bold text-sm transition-colors"
                     >
@@ -58,7 +59,7 @@ const AdTable: React.FC<AdTableProps> = ({ ads, onOpenEdit, onOpenDelete, onOpen
                     <div className="w-px h-3 bg-slate-200"></div>
                   </>
                 )}
-                <button 
+                <button
                   onClick={() => onOpenEdit(ad)}
                   className="flex items-center gap-1.5 text-[#2563eb] hover:text-blue-700 font-bold text-sm transition-colors"
                 >
@@ -66,7 +67,7 @@ const AdTable: React.FC<AdTableProps> = ({ ads, onOpenEdit, onOpenDelete, onOpen
                   编辑
                 </button>
                 <div className="w-px h-3 bg-slate-200"></div>
-                <button 
+                <button
                   onClick={() => onOpenDelete(ad)}
                   className="flex items-center gap-1.5 text-red-500 hover:text-red-600 font-bold text-sm transition-colors"
                 >

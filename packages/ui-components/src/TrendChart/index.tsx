@@ -18,10 +18,10 @@ export interface TrendChartProps {
   className?: string;
 }
 
-export const TrendChart: React.FC<TrendChartProps> = ({ 
-  title = "趋势统计", 
-  subtitle, 
-  data, 
+export const TrendChart: React.FC<TrendChartProps> = ({
+  title = "趋势统计",
+  subtitle,
+  data,
   timeframe,
   onTimeframeChange,
   timeframeOptions = [
@@ -38,10 +38,11 @@ export const TrendChart: React.FC<TrendChartProps> = ({
           <h3 className="text-lg font-bold text-text-main">{title}</h3>
           {subtitle && <p className="text-text-muted text-xs">{subtitle}</p>}
         </div>
-        <SortSelector 
-          value={timeframe} 
-          onChange={onTimeframeChange} 
-          variant="select"
+        <SortSelector
+          value={timeframe}
+          onChange={onTimeframeChange}
+          variant="sort"
+          label=""
           options={timeframeOptions}
         />
       </div>

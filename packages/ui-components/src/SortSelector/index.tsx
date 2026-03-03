@@ -64,7 +64,7 @@ export const SortSelector: FC<SortSelectorProps> = ({
   // 渲染自定义下拉列表
   const renderDropdown = () => (
     <div
-      className="absolute left-0 top-full mt-2 w-full min-w-[120px] bg-white rounded-xl shadow-2xl border border-slate-100 py-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+      className="absolute left-0 top-full mt-1 w-full min-w-[120px] bg-white rounded-xl shadow-2xl border border-slate-100 py-1.5 z-50"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -90,7 +90,7 @@ export const SortSelector: FC<SortSelectorProps> = ({
   if (variant === 'filter') {
     return (
       <div
-        className={`relative inline-block ${className}`}
+        className={`relative inline-block pb-1 ${className}`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >

@@ -9,6 +9,7 @@ export * from './SortSelector';
 export * from './PieChart';
 export * from './TrendChart';
 export * from './VideoPlayer';
+export * from './VideoPreview';
 export * from './VideoUploader';
 export * from './Auth';
 export * from './Toast';
