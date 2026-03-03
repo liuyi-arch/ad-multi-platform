@@ -20,6 +20,8 @@ export interface UseAuthReturn {
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleSubmit: (e: React.FormEvent) => Promise<void>;
     loading: boolean;
+    user: { phone?: string; role?: AuthRole } | null;
+    logout: () => void;
 }
 
 export const useAuth = (options: UseAuthOptions = {}): UseAuthReturn => {
@@ -33,6 +35,18 @@ export const useAuth = (options: UseAuthOptions = {}): UseAuthReturn => {
         password: '',
         confirmPassword: '',
     });
+    const [user, setUser] = useState<{ phone?: string; role?: AuthRole } | null>(() => {
+        const savedRole = localStorage.getItem('user_role') as AuthRole;
+        const savedPhone = localStorage.getItem('user_phone');
+        return savedRole ? { role: savedRole, phone: savedPhone || undefined } : null;
+    });
+
+    const logout = () => {
+        localStorage.removeItem('auth_token');
+        localStorage.removeItem('user_role');
+        localStorage.removeItem('user_phone');
+        setUser(null);
+    };
 
     const setRole = (newRole: AuthRole) => {
         setRoleState(newRole);
@@ -79,6 +93,8 @@ export const useAuth = (options: UseAuthOptions = {}): UseAuthReturn => {
             if (result.token) {
                 localStorage.setItem('auth_token', result.token);
                 localStorage.setItem('user_role', role);
+                localStorage.setItem('user_phone', formData.phone);
+                setUser({ role, phone: formData.phone });
             }
 
             const successMsg = `${mode === 'LOGIN' ? '登录' : '注册'}成功`;
@@ -126,5 +142,7 @@ export const useAuth = (options: UseAuthOptions = {}): UseAuthReturn => {
         handleInputChange,
         handleSubmit,
         loading,
+        user,
+        logout,
     };
 };

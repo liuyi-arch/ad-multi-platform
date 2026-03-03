@@ -1,4 +1,4 @@
-import { FC, ChangeEvent, ReactNode } from 'react';
+import { FC, ChangeEvent, useState, useRef } from 'react';
 
 export interface SortOption {
   value: string;
@@ -13,7 +13,6 @@ export interface SortSelectorProps {
   label?: string;
   className?: string;
   onClick?: () => void; // 用于 filter 变体
-  children?: ReactNode; // 用于自定义内容
 }
 
 export const SortSelector: FC<SortSelectorProps> = ({
@@ -25,11 +24,27 @@ export const SortSelector: FC<SortSelectorProps> = ({
   className = '',
   onClick,
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const timeoutRef = useRef<any>(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setIsOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setIsOpen(false);
+    }, 200);
+  };
+
+  const currentOption = options.find(opt => opt.value === value) || options[0];
+
   const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     onChange?.(e.target.value);
   };
 
-  // admin-web 中 TimeframeSelector 下拉框 (select 变体)
+  // admin-web 中 TimeframeSelector 下拉框 (select 变体) - 保持原生或简单 select，通常这种不需要悬停
   if (variant === 'select') {
     return (
       <select
@@ -46,16 +61,48 @@ export const SortSelector: FC<SortSelectorProps> = ({
     );
   }
 
+  // 渲染自定义下拉列表
+  const renderDropdown = () => (
+    <div
+      className="absolute left-0 top-full mt-2 w-full min-w-[120px] bg-white rounded-xl shadow-2xl border border-slate-100 py-1.5 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {options.map((option) => (
+        <div
+          key={option.value}
+          onClick={() => {
+            onChange?.(option.value);
+            setIsOpen(false);
+          }}
+          className={`px-4 py-2 text-sm cursor-pointer transition-colors ${value === option.value
+            ? 'bg-blue-50 text-blue-600 font-bold'
+            : 'text-slate-600 hover:bg-slate-50'
+            }`}
+        >
+          {option.label}
+        </div>
+      ))}
+    </div>
+  );
+
   // admin-web 中 FilterButton 下拉框 (filter 变体)
   if (variant === 'filter') {
     return (
-      <button
-        onClick={onClick}
-        className={`flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-[#1e293b] transition-colors ${className}`}
+      <div
+        className={`relative inline-block ${className}`}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
-        <span className="material-symbols-outlined text-lg">filter_list</span>
-        更多筛选
-      </button>
+        <button
+          onClick={onClick}
+          className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-[#1e293b] transition-colors py-1"
+        >
+          <span className="material-symbols-outlined text-lg">filter_list</span>
+          更多筛选
+        </button>
+        {isOpen && options.length > 0 && renderDropdown()}
+      </div>
     );
   }
 
@@ -63,21 +110,20 @@ export const SortSelector: FC<SortSelectorProps> = ({
   return (
     <div className={`flex items-center gap-3 ${className}`}>
       {label && <span className="text-sm font-bold text-slate-500">{label}</span>}
-      <div className="relative inline-block w-48">
-        <select
-          value={value}
-          onChange={handleSelectChange}
-          className="appearance-none w-full bg-slate-50 border border-slate-200 text-[#1e293b] text-sm font-medium px-4 py-2 pr-10 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/10 focus:border-[#2563eb] cursor-pointer transition-all"
+      <div
+        className="relative inline-block w-48 py-1"
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        <div
+          className="flex items-center justify-between w-full bg-slate-50 border border-slate-200 text-[#1e293b] text-sm font-medium px-4 py-2 rounded-lg cursor-pointer transition-all hover:border-blue-400 hover:bg-white"
         >
-          {options.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
-          <span className="material-symbols-outlined text-xl">expand_more</span>
+          <span className="truncate">{currentOption?.label || '请选择'}</span>
+          <span className="material-symbols-outlined text-xl text-slate-400 transition-transform duration-200" style={{ transform: isOpen ? 'rotate(180)deg' : 'none' }}>
+            expand_more
+          </span>
         </div>
+        {isOpen && options.length > 0 && renderDropdown()}
       </div>
     </div>
   );
