@@ -10,7 +10,7 @@ import uploadService from './upload.service';
 
 export class UploadController {
     /**
-     * 上传视频
+     * 上传视频（原有功能，保留不变）
      */
     async uploadVideo(ctx: Context) {
         const file = (ctx.request as any).files?.video;
@@ -22,7 +22,7 @@ export class UploadController {
     }
 
     /**
-     * 上传图片
+     * 上传图片（原有功能，保留不变）
      */
     async uploadImage(ctx: Context) {
         const file = (ctx.request as any).files?.image;
@@ -34,7 +34,7 @@ export class UploadController {
     }
 
     /**
-     * 批量上传
+     * 批量上传（原有功能，保留不变）
      */
     async uploadMultiple(ctx: Context) {
         const files = (ctx.request as any).files;
@@ -56,7 +56,73 @@ export class UploadController {
     }
 
     /**
-     * 删除文件
+     * 秒传检查 —— 客户端先发送文件哈希，服务端判断是否已存在
+     * POST /upload/check
+     * Body: { hash: string, filename: string }
+     */
+    async checkFile(ctx: Context) {
+        const { hash, filename } = ctx.request.body as { hash: string; filename: string };
+        if (!hash) {
+            ctx.status = 400;
+            throw new Error('缺少文件哈希值');
+        }
+        const result = await uploadService.checkFileByHash(hash);
+        // result: { exists, url?, uploadedChunks? }
+        success(ctx, result, result.exists ? '文件已存在，秒传成功' : '文件未上传，请继续上传');
+    }
+
+    /**
+     * 上传单个分片
+     * POST /upload/chunk
+     * FormData: chunk(file), hash, index, total, filename, type
+     */
+    async uploadChunk(ctx: Context) {
+        const body = ctx.request.body as any;
+        const files = (ctx.request as any).files;
+        const chunkFile = files?.chunk;
+
+        if (!chunkFile) throw new Error('未发现分片文件');
+
+        const { hash, index, total, filename, type = 'video' } = body;
+        if (!hash || index === undefined || !total || !filename) {
+            throw new Error('缺少必要参数: hash, index, total, filename');
+        }
+
+        await uploadService.saveChunk(
+            hash,
+            Number(index),
+            Number(total),
+            filename,
+            type as 'video' | 'image',
+            chunkFile.filepath || chunkFile.path
+        );
+
+        success(ctx, { hash, index: Number(index), uploaded: true }, '分片上传成功');
+    }
+
+    /**
+     * 合并分片，完成文件上传
+     * POST /upload/merge
+     * Body: { hash: string, total: number, filename: string, type: 'video' | 'image' }
+     */
+    async mergeChunks(ctx: Context) {
+        const { hash, total, filename, type = 'video' } = ctx.request.body as any;
+        if (!hash || !total || !filename) {
+            throw new Error('缺少必要参数: hash, total, filename');
+        }
+
+        const result = await uploadService.mergeChunks(
+            hash,
+            Number(total),
+            filename,
+            type as 'video' | 'image'
+        );
+
+        success(ctx, result, SuccessMessages.UPLOADED);
+    }
+
+    /**
+     * 删除文件（原有功能，保留不变）
      */
     async deleteFile(ctx: Context) {
         const { filename: _filename } = ctx.params;
