@@ -1,5 +1,7 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@repo/hooks';
 import { ViewType } from '../../types';
 
 interface SidebarProps {
@@ -8,6 +10,14 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   const menuItems = [
     { id: 'dashboard' as ViewType, label: '仪表盘', icon: 'dashboard' },
     { id: 'ad_management' as ViewType, label: '广告管理', icon: 'campaign' },
@@ -52,7 +62,10 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
           <span className="material-symbols-outlined text-[22px]">settings</span>
           <p className="text-sm font-medium">设置</p>
         </div>
-        <div className="flex items-center gap-3 px-4 py-3 rounded-xl text-rose-400 hover:bg-rose-500/10 hover:text-rose-500 cursor-pointer transition-colors">
+        <div 
+          onClick={handleLogout}
+          className="flex items-center gap-3 px-4 py-3 rounded-xl text-rose-400 hover:bg-rose-500/10 hover:text-rose-500 cursor-pointer transition-colors"
+        >
           <span className="material-symbols-outlined text-[22px]">logout</span>
           <p className="text-sm font-medium">退出登录</p>
         </div>
