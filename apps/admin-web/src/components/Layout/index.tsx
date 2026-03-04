@@ -37,6 +37,7 @@ const Layout: React.FC<LayoutProps> = ({
                 <Header
                     title={title}
                     action={action || title}
+                    currentNav={currentNav}
                     searchQuery={searchQuery}
                     onSearchChange={onSearchChange}
                 />

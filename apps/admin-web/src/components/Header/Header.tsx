@@ -1,15 +1,16 @@
-
 import React from 'react';
 import { SearchBox } from '@repo/ui-components';
+import { ViewType } from '../../types';
 
 interface HeaderProps {
   title: string;
   action?: React.ReactNode;
+  currentNav?: ViewType;
   searchQuery: string;
   onSearchChange: (query: string) => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ title, action, searchQuery, onSearchChange }) => {
+const Header: React.FC<HeaderProps> = ({ title, action, currentNav, searchQuery, onSearchChange }) => {
   return (
     <header className="flex items-center bg-surface border-b border-border-light px-8 py-4 sticky top-0 z-10 gap-8 min-h-[64px]">
       <div className="flex items-center gap-6 flex-1">
@@ -18,7 +19,7 @@ const Header: React.FC<HeaderProps> = ({ title, action, searchQuery, onSearchCha
       </div>
 
       <div className="flex items-center gap-6">
-        {action}
+        {(!currentNav || !['dashboard', 'analytics', 'access'].includes(currentNav)) && action}
 
         <div className="flex items-center gap-3 pl-6 border-l border-border-light">
           <div className="text-right hidden sm:block">

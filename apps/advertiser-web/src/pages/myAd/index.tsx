@@ -21,7 +21,7 @@ const MyAd: React.FC = () => {
   const { modal, openModal, closeModal, handleConfirm } = useAdsModal(dataMethods);
 
   const { activeTab, setActiveTab, tabfilterAds } = useTabFilter(searchAds);
-  const { statCardState } = useAdStats(ads);
+  const { statCardState } = useAdStats(ownAds);
   const ITEMS_PER_PAGE = 10;
 
   const { currentPage, setCurrentPage, currentItems, totalPages, totalItems } = usePagination(tabfilterAds, ITEMS_PER_PAGE);
