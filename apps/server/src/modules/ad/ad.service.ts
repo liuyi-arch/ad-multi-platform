@@ -6,6 +6,7 @@
 import adRepository, { AdQueryParams } from './ad.repository';
 import { IAdDocument } from './ad.model';
 import { broadcast } from '../../config/websocket';
+import { UserPayload } from '../../types';
 
 export class AdService {
     /**
@@ -31,11 +32,12 @@ export class AdService {
     /**
      * 创建广告
      */
-    async create(data: Partial<IAdDocument>) {
+    async create(data: Partial<IAdDocument>, user?: UserPayload) {
         // 默认设置状态为 PENDING
-        const adData = {
+        const adData: any = {
             ...data,
             status: 'PENDING',
+            publisher: user?.phone || data.publisher,
             heat: data.heat || 0,
             engagement: data.engagement || 0,
             date: data.date || new Date().toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' }),

@@ -7,6 +7,7 @@ import { Context } from 'koa';
 import adService from './ad.service';
 import { success } from '../../utils';
 import { SuccessMessages } from '../../constants';
+import { ExtendedContext } from '../../types';
 
 export class AdController {
     /**
@@ -41,9 +42,9 @@ export class AdController {
      * 创建广告
      * POST /api/ads
      */
-    async create(ctx: Context) {
+    async create(ctx: ExtendedContext) {
         const data = ctx.request.body as any;
-        const ad = await adService.create(data);
+        const ad = await adService.create(data, ctx.user);
         success(ctx, ad, SuccessMessages.CREATED);
     }
 
@@ -51,7 +52,7 @@ export class AdController {
      * 更新广告
      * PUT /api/ads/:id
      */
-    async update(ctx: Context) {
+    async update(ctx: ExtendedContext) {
         const { id } = ctx.params;
         const data = ctx.request.body as any;
         const ad = await adService.update(id, data);
@@ -62,7 +63,7 @@ export class AdController {
      * 删除广告
      * DELETE /api/ads/:id
      */
-    async delete(ctx: Context) {
+    async delete(ctx: ExtendedContext) {
         const { id } = ctx.params;
         await adService.delete(id);
         success(ctx, null, SuccessMessages.DELETED);
