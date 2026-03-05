@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { AdStatus } from '../../types';
-import { ManagementStatsCard } from '../../components/StatsCard';
+import { ManagementStatsCard } from '../../components/StatsCard/StatsCard';
 import { Pagination, Tab, SortSelector } from '@repo/ui-components';
-import { ManagementAdTable } from '../../components/AdTable';
+import { ManagementAdTable } from '../../components/AdTable/AdTable';
 import { usePagination, useTabFilter, FilterType, useAdsData, useSearch, useAdsModal, useAdStats } from '@repo/hooks';
 import Layout from '../../components/Layout';
 import MyModal from '../../components/MyModal';

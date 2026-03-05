@@ -1,6 +1,6 @@
 import React from 'react';
-import Sidebar from '../Sidebar';
-import Header from '../Header';
+import Sidebar from '../Sidebar/Sidebar';
+import Header from '../Header/Header';
 import { Footer } from '@repo/ui-components';
 import { ViewType } from '../../types';
 import { useNavigate } from 'react-router-dom';

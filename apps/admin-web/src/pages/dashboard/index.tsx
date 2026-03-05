@@ -1,8 +1,8 @@
 
 import React from 'react';
-import StatsGrid from '../../components/StatsCard';
+import StatsGrid from '../../components/StatsCard/StatsCard';
 import { TrendChart, PieChart } from '@repo/ui-components';
-import { DashboardAdTable } from '../../components/AdTable';
+import { DashboardAdTable } from '../../components/AdTable/AdTable';
 import { PIE_DATA } from '../../mockData';
 import { useTrendTime } from '../../hooks/useTrendTime';
 import { useAdStats, useAdsData, useAdsModal, useSearch } from '@repo/hooks';
@@ -23,7 +23,6 @@ const DashboardPage: React.FC = () => {
       searchQuery={searchQuery}
       onSearchChange={setSearchQuery}
       currentNav="dashboard"
-      onNavChange={() => { }}
     >
       {loading ? (
         <div className="flex items-center justify-center h-64">
