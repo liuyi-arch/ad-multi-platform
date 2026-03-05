@@ -23,5 +23,8 @@ router.put('/:id', authenticate, adController.update);
 // 删除广告 (已加回认证)
 router.delete('/:id', authenticate, adController.delete);
 
+// 增加广告热度 (无需认证，访客也可贡献热度)
+router.put('/:id/heat', adController.incrementHeat);
+
 export default router;
 

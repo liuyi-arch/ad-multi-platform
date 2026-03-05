@@ -121,16 +121,18 @@ export const DashboardAdTable: React.FC<DashboardAdTableProps> = ({ ads, onDetai
       <table className="w-full text-left">
         <thead className="bg-background-base text-text-muted text-xs font-bold uppercase tracking-wider">
           <tr>
+            <th className="px-6 py-4">广告ID</th>
             <th className="px-6 py-4">项目名称</th>
             <th className="px-6 py-4">状态</th>
-            <th className="px-6 py-4">曝光量</th>
-            <th className="px-6 py-4">参与度</th>
-            <th className="px-6 py-4">操作</th>
+            <th className="px-6 py-4">出价</th>
+            <th className="px-6 py-4">热度</th>
+            <th className="px-6 py-4">查看</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border-light">
           {topAds.map((ad, idx) => (
             <tr key={ad.id || idx} className="hover:bg-background-base/50 transition-colors">
+              <td className="px-6 py-4 font-mono text-xs text-text-muted">{ad.id}</td>
               <td className="px-6 py-4">
                 <div className="flex items-center gap-3">
                   <VideoPreview
@@ -138,10 +140,10 @@ export const DashboardAdTable: React.FC<DashboardAdTableProps> = ({ ads, onDetai
                     posterUrl={ad.thumbnail}
                     className="size-10 rounded-lg border border-border-light overflow-hidden"
                   />
-                  <div>
-                    <p className="text-sm font-bold text-text-main">{ad.title.split('：')[0]}</p>
-                    <p className="text-[10px] text-text-muted">
-                      {ad.category || '分类'} • {ad.brand || '品牌'}
+                  <div className="min-w-0 max-w-[200px]">
+                    <p className="text-sm font-bold text-text-main truncate">{ad.title.split('：')[0]}</p>
+                    <p className="text-[10px] text-text-muted truncate">
+                      {ad.description}
                     </p>
                   </div>
                 </div>
@@ -149,15 +151,18 @@ export const DashboardAdTable: React.FC<DashboardAdTableProps> = ({ ads, onDetai
               <td className="px-6 py-4">
                 <StatusLabel status={ad.status} variant="table" />
               </td>
-              <td className="px-6 py-4 text-sm font-medium text-text-main">
-                {(Math.random() * 500000 + 100000).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+              <td className="px-6 py-4 text-sm font-bold text-primary">
+                ¥{ad.bid?.toLocaleString()}
               </td>
               <td className="px-6 py-4">
-                <div className="w-24 bg-background-base h-1.5 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full ${idx === 1 ? 'bg-emerald-500' : 'bg-primary'}`}
-                    style={{ width: `${ad.engagement || 0}%` }}
-                  ></div>
+                <div className="flex flex-col gap-1.5">
+                  <span className="text-sm font-medium text-text-main">{ad.heat?.toLocaleString() || 0}</span>
+                  <div className="w-24 bg-background-base h-1.5 rounded-full overflow-hidden">
+                    <div
+                      className={`h-full ${idx === 1 ? 'bg-emerald-500' : 'bg-primary'}`}
+                      style={{ width: `${Math.min((Number(ad.heat) || 0) / 1000 * 100, 100)}%` }}
+                    ></div>
+                  </div>
                 </div>
               </td>
               <td className="px-6 py-4">

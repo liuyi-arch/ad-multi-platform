@@ -69,4 +69,11 @@ export const adService = {
     deleteAd: async (id: string): Promise<void> => {
         await httpClient.delete(`/ads/${id}`);
     },
+    /**
+     * 增加广告热度
+     */
+    incrementHeat: async (id: string): Promise<Ad> => {
+        const res = await httpClient.put<ApiResult<Ad>>(`/ads/${id}/heat`);
+        return res.data.data;
+    },
 };

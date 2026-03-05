@@ -75,6 +75,20 @@ export class AdService {
         broadcast({ type: 'AD_DELETED', payload: { id } });
         return ad;
     }
+
+    /**
+     * 增加广告热度
+     */
+    async incrementHeat(id: string) {
+        const ad = await adRepository.incrementHeat(id);
+        if (!ad) {
+            const error: any = new Error('广告不存在');
+            error.status = 404;
+            throw error;
+        }
+        broadcast({ type: 'AD_UPDATED', payload: JSON.parse(JSON.stringify(ad)) });
+        return ad;
+    }
 }
 
 export default new AdService();

@@ -94,6 +94,23 @@ export const useAdsData = (initialAds?: Ad[]) => {
     }
   };
 
+  const incrementHeat = async (id: string) => {
+    try {
+      const updated = await adService.incrementHeat(id);
+      setAds(prev => prev.map(a => a.id === id ? { ...a, ...updated } : a));
+    } catch (err: any) {
+      console.error('Failed to increment heat:', err);
+      // 降级到本地操作
+      setAds(prev => prev.map(a => {
+        if (a.id === id) {
+          const currentHeat = typeof a.heat === 'number' ? a.heat : parseInt(a.heat as string) || 0;
+          return { ...a, heat: currentHeat + 1 };
+        }
+        return a;
+      }));
+    }
+  };
+
   return {
     ads,
     setAds,
@@ -101,6 +118,7 @@ export const useAdsData = (initialAds?: Ad[]) => {
     updateAd,
     deleteAd,
     updateAdStatus,
+    incrementHeat,
     loading,
     error,
     refetch: fetchAds,

@@ -6,6 +6,7 @@ interface AdsDataMethods {
   updateAd: (id: string, payload: any) => void;
   deleteAd: (id: string) => void;
   updateAdStatus?: (id: string, status: AdStatus) => void;
+  incrementHeat?: (id: string) => void;
 }
 
 /**
@@ -16,15 +17,18 @@ export const useAdsModal = (methods: AdsDataMethods) => {
     type: ModalType;
     ad: Ad | null;
     formMode: 'CREATE' | 'EDIT';
-  }>({ 
-    type: null, 
+  }>({
+    type: null,
     ad: null,
     formMode: 'CREATE'
   });
 
-  const { addAd, updateAd, deleteAd, updateAdStatus } = methods;
+  const { addAd, updateAd, deleteAd, updateAdStatus, incrementHeat } = methods;
 
   const openModal = (type: ModalType, ad: Ad | null = null, formMode: 'CREATE' | 'EDIT' = 'CREATE') => {
+    if (type === 'DETAIL' && ad && incrementHeat) {
+      incrementHeat(ad.id);
+    }
     setModal({ type, ad, formMode });
   };
 

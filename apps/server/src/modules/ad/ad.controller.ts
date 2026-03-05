@@ -68,6 +68,16 @@ export class AdController {
         await adService.delete(id);
         success(ctx, null, SuccessMessages.DELETED);
     }
+
+    /**
+     * 增加广告热度
+     * PUT /api/ads/:id/heat
+     */
+    async incrementHeat(ctx: Context) {
+        const { id } = ctx.params;
+        const ad = await adService.incrementHeat(id);
+        success(ctx, ad, '热度更新成功');
+    }
 }
 
 export default new AdController();

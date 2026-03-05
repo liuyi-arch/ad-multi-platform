@@ -95,6 +95,13 @@ export class AdRepository {
     }
 
     /**
+     * 原子增加广告热度
+     */
+    async incrementHeat(id: string): Promise<IAdDocument | null> {
+        return AdModel.findByIdAndUpdate(id, { $inc: { heat: 1 } }, { new: true });
+    }
+
+    /**
      * 统计数量
      */
     async count(filter: any = {}): Promise<number> {

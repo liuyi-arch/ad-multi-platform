@@ -16,6 +16,7 @@ const AdTable: React.FC<AdTableProps> = ({ ads, onOpenEdit, onOpenDelete, onOpen
     <table className="w-full text-left">
       <thead>
         <tr className="border-b border-slate-50">
+          <th className="px-8 py-5 text-slate-500 text-xs font-bold uppercase tracking-wider">广告ID</th>
           <th className="px-8 py-5 text-slate-500 text-xs font-bold uppercase tracking-wider">广告详情</th>
           <th className="px-8 py-5 text-slate-500 text-xs font-bold uppercase tracking-wider">创建日期</th>
           <th className="px-8 py-5 text-slate-500 text-xs font-bold uppercase tracking-wider">状态</th>
@@ -25,6 +26,7 @@ const AdTable: React.FC<AdTableProps> = ({ ads, onOpenEdit, onOpenDelete, onOpen
       <tbody className="divide-y divide-slate-50">
         {ads.map(ad => (
           <tr key={ad.id} className="hover:bg-slate-50/50 transition-colors group">
+            <td className="px-8 py-6 font-mono text-xs text-slate-400">{ad.id}</td>
             <td className="px-8 py-6">
               <div className="flex items-center gap-4">
                 <VideoPreview
@@ -80,7 +82,7 @@ const AdTable: React.FC<AdTableProps> = ({ ads, onOpenEdit, onOpenDelete, onOpen
         ))}
         {ads.length === 0 && (
           <tr>
-            <td colSpan={4} className="px-8 py-20 text-center">
+            <td colSpan={5} className="px-8 py-20 text-center">
               <div className="flex flex-col items-center gap-2 opacity-20">
                 <span className="material-symbols-outlined text-5xl">inventory_2</span>
                 <p className="text-sm font-bold">暂无相关广告记录</p>
