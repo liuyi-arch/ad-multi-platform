@@ -13,7 +13,7 @@ interface AdTableProps {
 
 const AdTable: React.FC<AdTableProps> = ({ ads, onOpenEdit, onOpenDelete, onOpenRejection, onOpenDetail }) => (
   <div className="overflow-x-auto">
-    <table className="w-full text-left">
+    <table className="w-full text-left min-w-[1200px]">
       <thead>
         <tr className="border-b border-slate-50">
           <th className="px-8 py-5 text-slate-500 text-xs font-bold uppercase tracking-wider">广告ID</th>

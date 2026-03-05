@@ -38,7 +38,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children, currentView, onViewCh
   return (
     <div className="flex flex-col min-h-screen bg-[#f8fafc]">
       <header className="sticky top-0 z-40 w-full bg-white border-b border-slate-100 px-4 lg:px-20 py-3 shadow-sm">
-        <div className="max-w-[1280px] mx-auto flex items-center justify-between">
+        <div className="max-w-[1920px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-10">
             <div className="flex items-center gap-3">
               <div className="size-9 bg-[#2563eb] rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
@@ -88,7 +88,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children, currentView, onViewCh
         </div>
       </header>
 
-      <main className="flex-1 max-w-[1280px] w-full mx-auto px-4 lg:px-20 py-10">
+      <main className="flex-1 max-w-[1920px] w-full mx-auto px-4 lg:px-20 py-10">
         {children}
       </main>
 

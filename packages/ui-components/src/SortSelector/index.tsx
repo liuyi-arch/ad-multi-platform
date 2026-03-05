@@ -20,7 +20,6 @@ export const SortSelector: FC<SortSelectorProps> = ({
   onChange,
   options = [],
   variant = 'sort',
-  label = '排序方式:',
   className = '',
   onClick,
 }) => {
@@ -109,9 +108,8 @@ export const SortSelector: FC<SortSelectorProps> = ({
   // advertiser-web 中默认下拉框 (sort 变体)
   return (
     <div className={`flex items-center gap-3 ${className}`}>
-      {label && <span className="text-sm font-bold text-slate-500">{label}</span>}
       <div
-        className="relative inline-block w-48 py-1"
+        className="relative inline-block w-32 py-1"
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
