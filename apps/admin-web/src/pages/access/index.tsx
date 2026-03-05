@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Layout from '../../components/Layout';
+import Layout from '../../components/Layout/Layout';
 
 interface User {
   id: string;
@@ -23,7 +23,6 @@ const AccessControlPage: React.FC = () => {
       searchQuery={searchQuery}
       onSearchChange={setSearchQuery}
       currentNav="access"
-      onNavChange={() => { }}
     >
       <div className="space-y-6">
         <div className="flex justify-between items-center">
@@ -62,7 +61,7 @@ const AccessControlPage: React.FC = () => {
                   </td>
                   <td className="px-6 py-4">
                     <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase ${user.role === 'admin' ? 'bg-amber-100 text-amber-700' :
-                        user.role === 'editor' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-700'
+                      user.role === 'editor' ? 'bg-blue-100 text-blue-700' : 'bg-slate-100 text-slate-700'
                       }`}>
                       {user.role}
                     </span>

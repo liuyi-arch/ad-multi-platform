@@ -5,8 +5,8 @@ import { Pagination, SortSelector } from '@repo/ui-components';
 import AdCard from '../../components/AdCard/AdCard';
 import { usePagination, useAdsData, useSearch, useAdsModal } from '@repo/hooks';
 import { useSelectFilter } from '../../hooks/useSelectFilter';
-import Layout from '../../components/Layout';
-import { AdDetailModal, AdFormModal } from '../../components/MyModal';
+import Layout from '../../components/Layout/Layout';
+import MyModal from '../../components/MyModal';
 import { useNavigate } from 'react-router-dom';
 
 const Home: React.FC = () => {
@@ -92,22 +92,13 @@ const Home: React.FC = () => {
         </div>
       )}
 
-      {/* Modals */}
-      {modal.type === 'DETAIL' && modal.ad && (
-        <AdDetailModal
-          ad={modal.ad}
-          onClose={closeModal}
-        />
-      )}
-
-      {modal.type === 'FORM' && (
-        <AdFormModal
-          mode={modal.formMode}
-          ad={modal.ad}
-          onClose={closeModal}
-          onSave={handleConfirm}
-        />
-      )}
+      <MyModal
+        type={modal.type}
+        ad={modal.ad}
+        formMode={modal.formMode}
+        onClose={closeModal}
+        onConfirm={handleConfirm}
+      />
     </Layout>
   );
 };

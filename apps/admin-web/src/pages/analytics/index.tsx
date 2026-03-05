@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { TrendChart, PieChart } from '@repo/ui-components';
 import { PIE_DATA } from '../../mockData';
 import { useTrendTime } from '../../hooks/useTrendTime';
-import Layout from '../../components/Layout';
+import Layout from '../../components/Layout/Layout';
 
 const AnalyticsPage: React.FC = () => {
   const { timeRange, setTimeRange, trendResData } = useTrendTime();
@@ -15,7 +15,6 @@ const AnalyticsPage: React.FC = () => {
       searchQuery={searchQuery}
       onSearchChange={setSearchQuery}
       currentNav="analytics"
-      onNavChange={() => { }}
     >
       <div className="space-y-8">
         <div className="flex justify-between items-center">

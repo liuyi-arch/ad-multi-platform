@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@repo/hooks';
 import { ViewType } from '../../types';
-import HeadNav from '../Nav/HeadNav';
+import HeadNav from '../Nav/Nav';
 import { Footer, SearchBox } from '@repo/ui-components';
 
 interface PageLayoutProps {

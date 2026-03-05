@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@repo/hooks';
 import { ViewType } from '../../types';
+import { MENU_ITEMS } from '../../constants';
 
 interface SidebarProps {
   currentView: ViewType;
@@ -22,13 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
     setIsCollapsed(!isCollapsed);
   };
 
-  const menuItems = [
-    { id: 'dashboard' as ViewType, label: '仪表盘', icon: 'dashboard' },
-    { id: 'ad_management' as ViewType, label: '广告管理', icon: 'campaign' },
-    { id: 'media' as ViewType, label: '媒体库', icon: 'perm_media' },
-    { id: 'analytics' as ViewType, label: '数据分析', icon: 'bar_chart_4_bars' },
-    { id: 'access' as ViewType, label: '访问控制', icon: 'admin_panel_settings' },
-  ];
+
 
   return (
     <aside className={`${isCollapsed ? 'w-20' : 'w-64'} transition-all duration-300 ease-in-out flex-shrink-0 bg-navy-sidebar flex flex-col justify-between py-6 h-screen relative group`}>
@@ -56,13 +51,13 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
         </div>
 
         <nav className="flex flex-col gap-1.5">
-          {menuItems.map((item) => (
+          {MENU_ITEMS.map((item) => (
             <div
               key={item.id}
               onClick={() => onViewChange(item.id)}
               className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 cursor-pointer ${currentView === item.id
-                  ? 'bg-primary text-white shadow-lg shadow-primary/20'
-                  : 'text-slate-400 hover:text-white hover:bg-white/10'
+                ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                : 'text-slate-400 hover:text-white hover:bg-white/10'
                 } ${isCollapsed ? 'justify-center' : ''}`}
               title={isCollapsed ? item.label : ''}
             >

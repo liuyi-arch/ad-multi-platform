@@ -5,8 +5,8 @@ import StatCard from '../../components/StatCard/StatCard';
 import { Pagination, Tab } from '@repo/ui-components';
 import AdTable from '../../components/AdTable/AdTable';
 import { usePagination, useTabFilter, useAdStats, useAdsData, useAdsModal, useSearch, useAuth } from '@repo/hooks';
-import Layout from '../../components/Layout';
-import { AdDetailModal, AdFormModal, DeleteConfirmModal, RejectionReasonModal } from '../../components/MyModal';
+import Layout from '../../components/Layout/Layout';
+import MyModal from '../../components/MyModal';
 import { useNavigate } from 'react-router-dom';
 
 const MyAd: React.FC = () => {
@@ -95,36 +95,13 @@ const MyAd: React.FC = () => {
         </div>
       )}
 
-      {/* Modals */}
-      {modal.type === 'DETAIL' && modal.ad && (
-        <AdDetailModal
-          ad={modal.ad}
-          onClose={closeModal}
-        />
-      )}
-
-      {modal.type === 'FORM' && (
-        <AdFormModal
-          mode={modal.formMode}
-          ad={modal.ad}
-          onClose={closeModal}
-          onSave={handleConfirm}
-        />
-      )}
-
-      {modal.type === 'DELETE' && modal.ad && (
-        <DeleteConfirmModal
-          onClose={closeModal}
-          onConfirm={handleConfirm}
-        />
-      )}
-
-      {modal.type === 'REJECT_REASON' && modal.ad && (
-        <RejectionReasonModal
-          reason={modal.ad.rejectionReason || '未提供具体原因。'}
-          onClose={closeModal}
-        />
-      )}
+      <MyModal
+        type={modal.type}
+        ad={modal.ad}
+        formMode={modal.formMode}
+        onClose={closeModal}
+        onConfirm={handleConfirm}
+      />
     </Layout>
   );
 };

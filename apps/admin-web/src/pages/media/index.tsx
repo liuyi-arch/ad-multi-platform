@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { MediaItem } from '../../types';
 import { fetchMediaItems } from '../../api/mediaApi';
-import Layout from '../../components/Layout';
+import Layout from '../../components/Layout/Layout';
 
 const MediaPage: React.FC = () => {
   const [mediaItems, setMediaItems] = useState<MediaItem[]>([]);
@@ -26,7 +26,6 @@ const MediaPage: React.FC = () => {
       searchQuery={searchQuery}
       onSearchChange={setSearchQuery}
       currentNav="media"
-      onNavChange={() => { }}
     >
       <div className="space-y-6">
         <div>

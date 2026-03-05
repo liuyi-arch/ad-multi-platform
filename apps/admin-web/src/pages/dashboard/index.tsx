@@ -2,11 +2,11 @@
 import React from 'react';
 import StatsGrid from '../../components/StatsCard/StatsCard';
 import { TrendChart, PieChart } from '@repo/ui-components';
-import { DashboardAdTable } from '../../components/AdTable/AdTable';
+import { DashboardAdTable } from '../../components/AdTable';
 import { PIE_DATA } from '../../mockData';
 import { useTrendTime } from '../../hooks/useTrendTime';
 import { useAdStats, useAdsData, useAdsModal, useSearch } from '@repo/hooks';
-import Layout from '../../components/Layout';
+import Layout from '../../components/Layout/Layout';
 import MyModal from '../../components/MyModal';
 
 const DashboardPage: React.FC = () => {
