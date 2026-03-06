@@ -20,14 +20,14 @@ export const AdDetailModal: React.FC<{ ad: AdItem; onClose: () => void }> = ({ a
                             <span className="material-symbols-outlined text-lg">payments</span>
                             <span className="text-xs font-bold uppercase tracking-wider">广告出价</span>
                         </div>
-                        <p className="text-lg font-bold text-[#1e293b]">{ad.bid.toFixed(2)}<span className="text-xs font-medium text-slate-500 ml-0.5">元</span></p>
+                        <p className="text-lg font-bold text-[#1e293b]">{ad.bid}</p>
                     </div>
                     <div className="bg-orange-50 rounded-xl p-4 flex flex-col gap-1 border border-orange-100">
                         <div className="flex items-center gap-2 text-orange-600">
                             <span className="material-symbols-outlined text-lg">local_fire_department</span>
                             <span className="text-xs font-bold uppercase tracking-wider">广告热度</span>
                         </div>
-                        <p className="text-lg font-bold text-[#1e293b]">{ad.heat.toLocaleString()} <span className="text-xs font-medium text-slate-500">热度值</span></p>
+                        <p className="text-lg font-bold text-[#1e293b]">{ad.heat}</p>
                     </div>
                 </div>
                 <div className="space-y-3">

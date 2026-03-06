@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@repo/hooks';
+import React from 'react';
 import { ViewType } from '../../types';
 import { MENU_ITEMS } from '../../constants';
+import { useSidebar } from './useSidebar';
 
 interface SidebarProps {
   currentView: ViewType;
@@ -10,18 +9,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
-  const navigate = useNavigate();
-  const { logout } = useAuth();
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
-
-  const toggleSidebar = () => {
-    setIsCollapsed(!isCollapsed);
-  };
+  const { isCollapsed, toggleSidebar, handleLogout } = useSidebar();
 
 
 

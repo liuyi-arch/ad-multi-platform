@@ -26,11 +26,11 @@ const AdCard: React.FC<AdCardProps> = ({ ad, onClick }) => (
       <div className="flex items-center justify-between mt-auto pt-2 border-t border-slate-50">
         <div className="flex items-center gap-1.5 text-slate-400">
           <span className="material-symbols-outlined text-base text-[#2563eb]">payments</span>
-          <span className="text-xs font-bold text-[#1e293b]">¥{ad.bid.toFixed(2)}</span>
+          <span className="text-xs font-bold text-[#1e293b]">{ad.bid}</span>
         </div>
         <div className="flex items-center gap-1.5 text-slate-400">
           <span className="material-symbols-outlined text-base text-orange-500">local_fire_department</span>
-          <span className="text-xs font-bold text-[#1e293b]">{(Number(ad.heat) / 1000).toFixed(1)}k</span>
+          <span className="text-xs font-bold text-[#1e293b]">{ad.heat}</span>
         </div>
       </div>
     </div>

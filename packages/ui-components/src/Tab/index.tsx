@@ -41,9 +41,7 @@ export const Tab = ({
     );
   }
 
-  const isSoft = variant === 'soft';
-
-  if (isSoft) {
+  if (variant === 'soft') {
     return (
       <div className={`px-6 py-5 border-b border-slate-50 ${className}`}>
         <div className="flex items-center gap-2 p-1 bg-[#f8fafc] w-fit rounded-xl">

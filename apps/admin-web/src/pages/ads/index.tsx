@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { AdStatus } from '../../types';
-import { ManagementStatsCard } from '../../components/StatsCard/StatsCard';
+import { ManagementStatsCard } from '../../components/StatsCard';
 import { Pagination, Tab, SortSelector } from '@repo/ui-components';
 import { ManagementAdTable } from '../../components/AdTable';
 import { usePagination, useTabFilter, FilterType, useAdsData, useSearch, useAdsModal, useAdStats } from '@repo/hooks';
@@ -22,7 +22,8 @@ const AdManagementPage: React.FC = () => {
     totalPages,
     currentItems,
     totalItems,
-    itemsPerPage
+    itemsPerPage,
+    pages
   } = usePagination(tabfilterAds, 5);
 
   const tabOptions = [
@@ -98,6 +99,7 @@ const AdManagementPage: React.FC = () => {
               totalItems={totalItems}
               itemsPerPage={itemsPerPage}
               onPageChange={setCurrentPage}
+              pages={pages}
             />
           </div>
         </div>

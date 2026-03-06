@@ -1,6 +1,6 @@
 
 import React from 'react';
-import StatsGrid from '../../components/StatsCard/StatsCard';
+import StatsGrid from '../../components/StatsCard';
 import { TrendChart, PieChart } from '@repo/ui-components';
 import { DashboardAdTable } from '../../components/AdTable';
 import { PIE_DATA } from '../../mockData';

@@ -46,7 +46,7 @@ export const DashboardAdTable: React.FC<DashboardAdTableProps> = ({ ads, onDetai
                                 <StatusLabel status={ad.status} variant="table" />
                             </td>
                             <td className="px-6 py-4 text-sm font-bold text-primary">
-                                ¥{ad.bid?.toLocaleString()}
+                                {ad.bid?.toLocaleString()}
                             </td>
                             <td className="px-6 py-4">
                                 <div className="flex flex-col gap-1.5">

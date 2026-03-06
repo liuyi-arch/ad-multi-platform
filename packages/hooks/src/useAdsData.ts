@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Ad, AdStatus } from '@repo/shared-types';
 import { adService } from '@repo/api';
+import { formatPrice, formatHeat } from '@repo/utils';
 
 /**
  * 通用的广告数据管理 Hook
@@ -17,7 +18,12 @@ export const useAdsData = (initialAds?: Ad[]) => {
       setLoading(true);
       setError(null);
       const result = await adService.getAds({ pageSize: 100 });
-      setAds(result.items);
+      const formattedItems = result.items.map((item: Ad) => ({
+        ...item,
+        bid: formatPrice(item.bid as any as number) as any,
+        heat: formatHeat(item.heat)
+      }));
+      setAds(formattedItems);
     } catch (err: any) {
       console.error('Failed to fetch ads:', err);
       setError(err.message || '获取数据失败');
@@ -56,8 +62,14 @@ export const useAdsData = (initialAds?: Ad[]) => {
         imageUrl: payload.imageUrl || 'https://picsum.photos/400/250',
         thumbnail: payload.thumbnail || 'https://picsum.photos/400/225',
       } as Ad;
-      setAds(prev => [localAd, ...prev]);
-      return localAd;
+
+      const formattedLocalAd = {
+        ...localAd,
+        bid: formatPrice(localAd.bid as any as number) as any,
+        heat: formatHeat(localAd.heat)
+      };
+      setAds(prev => [formattedLocalAd, ...prev]);
+      return formattedLocalAd as any;
     }
   };
 

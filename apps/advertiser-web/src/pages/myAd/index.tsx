@@ -21,10 +21,10 @@ const MyAd: React.FC = () => {
   const { modal, openModal, closeModal, handleConfirm } = useAdsModal(dataMethods);
 
   const { activeTab, setActiveTab, tabfilterAds } = useTabFilter(searchAds);
-  const { statCardState } = useAdStats(ownAds);
+  const { statCardState, stats } = useAdStats(ownAds);
   const ITEMS_PER_PAGE = 10;
 
-  const { currentPage, setCurrentPage, currentItems, totalPages, totalItems } = usePagination(tabfilterAds, ITEMS_PER_PAGE);
+  const { currentPage, setCurrentPage, currentItems, totalPages, totalItems, pages } = usePagination(tabfilterAds, ITEMS_PER_PAGE);
 
   const handleTabChange = (tab: 'ALL' | AdStatus) => {
     setActiveTab(tab);
@@ -61,10 +61,9 @@ const MyAd: React.FC = () => {
       ) : (
         <div className="space-y-8 animate-in slide-in-from-bottom-2 duration-500 max-w-[1920px] mx-auto w-full">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <StatCard icon="ads_click" label="广告总数" value={statCardState.total} color="text-blue-600 bg-blue-50" />
-            <StatCard icon="check_circle" label="已通过" value={statCardState.approved} color="text-green-600 bg-green-50" />
-            <StatCard icon="block" label="已拒绝" value={statCardState.rejected} color="text-red-600 bg-red-50" />
-            <StatCard icon="pending" label="待审核" value={statCardState.pending} color="text-amber-600 bg-amber-50" />
+            {stats.map((stat, index) => (
+              <StatCard key={index} stat={stat} />
+            ))}
           </div>
 
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden flex flex-col">
@@ -90,6 +89,7 @@ const MyAd: React.FC = () => {
               totalItems={totalItems}
               itemsPerPage={ITEMS_PER_PAGE}
               onPageChange={setCurrentPage}
+              pages={pages}
             />
           </div>
         </div>

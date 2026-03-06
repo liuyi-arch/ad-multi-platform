@@ -8,6 +8,7 @@ export interface PaginationProps {
   itemsPerPage?: number;
   className?: string;
   hideOnSinglePage?: boolean;
+  pages?: (number | string)[];
 }
 
 export const Pagination = ({
@@ -19,10 +20,13 @@ export const Pagination = ({
   itemsPerPage = 10,
   className = '',
   hideOnSinglePage = true,
+  pages,
 }: PaginationProps) => {
   if (totalPages <= 0) return null;
 
   const renderPageButtons = () => {
+    const pageNumbers = pages || [...Array(totalPages)].map((_, i) => i + 1);
+
     return (
       <div className="flex items-center gap-2">
         <button
@@ -33,17 +37,21 @@ export const Pagination = ({
           <span className="material-symbols-outlined text-xl">chevron_left</span>
         </button>
 
-        {[...Array(totalPages)].map((_, i) => (
-          <button
-            key={i + 1}
-            onClick={() => onPageChange(i + 1)}
-            className={`size-9 flex items-center justify-center text-sm font-bold rounded-lg transition-all ${currentPage === i + 1
-              ? 'bg-[#2563eb] text-white shadow-md shadow-blue-500/20'
-              : 'border border-slate-200 text-slate-500 hover:bg-slate-50'
-              }`}
-          >
-            {i + 1}
-          </button>
+        {pageNumbers.map((page: number | string, i: number) => (
+          page === '...' ? (
+            <span key={`ellipsis-${i}`} className="px-1 text-slate-400 font-medium">...</span>
+          ) : (
+            <button
+              key={page}
+              onClick={() => onPageChange(page as number)}
+              className={`size-9 flex items-center justify-center text-sm font-bold rounded-lg transition-all ${currentPage === page
+                ? 'bg-[#2563eb] text-white shadow-md shadow-blue-500/20'
+                : 'border border-slate-200 text-slate-500 hover:bg-slate-50'
+                }`}
+            >
+              {page}
+            </button>
+          )
         ))}
 
         <button

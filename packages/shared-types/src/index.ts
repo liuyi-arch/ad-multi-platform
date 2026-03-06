@@ -49,7 +49,7 @@ export interface Ad {
   title: string;
   description: string;
   status: AdStatus;
-  bid: number;
+  bid: number | string;
   heat: number | string;
   publisher?: string;
   landingPage?: string;

@@ -27,3 +27,23 @@ export const formatDate = (date: string | Date): string => {
     day: 'numeric'
   });
 };
+
+/**
+ * 格式化价格（货币符号 + 两位小数）
+ */
+export const formatPrice = (value: number): string => {
+  return `¥${value.toFixed(2)}`;
+};
+
+/**
+ * 格式化热度（k单位转化）
+ */
+export const formatHeat = (value: number | string): string => {
+  const numValue = typeof value === 'string' ? parseFloat(value) : value;
+  if (isNaN(numValue)) return '0';
+  if (numValue >= 1000) {
+    return `${(numValue / 1000).toFixed(1)}k`;
+  }
+  return numValue.toString();
+};
+

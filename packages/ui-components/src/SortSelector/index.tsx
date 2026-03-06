@@ -1,4 +1,5 @@
-import { FC, ChangeEvent, useState, useRef } from 'react';
+import { FC, ChangeEvent } from 'react';
+import { useHoverSelect } from '@repo/hooks';
 
 export interface SortOption {
   value: string;
@@ -23,19 +24,7 @@ export const SortSelector: FC<SortSelectorProps> = ({
   className = '',
   onClick,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const timeoutRef = useRef<any>(null);
-
-  const handleMouseEnter = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setIsOpen(true);
-  };
-
-  const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => {
-      setIsOpen(false);
-    }, 200);
-  };
+  const { isOpen, onMouseEnter, onMouseLeave, close } = useHoverSelect();
 
   const currentOption = options.find(opt => opt.value === value) || options[0];
 
@@ -64,15 +53,15 @@ export const SortSelector: FC<SortSelectorProps> = ({
   const renderDropdown = () => (
     <div
       className="absolute left-0 top-full mt-1 w-full min-w-[120px] bg-white rounded-xl shadow-2xl border border-slate-100 py-1.5 z-50"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
     >
       {options.map((option) => (
         <div
           key={option.value}
           onClick={() => {
             onChange?.(option.value);
-            setIsOpen(false);
+            close();
           }}
           className={`px-4 py-2 text-sm cursor-pointer transition-colors ${value === option.value
             ? 'bg-blue-50 text-blue-600 font-bold'
@@ -90,8 +79,8 @@ export const SortSelector: FC<SortSelectorProps> = ({
     return (
       <div
         className={`relative inline-block pb-1 ${className}`}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       >
         <button
           onClick={onClick}
@@ -110,14 +99,14 @@ export const SortSelector: FC<SortSelectorProps> = ({
     <div className={`flex items-center gap-3 ${className}`}>
       <div
         className="relative inline-block w-32 py-1"
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       >
         <div
           className="flex items-center justify-between w-full bg-slate-50 border border-slate-200 text-[#1e293b] text-sm font-medium px-4 py-2 rounded-lg cursor-pointer transition-all hover:border-blue-400 hover:bg-white"
         >
           <span className="truncate">{currentOption?.label || '请选择'}</span>
-          <span className="material-symbols-outlined text-xl text-slate-400 transition-transform duration-200" style={{ transform: isOpen ? 'rotate(180)deg' : 'none' }}>
+          <span className="material-symbols-outlined text-xl text-slate-400 transition-transform duration-200" style={{ transform: isOpen ? 'rotate(180deg)' : 'none' }}>
             expand_more
           </span>
         </div>

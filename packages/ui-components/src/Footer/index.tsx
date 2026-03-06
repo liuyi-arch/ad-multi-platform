@@ -12,7 +12,7 @@ export const Footer = ({ className = '' }: FooterProps) => {
         <a className="hover:text-blue-600 transition-colors" href="#">隐私政策</a>
       </div>
       <p className="text-xs font-medium text-slate-400/80 uppercase tracking-widest">
-        © 2024 ADWALL TECHNOLOGIES. ALL RIGHTS RESERVED.
+        © {new Date().getFullYear()} ADWALL TECHNOLOGIES. ALL RIGHTS RESERVED.
       </p>
     </footer>
   );
