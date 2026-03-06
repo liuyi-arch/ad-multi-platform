@@ -14,8 +14,7 @@ export const AdDetailModal: React.FC<{ ad: AdItem; onClose: () => void }> = ({ a
             <div className="space-y-6">
                 {(() => {
                     const rawUrl = (ad.videoUrls && ad.videoUrls.length > 0) ? ad.videoUrls[0] : (ad.imageUrl || ad.thumbnail || '');
-                    const fullUrl = rawUrl && !rawUrl.startsWith('http') ? `http://localhost:3000${rawUrl}` : rawUrl;
-                    return <VideoPlayer src={fullUrl} />;
+                    return <VideoPlayer src={rawUrl} />;
                 })()}
                 <h3 className="text-2xl font-bold text-[#1e293b]">{ad.title}</h3>
                 <div className="grid grid-cols-2 gap-4">

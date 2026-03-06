@@ -1,25 +1,5 @@
-import React, { useState, useRef, useCallback } from 'react';
-import { uploadService } from '@repo/api';
-
-// ─────────── 状态枚举 ───────────
-export type UploadStatus =
-  | 'PENDING'     // 等待中（已加入队列但未开始）
-  | 'HASHING'     // 计算哈希中
-  | 'UPLOADING'   // 上传中
-  | 'PAUSED'      // 已暂停
-  | 'ERROR'       // 上传失败
-  | 'SUCCESS';    // 上传成功
-
-// ─────────── 任务类型 ───────────
-interface UploadTask {
-  id: string;
-  file: File;
-  status: UploadStatus;
-  progress: number;         // 0-100
-  chunkInfo?: string;       // 例："3/10 片"
-  errorMsg?: string;
-  abortController: AbortController;
-}
+import React, { useRef } from 'react';
+import { useUpload, UploadStatus } from './useUpload';
 
 // ─────────── Props ───────────
 export interface VideoUploaderProps {
@@ -45,9 +25,6 @@ const STATUS_CONFIG: Record<UploadStatus, { label: string; color: string; icon: 
   SUCCESS: { label: '成功', color: '#22c55e', icon: 'check_circle' },
 };
 
-// ─────────── 工具函数 ───────────
-const genId = () => Math.random().toString(36).substring(2, 9);
-
 // ─────────────────────────────────────────────
 export const VideoUploader: React.FC<VideoUploaderProps> = ({
   value = [],
@@ -57,172 +34,21 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
   maxCount = 3,
   chunkThreshold = DEFAULT_CHUNK_THRESHOLD,
 }) => {
-  const [tasks, setTasks] = useState<UploadTask[]>([]);
-  const tasksRef = useRef<UploadTask[]>([]);   // 同步引用，避免闭包陷阱
   const fileInputRef = useRef<HTMLInputElement>(null);
-  // 存储每个 taskId → 最新 abortController，用于暂停/继续
-  const abortMapRef = useRef<Map<string, AbortController>>(new Map());
-
-  // ─── 状态更新助手 ───
-  const updateTask = useCallback((id: string, patch: Partial<UploadTask>) => {
-    setTasks(prev => {
-      const next = prev.map(t => t.id === id ? { ...t, ...patch } : t);
-      tasksRef.current = next;
-      return next;
-    });
-  }, []);
-
-  // ─── 文件校验 ───
-  const validateFile = (file: File): string | null => {
-    if (file.size > 100 * 1024 * 1024) return `文件 ${file.name} 超过 100MB`;
-    if (!['video/mp4', 'video/quicktime'].includes(file.type))
-      return `文件 ${file.name} 格式不支持（仅支持 MP4, MOV）`;
-    return null;
-  };
-
-  // ─── 选择文件处理 ───
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (!files.length) return;
-
-    const currentTotal = value.length + tasks.filter(t => t.status !== 'ERROR').length;
-    if (currentTotal + files.length > maxCount) {
-      alert(`最多只能上传 ${maxCount} 个视频`);
-      return;
-    }
-
-    files.forEach(file => {
-      const err = validateFile(file);
-      if (err) { alert(err); return; }
-      queueUpload(file);
-    });
-
-    if (fileInputRef.current) fileInputRef.current.value = '';
-  };
-
-  // ─── 入队并立即开始上传 ───
-  const queueUpload = (file: File) => {
-    const id = genId();
-    const abortController = new AbortController();
-    abortMapRef.current.set(id, abortController);
-
-    const task: UploadTask = {
-      id, file, status: 'PENDING', progress: 0, abortController,
-    };
-
-    setTasks(prev => {
-      const next = [...prev, task];
-      tasksRef.current = next;
-      return next;
-    });
-
-    // 使用分片上传（大文件）还是直接上传（小文件）
-    if (file.size > chunkThreshold) {
-      startChunkUpload(id, file, abortController);
-    } else {
-      startDirectUpload(id, file, abortController);
-    }
-  };
-
-  // ─── 直接上传（小文件，保留原有实现）───
-  const startDirectUpload = async (id: string, file: File, abortController: AbortController) => {
-    updateTask(id, { status: 'UPLOADING' });
-    try {
-      const result = await uploadService.uploadFile(file, 'video', {
-        onProgress: progress => updateTask(id, { progress }),
-        abortSignal: abortController.signal,
-      });
-      handleSuccess(id, result.url);
-    } catch (error: any) {
-      handleError(id, error);
-    }
-  };
-
-  // ─── 分片上传（大文件：秒传 + 断点续传 + 并发分片）───
-  const startChunkUpload = async (id: string, file: File, abortController: AbortController) => {
-    // 1. 哈希计算阶段
-    updateTask(id, { status: 'HASHING', progress: 0 });
-    try {
-      const result = await uploadService.uploadFileInChunks(file, 'video', {
-        abortSignal: abortController.signal,
-        onProgress: (progress) => {
-          // 区分阶段：进度 > 0 才切换为 UPLOADING
-          const status: UploadStatus = progress > 0 ? 'UPLOADING' : 'HASHING';
-          updateTask(id, { status, progress });
-        },
-      });
-      handleSuccess(id, result.url);
-    } catch (error: any) {
-      handleError(id, error);
-    }
-  };
-
-  // ─── 上传成功 ───
-  const handleSuccess = (id: string, url: string) => {
-    updateTask(id, { status: 'SUCCESS', progress: 100 });
-    // 延迟 800ms 后将成功项移出 tasks 并通知父组件
-    setTimeout(() => {
-      setTasks(prev => {
-        const next = prev.filter(t => t.id !== id);
-        tasksRef.current = next;
-        return next;
-      });
-      onChange?.([...value, url]);
-    }, 800);
-  };
-
-  // ─── 上传失败 ───
-  const handleError = (id: string, error: any) => {
-    if (error.name === 'AbortError' || error.name === 'CanceledError') {
-      // 被取消 or 暂停，不做处理（暂停由 cancelUpload 负责状态）
-      return;
-    }
-    const errorMsg = error?.response?.data?.message || error?.message || '上传失败，请重试';
-    updateTask(id, { status: 'ERROR', errorMsg });
-  };
-
-  // ─── 取消上传（移除任务）───
-  const cancelUpload = (id: string) => {
-    abortMapRef.current.get(id)?.abort();
-    abortMapRef.current.delete(id);
-    setTasks(prev => {
-      const next = prev.filter(t => t.id !== id);
-      tasksRef.current = next;
-      return next;
-    });
-  };
-
-  // ─── 暂停上传 ───
-  const pauseUpload = (id: string) => {
-    abortMapRef.current.get(id)?.abort();
-    updateTask(id, { status: 'PAUSED' });
-  };
-
-  // ─── 继续上传（断点续传，重新触发分片上传，会自动从 localStorage 恢复进度）───
-  const resumeUpload = (id: string) => {
-    const task = tasksRef.current.find(t => t.id === id);
-    if (!task) return;
-
-    const newAbort = new AbortController();
-    abortMapRef.current.set(id, newAbort);
-    updateTask(id, { status: 'HASHING', progress: 0, abortController: newAbort });
-    startChunkUpload(id, task.file, newAbort);
-  };
-
-  // ─── 重试失败任务 ───
-  const retryUpload = (id: string) => {
-    const task = tasksRef.current.find(t => t.id === id);
-    if (!task) return;
-    const newAbort = new AbortController();
-    abortMapRef.current.set(id, newAbort);
-    updateTask(id, { status: 'PENDING', progress: 0, errorMsg: undefined, abortController: newAbort });
-
-    if (task.file.size > chunkThreshold) {
-      startChunkUpload(id, task.file, newAbort);
-    } else {
-      startDirectUpload(id, task.file, newAbort);
-    }
-  };
+  const {
+    tasks,
+    activeCount,
+    handleFilesSelect,
+    cancelUpload,
+    pauseUpload,
+    resumeUpload,
+    retryUpload,
+  } = useUpload({
+    value,
+    onChange,
+    maxCount,
+    chunkThreshold,
+  });
 
   // ─── 移除已完成视频 ───
   const removeVideo = (index: number) => {
@@ -231,7 +57,11 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
     onChange?.(newUrls);
   };
 
-  const activeCount = value.length + tasks.filter(t => t.status !== 'ERROR').length;
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    handleFilesSelect(files);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
 
   // ─────────────────────────── 渲染 ───────────────────────────
   return (
@@ -248,7 +78,7 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
             <div className="w-full h-full bg-slate-900 flex items-center justify-center">
               {url ? (
                 <video
-                  src={url.startsWith('http') ? url : `http://localhost:3000${url}`}
+                  src={url}
                   className="w-full h-full object-cover"
                   muted
                   playsInline

@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import React from 'react';
+import { useVideoPreview } from './useVideoPreview';
 
 export interface VideoPreviewProps {
     /** 视频 URL */
@@ -21,43 +22,16 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
     className = '',
     onClick,
 }) => {
-    const videoRef = useRef<HTMLVideoElement>(null);
-    const [isHovering, setIsHovering] = useState(false);
+    const {
+        videoRef,
+        isHovering,
+        handleMouseEnter,
+        handleMouseLeave,
+        handleCanPlay,
+    } = useVideoPreview();
 
-    const resolveUrl = (url?: string) => {
-        if (!url) return '';
-        return url.startsWith('http') ? url : `http://localhost:3000${url}`;
-    };
-
-    const handleMouseEnter = () => {
-        setIsHovering(true);
-        const video = videoRef.current;
-        if (video && video.readyState >= 2) {
-            video.play().catch(() => { });
-        }
-    };
-
-    const handleMouseLeave = () => {
-        setIsHovering(false);
-        const video = videoRef.current;
-        if (video) {
-            video.pause();
-            video.currentTime = 0;
-        }
-    };
-
-    // 视频加载就绪后，如果仍在 hover 则立即播放
-    const handleCanPlay = () => {
-        if (isHovering && videoRef.current) {
-            videoRef.current.play().catch(() => { });
-        }
-    };
-
-    const resolvedPoster = resolveUrl(posterUrl);
-    const resolvedVideo = resolveUrl(videoUrl);
-    const hasVideo = !!resolvedVideo;
-    // 当没有封面图但有视频时，默认展示视频首帧作为“封面”
-    const shouldShowVideo = hasVideo && (isHovering || !resolvedPoster);
+    const hasVideo = !!videoUrl;
+    const shouldShowVideo = hasVideo && (isHovering || !posterUrl);
 
     return (
         <div
@@ -68,9 +42,9 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
             style={{ cursor: onClick ? 'pointer' : undefined }}
         >
             {/* 封面图 */}
-            {resolvedPoster && (
+            {posterUrl && (
                 <img
-                    src={resolvedPoster}
+                    src={posterUrl}
                     alt="preview"
                     className={`w-full h-full object-cover absolute inset-0 transition-opacity duration-300 ${isHovering && hasVideo ? 'opacity-0' : 'opacity-100'}`}
                 />
@@ -80,13 +54,13 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
             {hasVideo && (
                 <video
                     ref={videoRef}
-                    src={resolvedVideo}
+                    src={videoUrl}
                     className={`w-full h-full object-cover absolute inset-0 transition-opacity duration-300 ${shouldShowVideo ? 'opacity-100' : 'opacity-0'}`}
                     muted
                     playsInline
                     loop
                     preload="metadata"
-                    poster={resolvedPoster || undefined}
+                    poster={posterUrl || undefined}
                     onCanPlay={handleCanPlay}
                 />
             )}
@@ -101,7 +75,7 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
             )}
 
             {/* 无封面图且无视频时的占位 */}
-            {!resolvedPoster && !hasVideo && (
+            {!posterUrl && !hasVideo && (
                 <div className="w-full h-full flex items-center justify-center">
                     <span className="material-symbols-outlined text-slate-300 text-2xl">image</span>
                 </div>

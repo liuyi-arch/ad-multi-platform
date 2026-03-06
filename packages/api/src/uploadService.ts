@@ -1,6 +1,20 @@
 import httpClient from './httpClient';
 import { AxiosProgressEvent, AxiosRequestConfig } from 'axios';
 
+const getAssetBaseUrl = () => {
+    const baseUrl = String((httpClient.defaults as any)?.baseURL || '');
+    return baseUrl.replace(/\/?api\/?$/, '');
+};
+
+const resolveAssetUrl = (url?: string) => {
+    if (!url) return '';
+    if (url.startsWith('http')) return url;
+    const base = getAssetBaseUrl();
+    if (!base) return url;
+    const normalizedPath = url.startsWith('/') ? url : `/${url}`;
+    return `${base}${normalizedPath}`;
+};
+
 export interface UploadResponse {
     url: string;
     filename?: string;
@@ -113,7 +127,7 @@ async function uploadFileInChunks(
     const checkRes = await checkFile(hash, file.name);
     if (checkRes.exists && checkRes.url) {
         onProgress?.(100);
-        return { url: checkRes.url, filename: file.name };
+        return { url: resolveAssetUrl(checkRes.url), filename: file.name };
     }
 
     // ③ 断点续传：合并服务端已有分片 + 本地 localStorage 记录
@@ -173,7 +187,7 @@ async function uploadFileInChunks(
     clearResumeState(hash);
     onProgress?.(100);
 
-    return mergeResult;
+    return { ...mergeResult, url: resolveAssetUrl(mergeResult.url) };
 }
 
 // ─────────── API 方法 ───────────
@@ -230,7 +244,8 @@ export const uploadService = {
             config
         );
 
-        return response.data.data;
+        const data = response.data.data;
+        return { ...data, url: resolveAssetUrl(data.url) };
     },
 
     /**
@@ -264,7 +279,7 @@ export const uploadService = {
             }
         );
 
-        return response.data.data.urls;
+        return response.data.data.urls.map((u) => resolveAssetUrl(u));
     },
 };
 

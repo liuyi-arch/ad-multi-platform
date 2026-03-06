@@ -1,6 +1,8 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { ToastType, toast, ToastItem as HookToastItem } from '@repo/hooks';
+import { ToastType, toast } from '@repo/hooks';
+
+import { useToast } from './useToast';
 
 interface ToastProps {
     message: string;
@@ -42,20 +44,12 @@ const ToastItem: React.FC<ToastProps> = ({ message, type = 'info', duration = 30
 };
 
 export const ToastContainer: React.FC = () => {
-    const [toasts, setToasts] = useState<HookToastItem[]>([]);
-
-    useEffect(() => {
-        return toast._subscribe(setToasts);
-    }, []);
-
-    const removeToast = useCallback((id: number) => {
-        toast._remove(id);
-    }, []);
+    const { toasts, removeToast } = useToast();
 
     if (typeof document === 'undefined') return null;
 
     return ReactDOM.createPortal(
-        <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[9999] flex flex-col items-center gap-3 pointer-events-none">
+        <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[9999] flex flex-col items-center gap-3 pointer-eventsa_none">
             {toasts.map(t => (
                 <ToastItem key={t.id} {...t} onClose={() => removeToast(t.id)} />
             ))}
