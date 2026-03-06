@@ -1,105 +1,35 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React from 'react';
+import { useVideoPlayer } from './useVideoPlayer';
 
 export interface VideoPlayerProps {
-  imageUrl: string; // 这里的 imageUrl 实际作为视频源使用
+  src: string;
   className?: string;
 }
 
-export const VideoPlayer: React.FC<VideoPlayerProps> = ({ imageUrl, className = "" }) => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [playbackRate, setPlaybackRate] = useState(1);
-  const [showControls, setShowControls] = useState(true);
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const [showSpeedMenu, setShowSpeedMenu] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-
-  const fullUrl = imageUrl && !imageUrl.startsWith('http') ? `http://localhost:3000${imageUrl}` : imageUrl;
-
-  // 格式化时间
-  const formatTime = (time: number) => {
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-  };
-
-  // 切换播放/暂停
-  const togglePlay = () => {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause();
-      } else {
-        videoRef.current.play().catch(err => console.error("Play failed:", err));
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  // 更新进度
-  const handleTimeUpdate = () => {
-    if (videoRef.current && !isDragging) {
-      setCurrentTime(videoRef.current.currentTime);
-    }
-  };
-
-  // 加载元数据获取时长
-  const handleLoadedMetadata = () => {
-    if (videoRef.current) {
-      setDuration(videoRef.current.duration);
-    }
-  };
-
-  // 进度拖动中 (仅更新显示)
-  const handleSeekInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setIsDragging(true);
-    setCurrentTime(Number(e.target.value));
-  };
-
-  // 进度跳转完成 (更新实际播放位置)
-  const handleSeekChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const time = Number(e.target.value);
-    if (videoRef.current) {
-      videoRef.current.currentTime = time;
-    }
-    setIsDragging(false);
-  };
-
-  // 切换全屏
-  const toggleFullScreen = () => {
-    if (!containerRef.current) return;
-
-    if (!document.fullscreenElement) {
-      containerRef.current.requestFullscreen().catch(err => {
-        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
-      });
-      setIsFullScreen(true);
-    } else {
-      document.exitFullscreen();
-      setIsFullScreen(false);
-    }
-  };
-
-  // 监听全屏变化
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullScreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
-
-  // 自动隐藏控制栏
-  useEffect(() => {
-    let timeoutId: ReturnType<typeof setTimeout>;
-    if (isPlaying && showControls) {
-      timeoutId = setTimeout(() => setShowControls(false), 3000);
-    }
-    return () => clearTimeout(timeoutId);
-  }, [isPlaying, showControls]);
+export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, className = "" }) => {
+  const {
+    videoRef,
+    containerRef,
+    isPlaying,
+    currentTime,
+    duration,
+    playbackRate,
+    showControls,
+    isFullScreen,
+    showSpeedMenu,
+    setShowSpeedMenu,
+    togglePlay,
+    handleTimeUpdate,
+    handleLoadedMetadata,
+    handleSeekInput,
+    handleSeekChange,
+    toggleFullScreen,
+    toggleMute,
+    changePlaybackRate,
+    formatTime,
+    setShowControls,
+    setIsPlaying,
+  } = useVideoPlayer();
 
   return (
     <div
@@ -114,7 +44,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ imageUrl, className = 
     >
       <video
         ref={videoRef}
-        src={fullUrl}
+        src={src}
         className="w-full h-full object-contain"
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
@@ -197,11 +127,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ imageUrl, className = 
                     <button
                       key={speed}
                       className={`w-full px-4 py-2 text-xs text-left hover:bg-primary transition-colors ${playbackRate === speed ? 'text-primary bg-primary/10' : 'text-slate-300'}`}
-                      onClick={() => {
-                        setPlaybackRate(speed);
-                        if (videoRef.current) videoRef.current.playbackRate = speed;
-                        setShowSpeedMenu(false);
-                      }}
+                      onClick={() => changePlaybackRate(speed)}
                     >
                       {speed === 1 ? '正常' : `${speed}x`}
                     </button>
@@ -211,11 +137,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ imageUrl, className = 
             </div>
 
             <button
-              onClick={() => {
-                if (videoRef.current) {
-                  videoRef.current.muted = !videoRef.current.muted;
-                }
-              }}
+              onClick={toggleMute}
               className="hover:text-primary transition-colors flex items-center"
             >
               <span className="material-symbols-outlined text-2xl">volume_up</span>

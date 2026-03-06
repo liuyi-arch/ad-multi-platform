@@ -1,7 +1,6 @@
 export enum AdStatus {
   PENDING = 'PENDING',
   REJECTED = 'REJECTED',
-  ENDING_SOON = 'ENDING_SOON',
   APPROVED = 'APPROVED'
 }
 
@@ -30,11 +29,6 @@ export const StatusLabel = ({ status, variant = 'default', className = '' }: Sta
       label: '已拒绝',
       colorClass: 'bg-rose-50 text-rose-600 border-rose-200',
       dotClass: 'bg-rose-500',
-    },
-    ENDING_SOON: {
-      label: '即将结束',
-      colorClass: 'bg-blue-50 text-blue-600 border-blue-200',
-      dotClass: 'bg-blue-500',
     },
   };
 

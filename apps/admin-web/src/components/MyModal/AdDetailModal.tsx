@@ -12,7 +12,11 @@ export const AdDetailModal: React.FC<{ ad: AdItem; onClose: () => void }> = ({ a
             maxWidth="max-w-[720px]"
         >
             <div className="space-y-6">
-                <VideoPlayer imageUrl={(ad.videoUrls && ad.videoUrls.length > 0) ? ad.videoUrls[0] : (ad.imageUrl || ad.thumbnail || '')} />
+                {(() => {
+                    const rawUrl = (ad.videoUrls && ad.videoUrls.length > 0) ? ad.videoUrls[0] : (ad.imageUrl || ad.thumbnail || '');
+                    const fullUrl = rawUrl && !rawUrl.startsWith('http') ? `http://localhost:3000${rawUrl}` : rawUrl;
+                    return <VideoPlayer src={fullUrl} />;
+                })()}
                 <h3 className="text-2xl font-bold text-[#1e293b]">{ad.title}</h3>
                 <div className="grid grid-cols-2 gap-4">
                     <div className="bg-blue-50 rounded-xl p-4 flex flex-col gap-1 border border-blue-100">
