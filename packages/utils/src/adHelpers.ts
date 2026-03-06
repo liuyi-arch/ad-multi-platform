@@ -16,7 +16,7 @@ export const parseChineseDate = (dateStr: string): number => {
  * 广告通用排序逻辑
  */
 export const sortAds = <T extends HasStatus & { bid: number; heat: any; createDate?: string; date?: string }>(
-  ads: T[], 
+  ads: T[],
   sortBy: string
 ): T[] => {
   const data = [...ads];

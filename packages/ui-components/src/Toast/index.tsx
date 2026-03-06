@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import ReactDOM from 'react-dom';
-
-export type ToastType = 'success' | 'error' | 'info' | 'warning';
+import { ToastType, toast, ToastItem as HookToastItem } from '@repo/hooks';
 
 interface ToastProps {
     message: string;
@@ -22,7 +21,7 @@ const ToastItem: React.FC<ToastProps> = ({ message, type = 'info', duration = 30
         return () => clearTimeout(timer);
     }, [duration, onClose]);
 
-    const typeConfig = {
+    const typeConfig: Record<ToastType, { icon: string; color: string; text: string }> = {
         success: { icon: 'check_circle', color: 'bg-green-500', text: 'text-white' },
         error: { icon: 'error', color: 'bg-red-500', text: 'text-white' },
         info: { icon: 'info', color: 'bg-blue-500', text: 'text-white' },
@@ -42,37 +41,15 @@ const ToastItem: React.FC<ToastProps> = ({ message, type = 'info', duration = 30
     );
 };
 
-// Singleton controller for programmatically showing toasts
-let toastIdCounter = 0;
-const subscribers = new Set<(toasts: Array<{ id: number; message: string; type: ToastType; duration: number }>) => void>();
-let activeToasts: Array<{ id: number; message: string; type: ToastType; duration: number }> = [];
-
-export const toast = {
-    show: (message: string, type: ToastType = 'info', duration: number = 3000) => {
-        const id = ++toastIdCounter;
-        activeToasts = [...activeToasts, { id, message, type, duration }];
-        subscribers.forEach(fn => fn(activeToasts));
-    },
-    success: (msg: string) => toast.show(msg, 'success'),
-    error: (msg: string) => toast.show(msg, 'error'),
-    info: (msg: string) => toast.show(msg, 'info'),
-    warning: (msg: string) => toast.show(msg, 'warning'),
-};
-
 export const ToastContainer: React.FC = () => {
-    const [toasts, setToasts] = useState<Array<{ id: number; message: string; type: ToastType; duration: number }>>([]);
+    const [toasts, setToasts] = useState<HookToastItem[]>([]);
 
     useEffect(() => {
-        const sub = (newToasts: typeof toasts) => setToasts(newToasts);
-        subscribers.add(sub);
-        return () => {
-            subscribers.delete(sub);
-        };
+        return toast._subscribe(setToasts);
     }, []);
 
     const removeToast = useCallback((id: number) => {
-        activeToasts = activeToasts.filter(t => t.id !== id);
-        setToasts(activeToasts);
+        toast._remove(id);
     }, []);
 
     if (typeof document === 'undefined') return null;

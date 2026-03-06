@@ -92,7 +92,7 @@ const AdTable: React.FC<AdTableProps> = ({ ads, onOpenEdit, onOpenDelete, onOpen
         )}
       </tbody>
     </table>
-  </div>
+  </div >
 );
 
 export default AdTable;

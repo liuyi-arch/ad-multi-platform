@@ -18,7 +18,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
       {/* 折叠切换按钮 */}
       <button
         onClick={toggleSidebar}
-        className="absolute -right-3 top-20 bg-primary text-white size-6 rounded-full flex items-center justify-center shadow-lg border border-white/20 z-10 hover:scale-110 transition-transform"
+        className="absolute -right-3 top-[28px] bg-primary text-white size-6 rounded-full flex items-center justify-center shadow-lg border border-white/20 z-50 hover:scale-110 transition-transform"
       >
         <span className="material-symbols-outlined text-sm">
           {isCollapsed ? 'chevron_right' : 'chevron_left'}
