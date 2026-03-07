@@ -1,9 +1,9 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Ad, AdStatus, ViewType } from '../../types';
 import { Pagination, SortSelector } from '@repo/ui-components';
 import AdCard from '../../components/AdCard/AdCard';
-import { usePagination, useAdsData, useSearch, useAdsModal } from '@repo/hooks';
+import { usePagination, useAdsStore, useModalStore, useSearch } from '@repo/hooks';
 import { useSelectFilter } from '../../hooks/useSelectFilter';
 import Layout from '../../components/Layout/Layout';
 import MyModal from '../../components/MyModal';
@@ -11,9 +11,16 @@ import { useNavigate } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  const { ads, loading, error, ...dataMethods } = useAdsData();
+  
+  // Zustand Stores
+  const { ads, loading, error, fetchAds, addAd, updateAd, deleteAd, updateAdStatus } = useAdsStore();
+  const { type, ad: modalAd, formMode, openModal, closeModal, handleConfirm: storeHandleConfirm } = useModalStore();
+
+  useEffect(() => {
+    fetchAds();
+  }, [fetchAds]);
+
   const { searchQuery, setSearchQuery, searchResults: searchAds } = useSearch(ads, ['title', 'description']);
-  const { modal, openModal, closeModal, handleConfirm } = useAdsModal(dataMethods);
 
   const ITEMS_PER_PAGE = 12;
   const { activeSelect, selectFilterAds, setActiveSelect } = useSelectFilter(searchAds);
@@ -28,6 +35,16 @@ const Home: React.FC = () => {
   const handleViewChange = (v: ViewType) => {
     const path = v === 'GALLERY' ? '/home' : '/my-ads';
     navigate(path);
+  };
+
+  const handleConfirm = async (payload: any) => {
+    await storeHandleConfirm(payload, {
+      addAd,
+      updateAd,
+      deleteAd,
+      updateAdStatus
+    });
+    // 成功后根据需要刷新或处理
   };
 
   return (
@@ -93,9 +110,9 @@ const Home: React.FC = () => {
       )}
 
       <MyModal
-        type={modal.type}
-        ad={modal.ad}
-        formMode={modal.formMode}
+        type={type}
+        ad={modalAd}
+        formMode={formMode}
         onClose={closeModal}
         onConfirm={handleConfirm}
       />

@@ -1,18 +1,22 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import StatsGrid from '../../components/StatsCard';
 import { TrendChart, PieChart } from '@repo/ui-components';
 import { DashboardAdTable } from '../../components/AdTable';
 import { PIE_DATA } from '../../mockData';
 import { useTrendTime } from '../../hooks/useTrendTime';
-import { useAdStats, useAdsData, useAdsModal, useSearch } from '@repo/hooks';
+import { useAdStats, useAdsStore, useModalStore, useSearch } from '@repo/hooks';
 import Layout from '../../components/Layout/Layout';
 import MyModal from '../../components/MyModal';
 
 const DashboardPage: React.FC = () => {
-  const { ads, loading, error, ...dataMethods } = useAdsData();
+  const { ads, loading, error, fetchAds } = useAdsStore();
   const { searchQuery, setSearchQuery, searchResults: searchAds } = useSearch(ads, ['id', 'title', 'description']);
-  const { modal, openModal, closeModal, handleConfirm } = useAdsModal(dataMethods);
+  const { type, ad: modalAd, formMode, openModal, closeModal } = useModalStore();
+
+  useEffect(() => {
+    fetchAds();
+  }, [fetchAds]);
 
   const { timeRange, setTimeRange, trendResData } = useTrendTime();
   const { stats } = useAdStats(searchAds);
@@ -61,11 +65,11 @@ const DashboardPage: React.FC = () => {
       )}
 
       <MyModal
-        type={modal.type}
-        ad={modal.ad}
-        formMode={modal.formMode}
+        type={type}
+        ad={modalAd}
+        formMode={formMode}
         onClose={closeModal}
-        onConfirm={handleConfirm}
+        onConfirm={closeModal}
       />
     </Layout>
   );

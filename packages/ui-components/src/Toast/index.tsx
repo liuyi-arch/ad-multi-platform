@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
-import { ToastType, toast } from '@repo/hooks';
-import { useToast } from './useToast';
+import { ToastType, useToastStore } from '@repo/hooks';
 
 interface ToastProps {
     message: string;
@@ -43,19 +42,19 @@ const ToastItem: React.FC<ToastProps> = ({ message, type = 'info', duration = 30
 };
 
 export const ToastContainer: React.FC = () => {
-    const { toasts, removeToast } = useToast();
+    const { toasts, remove } = useToastStore();
 
     if (typeof document === 'undefined') return null;
 
     return ReactDOM.createPortal(
         <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[9999] flex flex-col items-center gap-3 pointer-events-none">
-            {toasts.map(t => (
-                <ToastItem key={t.id} {...t} onClose={() => removeToast(t.id)} />
+            {toasts.map((t: any) => (
+                <ToastItem key={t.id} {...t} onClose={() => remove(t.id)} />
             ))}
         </div>,
         document.body
     );
 };
 
-export { toast };
-export default toast;
+export { toast } from '@repo/hooks';
+export default ToastContainer;

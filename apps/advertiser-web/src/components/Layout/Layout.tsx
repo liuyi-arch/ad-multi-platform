@@ -1,4 +1,4 @@
-import { useAuth, useLoginOut } from '@repo/hooks';
+import { useAuthStore, useLoginOut } from '@repo/hooks';
 import { ViewType } from '../../types';
 import Nav from '../Nav/Nav';
 import { Footer, SearchBox, UserMenu } from '@repo/ui-components';
@@ -12,7 +12,7 @@ interface PageLayoutProps {
 }
 
 const PageLayout: React.FC<PageLayoutProps> = ({ children, currentView, onViewChange, onSearch, searchQuery }) => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const { handleLogout } = useLoginOut();
 
   return (

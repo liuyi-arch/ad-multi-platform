@@ -1,6 +1,6 @@
 import { SearchBox, UserMenu } from '@repo/ui-components';
 import { ViewType } from '../../types';
-import { useAuth, useLoginOut } from '@repo/hooks';
+import { useAuthStore, useLoginOut } from '@repo/hooks';
 
 interface HeaderProps {
   title: string;
@@ -11,7 +11,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ title, action, currentNav, searchQuery, onSearchChange }) => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const { handleLogout } = useLoginOut();
 
   return (

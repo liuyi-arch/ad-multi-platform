@@ -1,17 +1,21 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { AdStatus } from '../../types';
 import { ManagementStatsCard } from '../../components/StatsCard';
 import { Pagination, Tab, SortSelector } from '@repo/ui-components';
 import { ManagementAdTable } from '../../components/AdTable';
-import { usePagination, useTabFilter, FilterType, useAdsData, useSearch, useAdsModal, useAdStats } from '@repo/hooks';
+import { usePagination, useTabFilter, FilterType, useAdsStore, useModalStore, useSearch, useAdStats } from '@repo/hooks';
 import Layout from '../../components/Layout/Layout';
 import MyModal from '../../components/MyModal';
 
 const AdManagementPage: React.FC = () => {
-  const { ads, loading, error, ...dataMethods } = useAdsData();
+  const { ads, loading, error, fetchAds, addAd, updateAd, deleteAd, updateAdStatus } = useAdsStore();
   const { searchQuery, setSearchQuery, searchResults: searchAds } = useSearch(ads, ['id', 'title', 'description']);
-  const { modal, openModal, closeModal, handleConfirm } = useAdsModal(dataMethods);
+  const { type, ad: modalAd, formMode, openModal, closeModal, handleConfirm: storeHandleConfirm } = useModalStore();
+
+  useEffect(() => {
+    fetchAds();
+  }, [fetchAds]);
 
   const { activeTab, setActiveTab, tabfilterAds } = useTabFilter(searchAds);
   const { stats } = useAdStats(ads);
@@ -25,6 +29,15 @@ const AdManagementPage: React.FC = () => {
     itemsPerPage,
     pages
   } = usePagination(tabfilterAds, 5);
+
+  const handleConfirm = async (payload: any) => {
+    await storeHandleConfirm(payload, {
+      addAd,
+      updateAd,
+      deleteAd,
+      updateAdStatus
+    });
+  };
 
   const tabOptions = [
     { id: 'ALL', label: '所有广告' },
@@ -106,9 +119,9 @@ const AdManagementPage: React.FC = () => {
       )}
 
       <MyModal
-        type={modal.type}
-        ad={modal.ad}
-        formMode={modal.formMode}
+        type={type}
+        ad={modalAd}
+        formMode={formMode}
         onClose={closeModal}
         onConfirm={handleConfirm}
       />

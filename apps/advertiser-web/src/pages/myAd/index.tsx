@@ -1,27 +1,36 @@
 
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Ad, AdStatus, ViewType } from '../../types';
 import StatCard from '../../components/StatCard/StatCard';
 import { Pagination, Tab } from '@repo/ui-components';
 import AdTable from '../../components/AdTable/AdTable';
-import { usePagination, useTabFilter, useAdStats, useAdsData, useAdsModal, useSearch, useAuth } from '@repo/hooks';
+import { usePagination, useTabFilter, useAdStats, useAdsStore, useModalStore, useSearch, useAuthStore } from '@repo/hooks';
 import Layout from '../../components/Layout/Layout';
 import MyModal from '../../components/MyModal';
 import { useNavigate } from 'react-router-dom';
 
 const MyAd: React.FC = () => {
   const navigate = useNavigate();
-  const { ads, loading, error, ...dataMethods } = useAdsData();
-  const { user } = useAuth();
+  
+  // Zustand Stores
+  const { ads, loading, error, fetchAds, addAd, updateAd, deleteAd, updateAdStatus } = useAdsStore();
+  const { user } = useAuthStore();
+  const { type, ad: modalAd, formMode, openModal, closeModal, handleConfirm: storeHandleConfirm } = useModalStore();
+
+  useEffect(() => {
+    fetchAds();
+  }, [fetchAds]);
+
   // 根据当前登录手机号隔离广告，只展示“我的广告”
   const ownerPhone = user?.phone;
-  const ownAds = ownerPhone ? ads.filter(ad => ad.publisher === ownerPhone) : ads;
+  const ownAds = useMemo(() => 
+    ownerPhone ? ads.filter(ad => ad.publisher === ownerPhone) : ads
+  , [ads, ownerPhone]);
 
   const { searchQuery, setSearchQuery, searchResults: searchAds } = useSearch(ownAds, ['title', 'description']);
-  const { modal, openModal, closeModal, handleConfirm } = useAdsModal(dataMethods);
 
   const { activeTab, setActiveTab, tabfilterAds } = useTabFilter(searchAds);
-  const { statCardState, stats } = useAdStats(ownAds);
+  const { stats } = useAdStats(ownAds);
   const ITEMS_PER_PAGE = 10;
 
   const { currentPage, setCurrentPage, currentItems, totalPages, totalItems, pages } = usePagination(tabfilterAds, ITEMS_PER_PAGE);
@@ -34,6 +43,15 @@ const MyAd: React.FC = () => {
   const handleViewChange = (v: ViewType) => {
     const path = v === 'GALLERY' ? '/home' : '/my-ads';
     navigate(path);
+  };
+
+  const handleConfirm = async (payload: any) => {
+    await storeHandleConfirm(payload, {
+      addAd,
+      updateAd,
+      deleteAd,
+      updateAdStatus
+    });
   };
 
   const tabOptions = [
@@ -96,9 +114,9 @@ const MyAd: React.FC = () => {
       )}
 
       <MyModal
-        type={modal.type}
-        ad={modal.ad}
-        formMode={modal.formMode}
+        type={type}
+        ad={modalAd}
+        formMode={formMode}
         onClose={closeModal}
         onConfirm={handleConfirm}
       />
