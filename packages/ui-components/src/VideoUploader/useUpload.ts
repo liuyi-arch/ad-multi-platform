@@ -1,13 +1,29 @@
 import { useCallback, useRef, useState } from 'react';
 import { uploadService } from '@repo/api';
-import { UploadTask, UseUploadOptions, UploadStatus } from '@repo/shared-types';
+import { UploadStatus } from '@repo/shared-types';
 import { validateFileSize, validateFileType, genId } from '@repo/utils';
+
+interface UploadTask {
+  id: string;
+  file: File;
+  status: UploadStatus;
+  progress: number;
+  errorMsg?: string;
+  abortController: AbortController;
+}
+
+interface UseUploadHookOptions {
+  value: string[];
+  onChange?: (urls: string[]) => void;
+  maxCount: number;
+  chunkThreshold: number;
+}
 
 /**
  * 视频上传管理 Hook
  * 处理文件选择、分片上传、进度追踪及取消上传
  */
-export const useUpload = ({ value, onChange, maxCount, chunkThreshold }: UseUploadOptions) => {
+export const useUpload = ({ value, onChange, maxCount, chunkThreshold }: UseUploadHookOptions) => {
   const [tasks, setTasks] = useState<UploadTask[]>([]);
   const tasksRef = useRef<UploadTask[]>([]);
   const abortMapRef = useRef<Map<string, AbortController>>(new Map());

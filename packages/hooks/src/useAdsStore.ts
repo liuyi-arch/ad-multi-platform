@@ -46,6 +46,7 @@ export const useAdsStore = create<AdsState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await adService.getAds({ pageSize: 100 });
+      // 这里的 response 是 PaginatedResponse<Ad> 类型
       set({ 
         ads: response.items.map(formatAd), 
         loading: false, 

@@ -1,54 +1,7 @@
+import { UploadResponse, UploadOptions, ChunkUploadOptions, CheckFileResult, ApiResult } from '@repo/shared-types';
+import { resolveAssetUrl } from './utils';
 import httpClient from './httpClient';
 import { AxiosProgressEvent, AxiosRequestConfig } from 'axios';
-
-const getAssetBaseUrl = () => {
-    const baseUrl = String((httpClient.defaults as any)?.baseURL || '');
-    return baseUrl.replace(/\/?api\/?$/, '');
-};
-
-const resolveAssetUrl = (url?: string) => {
-    if (!url) return '';
-    if (url.startsWith('http')) return url;
-    const base = getAssetBaseUrl();
-    if (!base) return url;
-    const normalizedPath = url.startsWith('/') ? url : `/${url}`;
-    return `${base}${normalizedPath}`;
-};
-
-export interface UploadResponse {
-    url: string;
-    filename?: string;
-    size?: number;
-    mimeType?: string;
-}
-
-export interface UploadOptions {
-    onProgress?: (progress: number) => void;
-    cancelToken?: any;
-    abortSignal?: AbortSignal;
-}
-
-// ─────────── 分片上传相关类型 ───────────
-
-export interface ChunkUploadOptions {
-    /** 分片大小，默认 5MB */
-    chunkSize?: number;
-    /** 每片进度回调 (0-100) */
-    onProgress?: (progress: number) => void;
-    /** 可中断信号 */
-    abortSignal?: AbortSignal;
-    /** 并发分片数，默认 3 */
-    concurrency?: number;
-}
-
-export interface CheckFileResult {
-    /** 是否已存在（秒传） */
-    exists: boolean;
-    /** 秒传时直接返回的 URL */
-    url?: string;
-    /** 断点续传时已上传的分片索引 */
-    uploadedChunks?: number[];
-}
 
 /** localStorage 中存储的上传进度 key 格式 */
 const RESUME_KEY = (hash: string) => `upload_resume_${hash}`;
@@ -193,7 +146,7 @@ async function uploadFileInChunks(
 // ─────────── API 方法 ───────────
 
 async function checkFile(hash: string, filename: string): Promise<CheckFileResult> {
-    const res = await httpClient.post<{ data: CheckFileResult }>('/upload/check', { hash, filename });
+    const res = await httpClient.post<ApiResult<CheckFileResult>>('/upload/check', { hash, filename });
     return res.data.data;
 }
 
@@ -203,7 +156,7 @@ async function mergeChunks(
     filename: string,
     type: 'video' | 'image' = 'video'
 ): Promise<UploadResponse> {
-    const res = await httpClient.post<{ data: UploadResponse }>('/upload/merge', { hash, total, filename, type });
+    const res = await httpClient.post<ApiResult<UploadResponse>>('/upload/merge', { hash, total, filename, type });
     return res.data.data;
 }
 
@@ -238,7 +191,7 @@ export const uploadService = {
         };
 
         const endpoint = type === 'video' ? '/upload/video' : '/upload/image';
-        const response = await httpClient.post<{ data: UploadResponse }>(
+        const response = await httpClient.post<ApiResult<UploadResponse>>(
             endpoint,
             formData,
             config
@@ -263,7 +216,7 @@ export const uploadService = {
         const formData = new FormData();
         files.forEach((file) => formData.append('files', file));
 
-        const response = await httpClient.post<{ data: { urls: string[] } }>(
+        const response = await httpClient.post<ApiResult<{ urls: string[] }>>(
             '/upload/multiple',
             formData,
             {

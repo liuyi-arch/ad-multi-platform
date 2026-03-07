@@ -40,7 +40,7 @@ export const useToastStore = create<ToastState>((set, get) => ({
 
 // 为了保持与原有 API 的兼容性，导出 toast 对象
 export const toast = {
-    show: (message: string, type: ToastType = 'info', duration: number = 3000) => 
+    show: (message: string, type: ToastType = 'info', duration: number = 3000) =>
         useToastStore.getState().show(message, type, duration),
     success: (message: string) => useToastStore.getState().show(message, 'success'),
     error: (message: string) => useToastStore.getState().show(message, 'error'),

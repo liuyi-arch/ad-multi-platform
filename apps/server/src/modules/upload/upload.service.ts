@@ -73,7 +73,6 @@ export class UploadService {
         type: 'video' | 'image'
     ): Promise<{ url: string; filename: string }> {
         const chunkDir = path.join(uploadConfig.storage.tempDir, 'chunks', hash);
-        const ext = path.extname(originalFilename);
         const filename = generateFilename(originalFilename);
         const uploadDir = path.join(uploadConfig.storage.uploadDir, type);
         await ensureDir(uploadDir);

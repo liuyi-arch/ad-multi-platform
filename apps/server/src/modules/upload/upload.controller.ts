@@ -61,7 +61,7 @@ export class UploadController {
      * Body: { hash: string, filename: string }
      */
     async checkFile(ctx: Context) {
-        const { hash, filename } = ctx.request.body as { hash: string; filename: string };
+        const { hash } = ctx.request.body as { hash: string; filename: string };
         if (!hash) {
             ctx.status = 400;
             throw new Error('缺少文件哈希值');

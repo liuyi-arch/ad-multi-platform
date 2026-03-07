@@ -8,10 +8,10 @@ export interface ApiResponse<T = any> {
 }
 
 /**
- * 分页响应格式
+ * 分页响应格式 (标准格式，items 为数据主体)
  */
 export interface PaginatedResponse<T> {
-  data: T[];
+  items: T[];
   total: number;
   page: number;
   pageSize: number;
@@ -107,3 +107,5 @@ export interface FormConfig {
  */
 export * from './auth';
 export * from './upload';
+export * from './api';
+export * from './ad';

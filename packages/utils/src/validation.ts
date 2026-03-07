@@ -32,14 +32,14 @@ export const validateConfirmPassword = (password: string, confirmPassword?: stri
  * @returns 错误消息，若无错误则返回 null
  */
 export const validateAuthForm = (data: AuthFormData, mode: AuthMode): string | null => {
-    const phoneError = validatePhone(data.phone);
+    const phoneError = validatePhone(data.phone ?? '');
     if (phoneError) return phoneError;
 
-    const passwordError = validatePassword(data.password);
+    const passwordError = validatePassword(data.password ?? '');
     if (passwordError) return passwordError;
 
     if (mode === 'REGISTER') {
-        const confirmError = validateConfirmPassword(data.password, data.confirmPassword);
+        const confirmError = validateConfirmPassword(data.password ?? '', data.confirmPassword);
         if (confirmError) return confirmError;
     }
 

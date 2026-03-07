@@ -1,16 +1,6 @@
-/**
- * 审批 API 服务
- * 封装审批相关的 HTTP 请求
- */
-
+import { Ad, ApiResult } from '@repo/shared-types';
+import { normalizeAdAssets } from './utils';
 import httpClient from './httpClient';
-import { Ad } from '@repo/shared-types';
-
-interface ApiResult<T> {
-    code: number;
-    message: string;
-    data: T;
-}
 
 export const approvalService = {
     /**
@@ -18,7 +8,7 @@ export const approvalService = {
      */
     getPendingList: async (): Promise<Ad[]> => {
         const res = await httpClient.get<ApiResult<Ad[]>>('/approvals/pending');
-        return res.data.data;
+        return res.data.data.map(normalizeAdAssets);
     },
 
     /**
@@ -26,7 +16,7 @@ export const approvalService = {
      */
     approveAd: async (id: string): Promise<Ad> => {
         const res = await httpClient.post<ApiResult<Ad>>(`/approvals/${id}/approve`);
-        return res.data.data;
+        return normalizeAdAssets(res.data.data);
     },
 
     /**
@@ -34,7 +24,7 @@ export const approvalService = {
      */
     rejectAd: async (id: string, reason: string): Promise<Ad> => {
         const res = await httpClient.post<ApiResult<Ad>>(`/approvals/${id}/reject`, { reason });
-        return res.data.data;
+        return normalizeAdAssets(res.data.data);
     },
 
     /**

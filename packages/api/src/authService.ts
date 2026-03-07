@@ -1,27 +1,11 @@
+import { ApiResult, AuthResponse, AuthFormData } from '@repo/shared-types';
 import httpClient from './httpClient';
-
-export interface AuthResponse {
-    token: string;
-    user: {
-        id: string;
-        username?: string;
-        phone: string;
-        role: string;
-    };
-}
-
-/** 服务端统一响应结构 */
-interface ApiResult<T> {
-    code: number;
-    message: string;
-    data: T;
-}
 
 export const authService = {
     /**
      * 用户登录
      */
-    login: async (formData: any): Promise<AuthResponse> => {
+    login: async (formData: AuthFormData): Promise<AuthResponse> => {
         const response = await httpClient.post<ApiResult<AuthResponse>>('/auth/login', formData);
         return response.data.data;
     },
@@ -29,7 +13,7 @@ export const authService = {
     /**
      * 用户注册
      */
-    register: async (formData: any): Promise<AuthResponse> => {
+    register: async (formData: AuthFormData): Promise<AuthResponse> => {
         const response = await httpClient.post<ApiResult<AuthResponse>>('/auth/register', formData);
         return response.data.data;
     },

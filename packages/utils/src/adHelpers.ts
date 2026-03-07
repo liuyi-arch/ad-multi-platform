@@ -51,7 +51,7 @@ export const calculateAdStats = <T extends HasStatus>(ads: T[], statusEnum: any)
 /**
  * 根据状态过滤广告列表（通用版）
  */
-export const filterAdsByStatus = <T extends HasStatus>(ads: T[], status: any, statusEnum: any) => {
+export const filterAdsByStatus = <T extends HasStatus>(ads: T[], status: any) => {
   if (status === 'ALL') return ads;
   return ads.filter(ad => ad.status === status);
 };

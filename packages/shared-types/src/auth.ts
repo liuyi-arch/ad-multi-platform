@@ -12,8 +12,19 @@ export type AuthMode = 'LOGIN' | 'REGISTER';
 /**
  * 认证表单数据
  */
+export interface AuthResponse {
+    token: string;
+    user: {
+        id: string;
+        username?: string;
+        phone: string;
+        role: string;
+    };
+}
+
 export interface AuthFormData {
     phone: string;
-    password: string;
+    password?: string;
     confirmPassword?: string;
+    role?: string;
 }
