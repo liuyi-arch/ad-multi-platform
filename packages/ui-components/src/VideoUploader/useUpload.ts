@@ -1,38 +1,22 @@
 import { useCallback, useRef, useState } from 'react';
 import { uploadService } from '@repo/api';
+import { UploadTask, UseUploadOptions, UploadStatus } from '@repo/shared-types';
+import { validateFileSize, validateFileType, genId } from '@repo/utils';
 
-export type UploadStatus =
-  | 'PENDING'
-  | 'HASHING'
-  | 'UPLOADING'
-  | 'PAUSED'
-  | 'ERROR'
-  | 'SUCCESS';
-
-export interface UploadTask {
-  id: string;
-  file: File;
-  status: UploadStatus;
-  progress: number;
-  chunkInfo?: string;
-  errorMsg?: string;
-  abortController: AbortController;
-}
-
-export interface UseUploadOptions {
-  value: string[];
-  onChange?: (urls: string[]) => void;
-  maxCount: number;
-  chunkThreshold: number;
-}
-
-const genId = () => Math.random().toString(36).substring(2, 9);
-
+/**
+ * 视频上传管理 Hook
+ * 处理文件选择、分片上传、进度追踪及取消上传
+ */
 export const useUpload = ({ value, onChange, maxCount, chunkThreshold }: UseUploadOptions) => {
   const [tasks, setTasks] = useState<UploadTask[]>([]);
   const tasksRef = useRef<UploadTask[]>([]);
   const abortMapRef = useRef<Map<string, AbortController>>(new Map());
 
+  /**
+   * 更新特定任务的状态
+   * @param id 任务 ID
+   * @param patch 更新的字段
+   */
   const updateTask = useCallback((id: string, patch: Partial<UploadTask>) => {
     setTasks(prev => {
       const next = prev.map(t => (t.id === id ? { ...t, ...patch } : t));
@@ -41,11 +25,17 @@ export const useUpload = ({ value, onChange, maxCount, chunkThreshold }: UseUplo
     });
   }, []);
 
+  /**
+   * 校验上传文件
+   * 限制 100MB 以内，格式仅支持 MP4/MOV
+   */
   const validateFile = useCallback((file: File): string | null => {
-    if (file.size > 100 * 1024 * 1024) return `文件 ${file.name} 超过 100MB`;
-    if (!['video/mp4', 'video/quicktime'].includes(file.type)) {
-      return `文件 ${file.name} 格式不支持（仅支持 MP4, MOV）`;
-    }
+    const sizeError = validateFileSize(file, 100 * 1024 * 1024);
+    if (sizeError) return sizeError;
+
+    const typeError = validateFileType(file, ['video/mp4', 'video/quicktime']);
+    if (typeError) return typeError;
+
     return null;
   }, []);
 

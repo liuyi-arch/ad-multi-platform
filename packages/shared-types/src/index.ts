@@ -106,3 +106,4 @@ export interface FormConfig {
  * 认证相关类型
  */
 export * from './auth';
+export * from './upload';

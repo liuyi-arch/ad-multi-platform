@@ -47,3 +47,14 @@ export const formatHeat = (value: number | string): string => {
   return numValue.toString();
 };
 
+/**
+ * 格式化时间 (秒 -> mm:ss)
+ * @param seconds 秒数
+ * @returns 格式化后的时间字符串
+ */
+export const formatTime = (seconds: number): string => {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+};
+

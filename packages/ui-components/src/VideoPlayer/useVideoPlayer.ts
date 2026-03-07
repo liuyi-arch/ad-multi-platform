@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { formatTime as formatTimeUtil } from '@repo/utils';
 
 export const useVideoPlayer = () => {
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -13,11 +14,9 @@ export const useVideoPlayer = () => {
     const [showSpeedMenu, setShowSpeedMenu] = useState(false);
     const [isDragging, setIsDragging] = useState(false);
 
-    // 格式化时间
+    // 格式化时间 - 使用抽离的工具函数
     const formatTime = useCallback((time: number) => {
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        return formatTimeUtil(time);
     }, []);
 
     // 切换播放/暂停

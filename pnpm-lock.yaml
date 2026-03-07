@@ -337,6 +337,12 @@ importers:
       '@repo/hooks':
         specifier: workspace:*
         version: link:../hooks
+      '@repo/shared-types':
+        specifier: workspace:*
+        version: link:../shared-types
+      '@repo/utils':
+        specifier: workspace:*
+        version: link:../utils
       react:
         specifier: ^18.2.0
         version: 18.3.1
