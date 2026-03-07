@@ -49,8 +49,8 @@ export interface Ad {
   title: string;
   description: string;
   status: AdStatus;
-  bid: number | string;
-  heat: number | string;
+  bid: number;
+  heat: number;
   publisher?: string;
   landingPage?: string;
   category?: string;

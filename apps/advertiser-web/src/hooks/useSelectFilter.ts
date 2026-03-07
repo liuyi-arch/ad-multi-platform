@@ -9,7 +9,9 @@ import { sortAds } from '@repo/utils';
 export const useSelectFilter = (ads: Ad[]) => {
   const [activeSelect, setActiveSelect] = useState('time');
 
-  const selectFilterAds = useMemo(() => sortAds(ads, activeSelect), [ads, activeSelect]);
+  const selectFilterAds = useMemo(() => {
+    return sortAds(ads, activeSelect);
+  }, [ads, activeSelect]);
 
   const handleSelectChange = (value: string) => {
     setActiveSelect(value);

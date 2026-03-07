@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { ToastType, toast } from '@repo/hooks';
-
 import { useToast } from './useToast';
 
 interface ToastProps {
@@ -17,7 +16,7 @@ const ToastItem: React.FC<ToastProps> = ({ message, type = 'info', duration = 30
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsVisible(false);
-            setTimeout(onClose, 300); // Wait for transition
+            setTimeout(onClose, 300);
         }, duration);
 
         return () => clearTimeout(timer);
@@ -26,7 +25,7 @@ const ToastItem: React.FC<ToastProps> = ({ message, type = 'info', duration = 30
     const typeConfig: Record<ToastType, { icon: string; color: string; text: string }> = {
         success: { icon: 'check_circle', color: 'bg-green-500', text: 'text-white' },
         error: { icon: 'error', color: 'bg-red-500', text: 'text-white' },
-        info: { icon: 'info', color: 'bg-blue-500', text: 'text-white' },
+        info: { icon: 'info', color: 'bg-blue-50/80 backdrop-blur-md border border-blue-200', text: 'text-blue-600' },
         warning: { icon: 'warning', color: 'bg-orange-500', text: 'text-white' },
     };
 
@@ -49,7 +48,7 @@ export const ToastContainer: React.FC = () => {
     if (typeof document === 'undefined') return null;
 
     return ReactDOM.createPortal(
-        <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[9999] flex flex-col items-center gap-3 pointer-eventsa_none">
+        <div className="fixed top-8 left-1/2 -translate-x-1/2 z-[9999] flex flex-col items-center gap-3 pointer-events-none">
             {toasts.map(t => (
                 <ToastItem key={t.id} {...t} onClose={() => removeToast(t.id)} />
             ))}
