@@ -154,6 +154,12 @@ importers:
       '@repo/tsconfig':
         specifier: workspace:*
         version: link:../../packages/config/tsconfig
+      '@tailwindcss/container-queries':
+        specifier: ^0.1.1
+        version: 0.1.1(tailwindcss@4.2.1)
+      '@tailwindcss/forms':
+        specifier: ^0.5.11
+        version: 0.5.11(tailwindcss@4.2.1)
       '@types/node':
         specifier: ^20.0.0
         version: 20.19.27
@@ -172,12 +178,21 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.0.3
         version: 4.7.0(vite@4.5.14(@types/node@20.19.27))
+      autoprefixer:
+        specifier: ^10.4.27
+        version: 10.4.27(postcss@8.5.8)
       eslint:
         specifier: ^9.0.0
         version: 9.39.2
+      postcss:
+        specifier: ^8.5.8
+        version: 8.5.8
       prettier:
         specifier: ^3.0.0
         version: 3.7.4
+      tailwindcss:
+        specifier: ^4.2.1
+        version: 4.2.1
       typescript:
         specifier: ^5.0.2
         version: 5.9.3
