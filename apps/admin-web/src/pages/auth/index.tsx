@@ -5,11 +5,11 @@ import { AuthLayout, AuthTabs, LoginForm, RegisterForm, toast } from '@repo/ui-c
 
 const AuthPage: React.FC = () => {
     const navigate = useNavigate();
-    const { 
-        role, 
-        setRole, 
-        mode, 
-        switchMode, 
+    const {
+        role,
+        setRole,
+        mode,
+        switchMode,
         handleSubmit,
         formData,
         handleInputChange,
@@ -32,7 +32,7 @@ const AuthPage: React.FC = () => {
                         navigate('/dashboard');
                     } else {
                         // 如果是广告主在 Admin 端登录，跳转到广告主端
-                        window.location.href = 'http://localhost:3002';
+                        window.location.href = '/advertiser';
                     }
                 } else {
                     switchMode('LOGIN');

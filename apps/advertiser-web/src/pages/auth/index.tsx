@@ -32,7 +32,7 @@ const AuthPage: React.FC = () => {
                         navigate('/home');
                     } else {
                         // 如果是管理人员在广告主端登录，跳转到管理端
-                        window.location.href = ((import.meta as any).env.VITE_ADMIN_URL as string) || `http://${window.location.hostname}:3002`;
+                        window.location.href = ((import.meta as any).env.VITE_ADMIN_URL as string) || '/admin';
                     }
                 } else {
                     switchMode('LOGIN');
