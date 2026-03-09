@@ -7,6 +7,7 @@ import MediaPage from '../pages/media';
 import AnalyticsPage from '../pages/analytics';
 import AccessControlPage from '../pages/access';
 import AuthPage from '../pages/auth';
+import { RequireAuth } from '@repo/ui-components';
 
 export const getRoutes = (): RouteObject[] => [
   {
@@ -19,7 +20,7 @@ export const getRoutes = (): RouteObject[] => [
   },
   {
     path: '/',
-    element: <DashboardPage />,
+    element: <RequireAuth><DashboardPage /></RequireAuth>,
   },
   {
     path: '/dashboard',
@@ -27,19 +28,19 @@ export const getRoutes = (): RouteObject[] => [
   },
   {
     path: '/ads',
-    element: <AdManagementPage />,
+    element: <RequireAuth><AdManagementPage /></RequireAuth>,
   },
   {
     path: '/media',
-    element: <MediaPage />,
+    element: <RequireAuth><MediaPage /></RequireAuth>,
   },
   {
     path: '/analytics',
-    element: <AnalyticsPage />,
+    element: <RequireAuth><AnalyticsPage /></RequireAuth>,
   },
   {
     path: '/access',
-    element: <AccessControlPage />,
+    element: <RequireAuth><AccessControlPage /></RequireAuth>,
   },
   {
     path: '*',

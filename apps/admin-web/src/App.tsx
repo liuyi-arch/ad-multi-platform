@@ -1,9 +1,8 @@
 
 import React from 'react';
 import { BrowserRouter, useRoutes } from 'react-router-dom';
-import { ToastContainer } from '@repo/ui-components';
+import { ToastContainer, WebSocketManager } from '@repo/ui-components';
 import { getRoutes } from './routes';
-import WebSocketManager from './components/WebSocketManager';
 
 const AppContent: React.FC = () => {
     const routing = useRoutes(getRoutes());

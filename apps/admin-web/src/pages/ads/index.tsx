@@ -9,7 +9,7 @@ import Layout from '../../components/Layout/Layout';
 import MyModal from '../../components/MyModal';
 
 const AdManagementPage: React.FC = () => {
-  const { ads, loading, error, fetchAds, addAd, updateAd, deleteAd, updateAdStatus } = useAdsStore();
+  const { ads, loading, error, fetchAds, addAd, updateAd, deleteAd, updateAdStatus, incrementHeat } = useAdsStore();
   const { searchQuery, setSearchQuery, searchResults: searchAds } = useSearch(ads, ['id', 'title', 'description']);
   const { type, ad: modalAd, formMode, openModal, closeModal, handleConfirm: storeHandleConfirm } = useModalStore();
 
@@ -97,7 +97,10 @@ const AdManagementPage: React.FC = () => {
 
             <ManagementAdTable
               ads={currentItems}
-              onDetail={(ad) => openModal('DETAIL', ad)}
+              onDetail={(ad) => {
+                incrementHeat(ad.id);
+                openModal('DETAIL', ad);
+              }}
               onDelete={(ad) => openModal('DELETE', ad)}
               onReject={(ad) => openModal('REJECT_ACTION', ad)}
               onApprove={(ad) => openModal('APPROVE_ACTION', ad)}

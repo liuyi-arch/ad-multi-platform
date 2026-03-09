@@ -10,7 +10,7 @@ import Layout from '../../components/Layout/Layout';
 import MyModal from '../../components/MyModal';
 
 const DashboardPage: React.FC = () => {
-  const { ads, loading, error, fetchAds } = useAdsStore();
+  const { ads, loading, error, fetchAds, incrementHeat } = useAdsStore();
   const { searchQuery, setSearchQuery, searchResults: searchAds } = useSearch(ads, ['id', 'title', 'description']);
   const { type, ad: modalAd, formMode, openModal, closeModal } = useModalStore();
 
@@ -59,7 +59,10 @@ const DashboardPage: React.FC = () => {
               <h3 className="text-lg font-bold text-text-main">高转化广告项目</h3>
               <button className="text-primary text-sm font-semibold hover:text-primary-hover hover:underline transition-colors">查看完整报表</button>
             </div>
-            <DashboardAdTable ads={searchAds} onDetailClick={(ad) => openModal('DETAIL', ad)} />
+            <DashboardAdTable ads={searchAds} onDetailClick={(ad) => {
+              incrementHeat(ad.id);
+              openModal('DETAIL', ad);
+            }} />
           </div>
         </div>
       )}

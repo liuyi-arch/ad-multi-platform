@@ -5,7 +5,7 @@ import { useWebSocket, useAdsStore } from '@repo/hooks';
  * WebSocket 管理组件
  * 负责分发来自后端的实时更新消息
  */
-const WebSocketManager: React.FC = () => {
+export const WebSocketManager: React.FC = () => {
     const { syncActions } = useAdsStore();
 
     const { isConnected } = useWebSocket({
@@ -41,5 +41,3 @@ const WebSocketManager: React.FC = () => {
 
     return null; // 此组件不渲染任何 UI
 };
-
-export default WebSocketManager;

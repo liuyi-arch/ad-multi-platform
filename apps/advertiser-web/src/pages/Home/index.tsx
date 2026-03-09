@@ -11,9 +11,9 @@ import { useNavigate } from 'react-router-dom';
 
 const Home: React.FC = () => {
   const navigate = useNavigate();
-  
+
   // Zustand Stores
-  const { ads, loading, error, fetchAds, addAd, updateAd, deleteAd, updateAdStatus } = useAdsStore();
+  const { ads, loading, error, fetchAds, addAd, updateAd, deleteAd, updateAdStatus, incrementHeat } = useAdsStore();
   const { type, ad: modalAd, formMode, openModal, closeModal, handleConfirm: storeHandleConfirm } = useModalStore();
 
   useEffect(() => {
@@ -92,7 +92,10 @@ const Home: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {currentItems.map(ad => (
-                <AdCard key={ad.id} ad={ad} onClick={(ad) => openModal('DETAIL', ad)} />
+                <AdCard key={ad.id} ad={ad} onClick={(ad) => {
+                  incrementHeat(ad.id);
+                  openModal('DETAIL', ad);
+                }} />
               ))}
             </div>
           )}

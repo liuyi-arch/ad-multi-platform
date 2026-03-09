@@ -8,7 +8,9 @@ export const AdFormModal: React.FC<{ ad: AdItem | null; formMode: 'CREATE' | 'ED
         publisher: ad?.publisher || '',
         description: ad?.description || '',
         landingPage: ad?.landingPage || '',
-        bid: ad?.bid || 0,
+        bid: (typeof ad?.bid === 'string')
+            ? parseFloat((ad.bid as string).replace('¥', '').replace(',', ''))
+            : (ad?.bid || 0),
         videoUrls: ad?.videoUrls || [],
     });
 

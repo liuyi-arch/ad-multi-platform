@@ -11,9 +11,9 @@ import { useNavigate } from 'react-router-dom';
 
 const MyAd: React.FC = () => {
   const navigate = useNavigate();
-  
+
   // Zustand Stores
-  const { ads, loading, error, fetchAds, addAd, updateAd, deleteAd, updateAdStatus } = useAdsStore();
+  const { ads, loading, error, fetchAds, addAd, updateAd, deleteAd, updateAdStatus, incrementHeat } = useAdsStore();
   const { user } = useAuthStore();
   const { type, ad: modalAd, formMode, openModal, closeModal, handleConfirm: storeHandleConfirm } = useModalStore();
 
@@ -23,9 +23,9 @@ const MyAd: React.FC = () => {
 
   // 根据当前登录手机号隔离广告，只展示“我的广告”
   const ownerPhone = user?.phone;
-  const ownAds = useMemo(() => 
+  const ownAds = useMemo(() =>
     ownerPhone ? ads.filter(ad => ad.publisher === ownerPhone) : ads
-  , [ads, ownerPhone]);
+    , [ads, ownerPhone]);
 
   const { searchQuery, setSearchQuery, searchResults: searchAds } = useSearch(ownAds, ['title', 'description']);
 
@@ -97,7 +97,10 @@ const MyAd: React.FC = () => {
               onOpenEdit={(ad) => openModal('FORM', ad, 'EDIT')}
               onOpenDelete={(ad) => openModal('DELETE', ad)}
               onOpenRejection={(ad) => openModal('REJECT_REASON', ad)}
-              onOpenDetail={(ad) => openModal('DETAIL', ad)}
+              onOpenDetail={(ad) => {
+                incrementHeat(ad.id);
+                openModal('DETAIL', ad);
+              }}
             />
 
             <Pagination

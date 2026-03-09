@@ -13,11 +13,13 @@ export const AdFormModal: React.FC<{
         title: ad?.title || '',
         publisher: ad?.publisher || '',
         description: ad?.description || '',
-        bid: ad?.bid || 0,
+        category: ad?.category || '电子商务',
+        bid: (typeof ad?.bid === 'string')
+            ? parseFloat((ad.bid as string).replace('¥', '').replace(',', ''))
+            : (ad?.bid || 0),
         imageUrl: ad?.imageUrl || '',
         videoUrls: ad?.videoUrls || [],
         landingPage: ad?.landingPage || '',
-        category: ad?.category || '电子商务',
     });
 
     const [aiLoading, setAiLoading] = useState(false);

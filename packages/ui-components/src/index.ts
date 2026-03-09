@@ -14,3 +14,4 @@ export * from './VideoUploader';
 export * from './Auth';
 export * from './Toast';
 export * from './UserMenu/UserMenu';
+export * from './WebSocketManager';

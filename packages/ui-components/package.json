@@ -9,14 +9,16 @@
         "./*": "./src/*/index.tsx"
     },
     "peerDependencies": {
-        "react": "^18.2.0"
+        "react": "^18.2.0",
+        "react-router-dom": "^6.0.0"
     },
     "dependencies": {
         "@repo/api": "workspace:*",
         "@repo/hooks": "workspace:*",
         "@repo/shared-types": "workspace:*",
         "@repo/utils": "workspace:*",
-        "recharts": "^2.12.0"
+        "recharts": "^2.12.0",
+        "react-router-dom": "^6.0.0"
     },
     "devDependencies": {
         "@types/react": "^18.2.0",
