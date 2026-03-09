@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 
+// @ts-ignore
+const importMetaEnv = (import.meta as any).env;
+
 /**
  * WebSocket 消息类型
  */
@@ -21,7 +24,7 @@ interface UseWebSocketOptions {
  */
 export const useWebSocket = (options: UseWebSocketOptions = {}) => {
     const {
-        url = `ws://${window.location.hostname}:3000/ws`,
+        url = (importMetaEnv?.VITE_WS_URL as string) || `ws://${window.location.hostname}:3000/ws`,
         onMessage,
         reconnectInterval = 3000,
         maxReconnectAttempts = 10,

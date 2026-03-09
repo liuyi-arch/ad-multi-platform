@@ -1,0 +1,52 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: adwall-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    container_name: adwall-server
+    ports:
+      - "3000:3000"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/advertise-wall
+      - PORT=3000
+      - NODE_ENV=production
+    depends_on:
+      - mongodb
+
+  admin-web:
+    build:
+      context: .
+      dockerfile: apps/admin-web/Dockerfile
+      args:
+        - VITE_API_URL=http://121.40.134.147:3000
+        - VITE_WS_URL=ws://121.40.134.147:3000/ws
+    container_name: adwall-admin-web
+    ports:
+      - "3002:80"
+    depends_on:
+      - server
+
+  advertiser-web:
+    build:
+      context: .
+      dockerfile: apps/advertiser-web/Dockerfile
+      args:
+        - VITE_API_URL=http://121.40.134.147:3000
+        - VITE_WS_URL=ws://121.40.134.147:3000/ws
+        - VITE_ADMIN_URL=http://121.40.134.147:3002
+    container_name: adwall-advertiser-web
+    ports:
+      - "3003:80"
+    depends_on:
+      - server
+
+volumes:
+  mongodb_data:
