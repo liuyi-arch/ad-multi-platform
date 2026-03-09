@@ -5,13 +5,19 @@
     "main": "./src/index.ts",
     "types": "./src/index.ts",
     "scripts": {
-    "build": "tsc --build"
-  },
-  "dependencies": {
+        "build": "tsc --build"
+    },
+    "dependencies": {
         "@repo/shared-types": "workspace:*"
     },
     "exports": {
-        ".": "./src/index.ts",
-        "./*": "./src/*.ts"
+        ".": {
+            "types": "./dist/index.d.ts",
+            "default": "./dist/index.js"
+        },
+        "./*": {
+            "types": "./dist/*.d.ts",
+            "default": "./dist/*.js"
+        }
     }
 }
