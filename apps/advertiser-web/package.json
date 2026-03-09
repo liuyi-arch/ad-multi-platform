@@ -24,14 +24,19 @@
     "devDependencies": {
         "@repo/eslint-config": "workspace:*",
         "@repo/tsconfig": "workspace:*",
+        "@tailwindcss/container-queries": "^0.1.1",
+        "@tailwindcss/forms": "^0.5.11",
         "@types/node": "^20.0.0",
         "@types/react": "^18.2.15",
         "@types/react-dom": "^18.2.7",
         "@typescript-eslint/eslint-plugin": "^6.0.0",
         "@typescript-eslint/parser": "^6.0.0",
         "@vitejs/plugin-react": "^4.0.3",
+        "autoprefixer": "^10.4.27",
         "eslint": "^9.0.0",
+        "postcss": "^8.5.8",
         "prettier": "^3.0.0",
+        "tailwindcss": "^4.2.1",
         "typescript": "^5.0.2",
         "vite": "^4.4.5"
     }

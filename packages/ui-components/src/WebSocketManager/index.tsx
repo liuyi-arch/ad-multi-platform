@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useWebSocket, useAdsStore } from '@repo/hooks';
 
 /**
@@ -8,10 +8,8 @@ import { useWebSocket, useAdsStore } from '@repo/hooks';
 export const WebSocketManager: React.FC = () => {
     const { syncActions } = useAdsStore();
 
-    const { isConnected } = useWebSocket({
+    useWebSocket({
         onMessage: (message) => {
-            console.log('📬 WebSocket message received:', message.type);
-
             switch (message.type) {
                 case 'AD_CREATED':
                     syncActions.handleCreated(message.payload);
@@ -23,21 +21,11 @@ export const WebSocketManager: React.FC = () => {
                 case 'AD_DELETED':
                     syncActions.handleDeleted(message.payload.id);
                     break;
-                case 'CONNECTED':
-                    console.log('✅ Connected to WebSocket server');
-                    break;
                 default:
-                    console.log('❓ Unknown WS message type:', message.type);
+                    break;
             }
         }
     });
-
-    // 可以在开发环境下显示连接状态
-    useEffect(() => {
-        if (process.env.NODE_ENV === 'development') {
-            console.log(`🔌 WebSocket connection status: ${isConnected ? 'Connected' : 'Disconnected'}`);
-        }
-    }, [isConnected]);
 
     return null; // 此组件不渲染任何 UI
 };
