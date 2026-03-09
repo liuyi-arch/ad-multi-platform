@@ -266,6 +266,9 @@ importers:
       '@repo/shared-types':
         specifier: workspace:*
         version: link:../shared-types
+      '@repo/utils':
+        specifier: workspace:*
+        version: link:../utils
       axios:
         specifier: ^1.6.0
         version: 1.13.5
@@ -357,7 +360,11 @@ importers:
         specifier: ^18.2.0
         version: 18.3.7(@types/react@18.3.27)
 
-  packages/utils: {}
+  packages/utils:
+    dependencies:
+      '@repo/shared-types':
+        specifier: workspace:*
+        version: link:../shared-types
 
 packages:
 

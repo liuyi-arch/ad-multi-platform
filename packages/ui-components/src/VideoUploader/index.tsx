@@ -1,21 +1,18 @@
 import React, { useRef } from 'react';
-import { useUpload, UploadStatus } from './useUpload';
+import { useUpload } from './useUpload';
+import { UploadStatus } from '@repo/shared-types';
 
-// ─────────── Props ───────────
 export interface VideoUploaderProps {
-  value?: string[];
-  onChange?: (urls: string[]) => void;
+  value?: string[];   /** 已上传的视频 URL 列表 */
+  onChange?: (urls: string[]) => void;    /** 视频列表变化时的回调函数 */
   label?: string;
   className?: string;
-  maxCount?: number;
-  /** 单文件大于此值（字节）时启用分片上传，默认 5MB */
-  chunkThreshold?: number;
+  maxCount?: number;  /** 最大允许上传的视频数量 */
+  chunkThreshold?: number;    /** 单文件大于此值（字节）时启用分片上传，默认 5MB */
 }
 
-// ─────────── 常量 ───────────
-const DEFAULT_CHUNK_THRESHOLD = 5 * 1024 * 1024; // 5MB
+const DEFAULT_CHUNK_THRESHOLD = 5 * 1024 * 1024;
 
-// ─────────── 状态标签配置 ───────────
 const STATUS_CONFIG: Record<UploadStatus, { label: string; color: string; icon: string }> = {
   PENDING: { label: '等待', color: '#64748b', icon: 'schedule' },
   HASHING: { label: '解析中', color: '#f59e0b', icon: 'fingerprint' },
@@ -25,7 +22,6 @@ const STATUS_CONFIG: Record<UploadStatus, { label: string; color: string; icon: 
   SUCCESS: { label: '成功', color: '#22c55e', icon: 'check_circle' },
 };
 
-// ─────────────────────────────────────────────
 export const VideoUploader: React.FC<VideoUploaderProps> = ({
   value = [],
   onChange,
@@ -50,20 +46,24 @@ export const VideoUploader: React.FC<VideoUploaderProps> = ({
     chunkThreshold,
   });
 
-  // ─── 移除已完成视频 ───
+  /**
+   * 从已完成列表中移除指定视频
+   */
   const removeVideo = (index: number) => {
     const newUrls = [...value];
     newUrls.splice(index, 1);
     onChange?.(newUrls);
   };
 
+  /**
+   * 响应 input 文件选择事件，分发给上传 Hook
+   */
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     handleFilesSelect(files);
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
-  // ─────────────────────────── 渲染 ───────────────────────────
   return (
     <div className={`space-y-3 ${className}`}>
       <label className="block text-sm font-bold text-[#1e293b]">{label}</label>

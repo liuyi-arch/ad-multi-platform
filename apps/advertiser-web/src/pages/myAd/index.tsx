@@ -1,6 +1,6 @@
 
 import React, { useEffect, useMemo } from 'react';
-import { Ad, AdStatus, ViewType } from '../../types';
+import { AdStatus, ViewType } from '../../types';
 import StatCard from '../../components/StatCard/StatCard';
 import { Pagination, Tab } from '@repo/ui-components';
 import AdTable from '../../components/AdTable/AdTable';

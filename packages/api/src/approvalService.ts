@@ -1,14 +1,21 @@
 import { Ad, ApiResult } from '@repo/shared-types';
-import { normalizeAdAssets } from './utils';
+import { normalizeAdAssets } from '@repo/utils';
 import httpClient from './httpClient';
 
+const getApiBaseUrl = () => String(httpClient.defaults.baseURL || '');
+
+/**
+ * 审批 API 服务
+ * 封装审批相关的 HTTP 请求
+ */
 export const approvalService = {
     /**
      * 获取待审批列表
      */
     getPendingList: async (): Promise<Ad[]> => {
         const res = await httpClient.get<ApiResult<Ad[]>>('/approvals/pending');
-        return res.data.data.map(normalizeAdAssets);
+        const apiBaseUrl = getApiBaseUrl();
+        return res.data.data.map(ad => normalizeAdAssets(ad, apiBaseUrl));
     },
 
     /**
@@ -16,7 +23,7 @@ export const approvalService = {
      */
     approveAd: async (id: string): Promise<Ad> => {
         const res = await httpClient.post<ApiResult<Ad>>(`/approvals/${id}/approve`);
-        return normalizeAdAssets(res.data.data);
+        return normalizeAdAssets(res.data.data, getApiBaseUrl());
     },
 
     /**
@@ -24,7 +31,7 @@ export const approvalService = {
      */
     rejectAd: async (id: string, reason: string): Promise<Ad> => {
         const res = await httpClient.post<ApiResult<Ad>>(`/approvals/${id}/reject`, { reason });
-        return normalizeAdAssets(res.data.data);
+        return normalizeAdAssets(res.data.data, getApiBaseUrl());
     },
 
     /**

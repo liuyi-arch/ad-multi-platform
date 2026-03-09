@@ -48,8 +48,11 @@
             "@repo/ui-components/*": [
                 "./packages/ui-components/src/*"
             ],
+            "@repo/utils": [
+                "./packages/utils/src/index.ts"
+            ],
             "@repo/utils/*": [
-                "./packages/utils/*"
+                "./packages/utils/src/*"
             ],
             "@repo/hooks": [
                 "./packages/hooks/src/index.ts"

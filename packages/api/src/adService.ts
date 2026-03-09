@@ -1,6 +1,8 @@
 import { Ad, AdListParams, PaginatedResponse, ApiResult } from '@repo/shared-types';
-import { normalizeAdAssets } from './utils';
+import { normalizeAdAssets } from '@repo/utils';
 import httpClient from './httpClient';
+
+const getApiBaseUrl = () => String(httpClient.defaults.baseURL || '');
 
 /**
  * 广告 API 服务
@@ -13,9 +15,10 @@ export const adService = {
     getAds: async (params?: AdListParams): Promise<PaginatedResponse<Ad>> => {
         const res = await httpClient.get<ApiResult<PaginatedResponse<Ad>>>('/ads', { params });
         const data = res.data.data;
+        const apiBaseUrl = getApiBaseUrl();
         return {
             ...data,
-            items: data.items.map(normalizeAdAssets),
+            items: data.items.map(ad => normalizeAdAssets(ad, apiBaseUrl)),
         };
     },
 
@@ -24,7 +27,7 @@ export const adService = {
      */
     getAdById: async (id: string): Promise<Ad> => {
         const res = await httpClient.get<ApiResult<Ad>>(`/ads/${id}`);
-        return normalizeAdAssets(res.data.data);
+        return normalizeAdAssets(res.data.data, getApiBaseUrl());
     },
 
     /**
@@ -32,7 +35,7 @@ export const adService = {
      */
     createAd: async (data: Partial<Ad>): Promise<Ad> => {
         const res = await httpClient.post<ApiResult<Ad>>('/ads', data);
-        return normalizeAdAssets(res.data.data);
+        return normalizeAdAssets(res.data.data, getApiBaseUrl());
     },
 
     /**
@@ -40,7 +43,7 @@ export const adService = {
      */
     updateAd: async (id: string, data: Partial<Ad>): Promise<Ad> => {
         const res = await httpClient.put<ApiResult<Ad>>(`/ads/${id}`, data);
-        return normalizeAdAssets(res.data.data);
+        return normalizeAdAssets(res.data.data, getApiBaseUrl());
     },
 
     /**
@@ -55,6 +58,6 @@ export const adService = {
      */
     incrementHeat: async (id: string): Promise<Ad> => {
         const res = await httpClient.put<ApiResult<Ad>>(`/ads/${id}/heat`);
-        return normalizeAdAssets(res.data.data);
+        return normalizeAdAssets(res.data.data, getApiBaseUrl());
     },
 };

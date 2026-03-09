@@ -3,9 +3,15 @@
     "version": "0.0.0",
     "private": true,
     "main": "./src/index.ts",
-  "types": "./src/index.ts",
-  "exports": {
-    ".": "./src/index.ts",
-    "./*": "./src/*.ts"
-  }
+    "types": "./src/index.ts",
+    "scripts": {
+    "build": "tsc --build"
+  },
+  "dependencies": {
+        "@repo/shared-types": "workspace:*"
+    },
+    "exports": {
+        ".": "./src/index.ts",
+        "./*": "./src/*.ts"
+    }
 }

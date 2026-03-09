@@ -1,6 +1,6 @@
 
-import React, { useEffect, useMemo } from 'react';
-import { Ad, AdStatus, ViewType } from '../../types';
+import React, { useEffect } from 'react';
+import { ViewType } from '../../types';
 import { Pagination, SortSelector } from '@repo/ui-components';
 import AdCard from '../../components/AdCard/AdCard';
 import { usePagination, useAdsStore, useModalStore, useSearch } from '@repo/hooks';

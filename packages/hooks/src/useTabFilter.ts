@@ -11,7 +11,7 @@ export const useTabFilter = (ads: Ad[]) => {
   const [activeTab, setActiveTab] = useState<FilterType>('ALL');
 
   const tabfilterAds = useMemo(() => {
-    return filterAdsByStatus(ads, activeTab, AdStatus);
+    return filterAdsByStatus(ads, activeTab);
   }, [ads, activeTab]);
 
   return {
