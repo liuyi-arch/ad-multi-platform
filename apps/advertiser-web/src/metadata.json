@@ -1,5 +1,5 @@
 {
-  "name": "1.5 原子化划分组件",
+  "name": "广告大厅",
   "description": "一个功能齐全的广告大厅和管理仪表盘，支持广告展示、投放管理、数据统计以及基于 Gemini AI 的文案优化建议。",
   "requestFramePermissions": []
 }
