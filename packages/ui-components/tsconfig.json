@@ -1,0 +1,27 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "composite": true,
+        "declaration": true,
+        "outDir": "./dist",
+        "rootDir": "./src"
+    },
+    "include": [
+        "src"
+    ],
+    "references": [
+        {
+            "path": "../api"
+        },
+        {
+            "path": "../hooks"
+        },
+        {
+            "path": "../shared-types"
+        }
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}

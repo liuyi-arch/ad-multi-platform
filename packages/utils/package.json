@@ -2,6 +2,16 @@
     "name": "@repo/utils",
     "version": "0.0.0",
     "private": true,
-    "main": "./index.ts",
-    "types": "./index.ts"
+    "main": "./src/index.ts",
+    "types": "./src/index.ts",
+    "scripts": {
+    "build": "tsc --build"
+  },
+  "dependencies": {
+        "@repo/shared-types": "workspace:*"
+    },
+    "exports": {
+        ".": "./src/index.ts",
+        "./*": "./src/*.ts"
+    }
 }

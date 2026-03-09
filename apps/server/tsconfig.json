@@ -1,0 +1,39 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "compilerOptions": {
+        "outDir": "dist",
+        "rootDir": "src",
+        "module": "CommonJS",
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ],
+            "@repo/shared-types": [
+                "../../packages/shared-types/dist/index.d.ts"
+            ],
+            "@repo/shared-types/*": [
+                "../../packages/shared-types/dist/*.d.ts"
+            ],
+            "@repo/api": [
+                "../../packages/api/src/index.ts"
+            ],
+            "@repo/api/*": [
+                "../../packages/api/src/*"
+            ]
+        },
+        "noEmit": false,
+        "declaration": false,
+        "emitDeclarationOnly": false,
+        "composite": false,
+        "allowImportingTsExtensions": false
+    },
+    "include": [
+        "src/**/*"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist"
+    ]
+}

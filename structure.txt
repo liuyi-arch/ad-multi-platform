@@ -1,0 +1,258 @@
+.
+├── apps
+│   ├── admin-web
+│   │   ├── index.html
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── App.tsx
+│   │   │   ├── api
+│   │   │   │   ├── adApi.ts
+│   │   │   │   ├── mediaApi.ts
+│   │   │   │   └── userApi.ts
+│   │   │   ├── components
+│   │   │   │   ├── AdTable
+│   │   │   │   │   ├── AdTable.tsx
+│   │   │   │   │   └── index.ts
+│   │   │   │   ├── Header
+│   │   │   │   │   ├── Header.tsx
+│   │   │   │   │   └── index.ts
+│   │   │   │   ├── Layout
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── MyModal
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── Sidebar
+│   │   │   │   │   ├── Sidebar.tsx
+│   │   │   │   │   └── index.ts
+│   │   │   │   ├── StatsCard
+│   │   │   │   │   ├── StatsCard.tsx
+│   │   │   │   │   └── index.ts
+│   │   │   │   └── TopAdsTable
+│   │   │   │       ├── TopAdsTable.tsx
+│   │   │   │       └── index.ts
+│   │   │   ├── hooks
+│   │   │   │   └── useTrendTime.ts
+│   │   │   ├── main.tsx
+│   │   │   ├── metadata.json
+│   │   │   ├── mockData.tsx
+│   │   │   ├── pages
+│   │   │   │   ├── access
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── ads
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── analytics
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── auth
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── dashboard
+│   │   │   │   │   └── index.tsx
+│   │   │   │   └── media
+│   │   │   │       └── index.tsx
+│   │   │   ├── routes
+│   │   │   │   └── index.tsx
+│   │   │   ├── types
+│   │   │   │   ├── README.md
+│   │   │   │   └── index.ts
+│   │   │   └── utils
+│   │   │       └── chartHelpers.ts
+│   │   ├── tsconfig.json
+│   │   └── vite.config.ts
+│   ├── advertiser-web
+│   │   ├── README.md
+│   │   ├── index.html
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── App.tsx
+│   │   │   ├── api
+│   │   │   │   ├── advertiserApi.ts
+│   │   │   │   └── geminiService.ts
+│   │   │   ├── components
+│   │   │   │   ├── AdCard
+│   │   │   │   │   └── AdCard.tsx
+│   │   │   │   ├── AdTable
+│   │   │   │   │   └── AdTable.tsx
+│   │   │   │   ├── Layout
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── MyModal
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── Nav
+│   │   │   │   │   └── HeadNav.tsx
+│   │   │   │   └── StatCard
+│   │   │   │       └── StatCard.tsx
+│   │   │   ├── hooks
+│   │   │   │   └── useSelectFilter.ts
+│   │   │   ├── main.tsx
+│   │   │   ├── metadata.json
+│   │   │   ├── mockData.ts
+│   │   │   ├── pages
+│   │   │   │   ├── auth
+│   │   │   │   │   └── index.tsx
+│   │   │   │   ├── home
+│   │   │   │   │   └── index.tsx
+│   │   │   │   └── myAd
+│   │   │   │       └── index.tsx
+│   │   │   ├── routes
+│   │   │   │   └── index.tsx
+│   │   │   ├── types
+│   │   │   │   └── index.ts
+│   │   │   └── utils
+│   │   ├── tsconfig.json
+│   │   └── vite.config.ts
+│   └── server
+│       ├── README.md
+│       ├── package.json
+│       ├── src
+│       │   ├── app.ts
+│       │   ├── bootstrap.ts
+│       │   ├── config
+│       │   │   ├── database.ts
+│       │   │   ├── index.ts
+│       │   │   ├── ssr.ts
+│       │   │   ├── upload.ts
+│       │   │   └── websocket.ts
+│       │   ├── constants
+│       │   │   ├── index.ts
+│       │   │   ├── messages.ts
+│       │   │   └── status.ts
+│       │   ├── middlewares
+│       │   │   ├── auth.ts
+│       │   │   ├── cors.ts
+│       │   │   ├── error.ts
+│       │   │   ├── index.ts
+│       │   │   └── logger.ts
+│       │   ├── modules
+│       │   │   ├── ad
+│       │   │   │   ├── ad.controller.ts
+│       │   │   │   ├── ad.model.ts
+│       │   │   │   ├── ad.repository.ts
+│       │   │   │   ├── ad.service.ts
+│       │   │   │   └── ad.types.ts
+│       │   │   ├── approval
+│       │   │   │   ├── approval.controller.ts
+│       │   │   │   ├── approval.model.ts
+│       │   │   │   ├── approval.repository.ts
+│       │   │   │   ├── approval.service.ts
+│       │   │   │   └── approval.types.ts
+│       │   │   ├── auth
+│       │   │   │   ├── auth.controller.ts
+│       │   │   │   ├── auth.model.ts
+│       │   │   │   ├── auth.service.ts
+│       │   │   │   └── auth.types.ts
+│       │   │   ├── form
+│       │   │   │   ├── form.controller.ts
+│       │   │   │   └── form.types.ts
+│       │   │   ├── ssr
+│       │   │   │   ├── ssr.controller.ts
+│       │   │   │   └── ssr.types.ts
+│       │   │   └── upload
+│       │   │       ├── upload.controller.ts
+│       │   │       ├── upload.service.ts
+│       │   │       └── upload.types.ts
+│       │   ├── routes
+│       │   │   ├── ad.routes.ts
+│       │   │   ├── api.routes.ts
+│       │   │   ├── approval.routes.ts
+│       │   │   ├── auth.routes.ts
+│       │   │   ├── form.routes.ts
+│       │   │   ├── index.ts
+│       │   │   ├── ssr.routes.ts
+│       │   │   └── upload.routes.ts
+│       │   ├── seed.ts
+│       │   ├── types
+│       │   │   ├── api.ts
+│       │   │   ├── common.ts
+│       │   │   ├── context.ts
+│       │   │   └── index.ts
+│       │   └── utils
+│       │       ├── file.ts
+│       │       ├── index.ts
+│       │       └── response.ts
+│       └── tsconfig.json
+├── package.json
+├── packages
+│   ├── api
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── adService.ts
+│   │   │   ├── approvalService.ts
+│   │   │   ├── authService.ts
+│   │   │   ├── httpClient.ts
+│   │   │   ├── index.ts
+│   │   │   └── uploadService.ts
+│   │   └── tsconfig.json
+│   ├── config
+│   │   ├── eslint-config
+│   │   │   └── package.json
+│   │   ├── prettier-config
+│   │   │   └── package.json
+│   │   └── tsconfig
+│   │       └── package.json
+│   ├── hooks
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── index.ts
+│   │   │   ├── useAdStats.ts
+│   │   │   ├── useAdsData.ts
+│   │   │   ├── useAdsModal.ts
+│   │   │   ├── useAuth.ts
+│   │   │   ├── usePagination.ts
+│   │   │   ├── useSearch.ts
+│   │   │   ├── useTabFilter.ts
+│   │   │   └── useWebSocket.ts
+│   │   └── tsconfig.json
+│   ├── shared-types
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── auth.ts
+│   │   │   └── index.ts
+│   │   └── tsconfig.json
+│   ├── ui-components
+│   │   ├── index.ts
+│   │   ├── package.json
+│   │   ├── src
+│   │   │   ├── Auth
+│   │   │   │   ├── AuthLayout.tsx
+│   │   │   │   ├── AuthTabs.tsx
+│   │   │   │   ├── LoginForm.tsx
+│   │   │   │   ├── RegisterForm.tsx
+│   │   │   │   └── index.ts
+│   │   │   ├── Button
+│   │   │   │   └── index.tsx
+│   │   │   ├── Footer
+│   │   │   │   └── index.tsx
+│   │   │   ├── Modal
+│   │   │   │   └── index.tsx
+│   │   │   ├── Pagination
+│   │   │   │   └── index.tsx
+│   │   │   ├── PieChart
+│   │   │   │   └── index.tsx
+│   │   │   ├── SearchBox
+│   │   │   │   └── index.tsx
+│   │   │   ├── SortSelector
+│   │   │   │   └── index.tsx
+│   │   │   ├── StatusLabel
+│   │   │   │   └── index.tsx
+│   │   │   ├── Tab
+│   │   │   │   └── index.tsx
+│   │   │   ├── Toast
+│   │   │   │   └── index.tsx
+│   │   │   ├── TrendChart
+│   │   │   │   └── index.tsx
+│   │   │   ├── VideoPlayer
+│   │   │   │   └── index.tsx
+│   │   │   ├── VideoUploader
+│   │   │   │   └── index.tsx
+│   │   │   └── index.ts
+│   │   └── tsconfig.json
+│   └── utils
+│       ├── package.json
+│       └── src
+│           ├── adHelpers.ts
+│           ├── format.ts
+│           ├── index.ts
+│           └── validation.ts
+├── pnpm-lock.yaml
+├── pnpm-workspace.yaml
+├── tsconfig.base.json
+└── turbo.json
+
+86 directories, 170 files

@@ -7,12 +7,16 @@
             "ESNext"
         ],
         "module": "ESNext",
+        "moduleResolution": "bundler",
         "skipLibCheck": true,
-        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
         "allowImportingTsExtensions": true,
         "resolveJsonModule": true,
         "isolatedModules": true,
-        "noEmit": true,
+        "noEmit": false,
+        "declaration": true,
+        "emitDeclarationOnly": true,
         "jsx": "react-jsx",
         "strict": true,
         "noUnusedLocals": true,
@@ -23,14 +27,38 @@
             "@/*": [
                 "./src/*"
             ],
+            "@repo/shared-types": [
+                "./packages/shared-types/src/index.ts"
+            ],
             "@repo/shared-types/*": [
-                "./packages/shared-types/*"
+                "./packages/shared-types/src/*"
+            ],
+            "@repo/api": [
+                "./packages/api/src/index.ts"
+            ],
+            "@repo/api/*": [
+                "./packages/api/src/*"
             ],
             "@repo/ui/*": [
                 "./packages/ui-components/*"
             ],
+            "@repo/ui-components": [
+                "./packages/ui-components/src/index.ts"
+            ],
+            "@repo/ui-components/*": [
+                "./packages/ui-components/src/*"
+            ],
+            "@repo/utils": [
+                "./packages/utils/src/index.ts"
+            ],
             "@repo/utils/*": [
-                "./packages/utils/*"
+                "./packages/utils/src/*"
+            ],
+            "@repo/hooks": [
+                "./packages/hooks/src/index.ts"
+            ],
+            "@repo/hooks/*": [
+                "./packages/hooks/src/*"
             ]
         }
     },
