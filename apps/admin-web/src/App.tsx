@@ -11,7 +11,7 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
     return (
-        <BrowserRouter>
+        <BrowserRouter basename="/admin">
             <WebSocketManager />
             <AppContent />
             <ToastContainer />
