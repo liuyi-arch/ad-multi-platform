@@ -31,14 +31,17 @@ export const formatDate = (date: string | Date): string => {
 /**
  * 格式化价格（货币符号 + 两位小数）
  */
-export const formatPrice = (value: number): string => {
-  return `¥${value.toFixed(2)}`;
+export const formatPrice = (value: number | string | null | undefined): string => {
+  const numValue = typeof value === 'string' ? parseFloat(value) : (value as number);
+  if (value === null || value === undefined || isNaN(numValue)) return '¥0.00';
+  return `¥${numValue.toFixed(2)}`;
 };
 
 /**
  * 格式化热度（k单位转化）
  */
-export const formatHeat = (value: number | string): string => {
+export const formatHeat = (value: number | string | null | undefined): string => {
+  if (value === null || value === undefined) return '0';
   const numValue = typeof value === 'string' ? parseFloat(value) : value;
   if (isNaN(numValue)) return '0';
   if (numValue >= 1000) {

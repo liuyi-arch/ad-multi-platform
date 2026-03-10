@@ -5,9 +5,10 @@
 
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
-const API_BASE_URL = typeof window !== 'undefined'
-    ? (window as any).__API_BASE_URL__ || 'http://localhost:3000/api'
-    : 'http://localhost:3000/api';
+const API_BASE_URL = (import.meta as any).env.VITE_API_URL ||
+    (typeof window !== 'undefined'
+        ? (window as any).__API_BASE_URL__ || '/api'
+        : 'http://localhost:3000/api');
 
 const httpClient: AxiosInstance = axios.create({
     baseURL: API_BASE_URL,
