@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { Navigate, RouteObject } from 'react-router-dom';
-import Home from '@/src/pages/home';
-import MyAd from '@/src/pages/myAd';
-import AuthPage from '@/src/pages/auth';
+import Home from '@/pages/home';
+import MyAd from '@/pages/myAd';
+import AuthPage from '@/pages/auth';
 import { RequireAuth } from '@repo/ui-components';
 
 export const getRoutes = (): RouteObject[] => [
