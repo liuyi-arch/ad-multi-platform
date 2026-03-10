@@ -66,8 +66,9 @@ export const useAdsStore = create<AdsState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await adService.getAds({ pageSize: 100 });
+      const items = Array.isArray(response?.items) ? response.items : [];
       set({
-        ads: response.items.map(formatAd),
+        ads: items.map(formatAd),
         loading: false,
         lastFetched: Date.now()
       });
