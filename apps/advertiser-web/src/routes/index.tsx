@@ -1,5 +1,5 @@
 
-import React from 'react';
+
 import { Navigate, RouteObject } from 'react-router-dom';
 import Home from '@/pages/home/index';
 import MyAd from '@/pages/myAd/index';

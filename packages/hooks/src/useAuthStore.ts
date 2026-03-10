@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { authService } from '@repo/api';
 import { AuthRole, AuthMode, AuthFormData } from '@repo/shared-types';
 import { validateAuthForm } from '@repo/utils';
+import { ToastType } from './useToastStore';
 
 export type UserRole = 'ADVERTISER' | 'ADMIN';
 
@@ -21,7 +22,7 @@ interface AuthState {
   loading: boolean;
   showPassword: boolean;
   formData: AuthFormData;
-  
+
   // Actions
   setRole: (role: AuthRole) => void;
   setMode: (mode: AuthMode) => void;
@@ -29,7 +30,7 @@ interface AuthState {
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (e: React.FormEvent, options?: {
     onSuccess?: (role: AuthRole, mode: AuthMode) => void;
-    onNotify?: (msg: string, type: any) => void;
+    onNotify?: (msg: string, type: ToastType) => void;
   }) => Promise<void>;
   login: (user: User, token: string) => void;
   logout: () => void;
@@ -48,9 +49,9 @@ export const useAuthStore = create<AuthState>()(
       showPassword: false,
       formData: { phone: '', password: '', confirmPassword: '' },
 
-      setRole: (role) => set({ 
-        role, 
-        formData: { phone: '', password: '', confirmPassword: '' } 
+      setRole: (role) => set({
+        role,
+        formData: { phone: '', password: '', confirmPassword: '' }
       }),
       setMode: (mode) => set({ mode }),
       togglePasswordVisibility: () => set((state) => ({ showPassword: !state.showPassword })),
@@ -63,7 +64,7 @@ export const useAuthStore = create<AuthState>()(
       handleSubmit: async (e, options) => {
         e.preventDefault();
         const { formData, mode, role } = get();
-        
+
         const errorMsg = validateAuthForm(formData, mode);
         if (errorMsg) {
           options?.onNotify?.(errorMsg, 'error');
@@ -99,18 +100,18 @@ export const useAuthStore = create<AuthState>()(
         set({ user: null, token: null, isAuthenticated: false });
         localStorage.removeItem('auth_token');
       },
-      switchMode: (mode) => set({ 
-        mode, 
-        formData: { phone: '', password: '', confirmPassword: '' } 
+      switchMode: (mode) => set({
+        mode,
+        formData: { phone: '', password: '', confirmPassword: '' }
       }),
     }),
     {
       name: 'auth-storage',
-      partialize: (state) => ({ 
-        user: state.user, 
-        token: state.token, 
+      partialize: (state) => ({
+        user: state.user,
+        token: state.token,
         role: state.role,
-        isAuthenticated: state.isAuthenticated 
+        isAuthenticated: state.isAuthenticated
       }),
     }
   )

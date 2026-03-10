@@ -1,74 +1,54 @@
 
-import React from 'react';
-import { AdItem, AdStatus as LocalAdStatus } from '../../types/index';
+import { FC } from 'react';
+import { AdItem } from '../../types/index';
 import { StatusLabel } from '@repo/ui-components';
 
 interface TopAdsTableProps {
   ads: AdItem[];
-  onDetailClick: (ad: AdItem) => void;
 }
 
-const TopAdsTable: React.FC<TopAdsTableProps> = ({ ads, onDetailClick }) => {
-  // Display only top 3 or 4 ads for the dashboard widget
-  const topAds = ads.slice(0, 4);
-
+const TopAdsTable: FC<TopAdsTableProps> = ({ ads }) => {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-left">
-        <thead className="bg-background-base text-text-muted text-xs font-bold uppercase tracking-wider">
-          <tr>
-            <th className="px-6 py-4">项目名称</th>
-            <th className="px-6 py-4">状态</th>
-            <th className="px-6 py-4">曝光量</th>
-            <th className="px-6 py-4">参与度</th>
-            <th className="px-6 py-4">操作</th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-border-light">
-          {topAds.map((ad, idx) => (
-            <tr key={ad.id || idx} className="hover:bg-background-base/50 transition-colors">
-              <td className="px-6 py-4">
-                <div className="flex items-center gap-3">
-                  <div
-                    className="size-10 rounded-lg bg-background-base border border-border-light flex items-center justify-center overflow-hidden bg-cover bg-center"
-                    style={{ backgroundImage: `url('${ad.thumbnail}')` }}
-                  >
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-text-main">{ad.title.split('：')[0]}</p>
-                    <p className="text-[10px] text-text-muted">
-                      {ad.category || '分类'} • {ad.brand || '品牌'}
-                    </p>
-                  </div>
-                </div>
-              </td>
-              <td className="px-6 py-4">
-                <StatusLabel status={ad.status} variant="table" />
-              </td>
-              <td className="px-6 py-4 text-sm font-medium text-text-main">
-                {/* Use a placeholder for impressions if not available in data */}
-                {(Math.random() * 500000 + 100000).toLocaleString(undefined, { maximumFractionDigits: 0 })}
-              </td>
-              <td className="px-6 py-4">
-                <div className="w-24 bg-background-base h-1.5 rounded-full overflow-hidden">
-                  <div
-                    className={`h-full ${idx === 1 ? 'bg-emerald-500' : 'bg-primary'}`}
-                    style={{ width: `${ad.engagement || 0}%` }}
-                  ></div>
-                </div>
-              </td>
-              <td className="px-6 py-4">
-                <button
-                  onClick={() => onDetailClick(ad)}
-                  className="p-1.5 rounded-lg hover:bg-background-base text-text-muted transition-colors"
-                >
-                  <span className="material-symbols-outlined text-lg">more_vert</span>
-                </button>
-              </td>
+    <div className="bg-white rounded-2xl border border-slate-100/80 shadow-sm overflow-hidden">
+      <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <h3 className="font-bold text-slate-800">热门广告排行</h3>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="w-full text-left border-collapse">
+          <thead>
+            <tr className="bg-slate-50/50">
+              <th className="px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">广告详情</th>
+              <th className="px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider text-center">热度</th>
+              <th className="px-6 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">状态</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="divide-y divide-slate-100">
+            {ads.map((ad) => (
+              <tr key={ad.id} className="hover:bg-slate-50/50 transition-colors">
+                <td className="px-6 py-4">
+                  <div className="flex items-center gap-3">
+                    {ad.thumbnail && (
+                      <img src={ad.thumbnail} alt="" className="w-10 h-10 rounded-lg object-cover" />
+                    )}
+                    <div className="min-w-0">
+                      <p className="font-semibold text-slate-800 truncate text-sm">{ad.title}</p>
+                      <p className="text-xs text-slate-400 mt-0.5 capitalize">{ad.category || '未分类'}</p>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-6 py-4">
+                  <div className="flex flex-col items-center">
+                    <span className="text-sm font-bold text-slate-700">{ad.heat.toLocaleString()}</span>
+                  </div>
+                </td>
+                <td className="px-6 py-4">
+                  <StatusLabel status={ad.status} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };

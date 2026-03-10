@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { Navigate, RouteObject, useNavigate } from 'react-router-dom';
+
+import { Navigate, RouteObject } from 'react-router-dom';
 import DashboardPage from '@/pages/dashboard/index';
 import AdManagementPage from '@/pages/ads/index';
 import MediaPage from '@/pages/media/index';
