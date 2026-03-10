@@ -32,7 +32,7 @@ export const formatDate = (date: string | Date): string => {
  * 格式化价格（货币符号 + 两位小数）
  */
 export const formatPrice = (value: number): string => {
-  if (typeof value !== 'number' || isNaN(value)) return '¥0.00';
+  if (value === null || value === undefined || typeof value !== 'number' || isNaN(value)) return '¥0.00';
   return `¥${value.toFixed(2)}`;
 };
 
