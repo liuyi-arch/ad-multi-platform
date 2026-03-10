@@ -25,7 +25,7 @@ const AuthPage: React.FC = () => {
 
     const handleAuthSubmit = async (e: React.FormEvent) => {
         await handleSubmit(e, {
-            onNotify: (msg, type) => toast[type](msg),
+            onNotify: (msg, type) => toast.show(msg, type),
             onSuccess: (userRole, authMode) => {
                 if (authMode === 'LOGIN') {
                     if (userRole === 'ADVERTISER') {

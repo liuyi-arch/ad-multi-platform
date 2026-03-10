@@ -7,7 +7,7 @@ RUN corepack enable
 FROM base AS builder
 WORKDIR /app
 COPY . .
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --registry=https://registry.npmmirror.com
 RUN pnpm turbo run build --filter=server...
 
 FROM base AS runner
@@ -20,7 +20,7 @@ COPY --from=builder /app/apps/server/dist ./apps/server/dist
 COPY --from=builder /app/packages ./packages
 
 # 安装运行时的生产依赖
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile --ignore-scripts --filter=server...
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile --ignore-scripts --filter=server... --registry=https://registry.npmmirror.com
 
 EXPOSE 3000
 CMD ["pnpm", "--filter", "server", "start"]
