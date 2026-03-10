@@ -31,11 +31,23 @@ interface AdsState {
 /**
  * 统一的数据格式化逻辑，处理金额和热度的显示
  */
-const formatAd = (ad: Ad): Ad => ({
-  ...ad,
-  bid: formatPrice(ad.bid as any as number) as any,
-  heat: formatHeat(ad.heat) as any
-});
+const formatAd = (ad: Ad): Ad => {
+  // 将 bid 转换为纯数字：处理 "¥100.00" 已格式化字符串、纯数字字符串、以及原生 number
+  const rawBid = ad.bid as any;
+  let numericBid: number;
+  if (typeof rawBid === 'number') {
+    numericBid = rawBid;
+  } else if (typeof rawBid === 'string') {
+    numericBid = parseFloat(String(rawBid).replace(/[¥,]/g, '')) || 0;
+  } else {
+    numericBid = 0;
+  }
+  return {
+    ...ad,
+    bid: formatPrice(numericBid) as any,
+    heat: formatHeat(ad.heat) as any,
+  };
+};
 
 /**
  * 广告数据管理 Store
@@ -66,8 +78,9 @@ export const useAdsStore = create<AdsState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await adService.getAds({ pageSize: 100 });
+      const items = Array.isArray(response?.items) ? response.items : [];
       set({
-        ads: response.items.map(formatAd),
+        ads: items.map(formatAd),
         loading: false,
         lastFetched: Date.now()
       });

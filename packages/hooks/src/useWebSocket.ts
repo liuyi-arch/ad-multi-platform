@@ -24,7 +24,22 @@ interface UseWebSocketOptions {
  */
 export const useWebSocket = (options: UseWebSocketOptions = {}) => {
     const {
-        url = (importMetaEnv?.VITE_WS_URL as string) || `ws://${window.location.hostname}:3000/ws`,
+        url = (() => {
+            const envWsUrl = importMetaEnv?.VITE_WS_URL as string | undefined;
+            if (envWsUrl) {
+                // 如果是相对路径 (如 '/ws')，需转换为绝对 ws:// URL
+                if (envWsUrl.startsWith('ws://') || envWsUrl.startsWith('wss://')) {
+                    return envWsUrl;
+                }
+                // 相对路径转绝对路径
+                const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                const path = envWsUrl.startsWith('/') ? envWsUrl : `/${envWsUrl}`;
+                return `${protocol}//${window.location.host}${path}`;
+            }
+            // 无环境变量时，使用当前 host（通过 Nginx 网关代理 /ws）
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            return `${protocol}//${window.location.host}/ws`;
+        })(),
         onMessage,
         reconnectInterval = 3000,
         maxReconnectAttempts = 10,

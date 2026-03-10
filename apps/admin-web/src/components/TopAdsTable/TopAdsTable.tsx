@@ -38,7 +38,18 @@ const TopAdsTable: FC<TopAdsTableProps> = ({ ads }) => {
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex flex-col items-center">
-                    <span className="text-sm font-bold text-slate-700">{ad.heat.toLocaleString()}</span>
+                    <span className="text-sm font-bold text-slate-700">
+                      {(() => {
+                        const h: any = ad.heat;
+                        if (h === null || h === undefined) return '0';
+                        if (typeof h === 'string') {
+                          if ((h as string).toLowerCase().endsWith('k')) return h;
+                          const n = parseFloat(h as string);
+                          return isNaN(n) ? '0' : n.toLocaleString();
+                        }
+                        return (h as number).toLocaleString();
+                      })()}
+                    </span>
                   </div>
                 </td>
                 <td className="px-6 py-4">

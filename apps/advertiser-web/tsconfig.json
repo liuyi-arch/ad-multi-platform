@@ -1,11 +1,12 @@
 {
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "paths": {
       "@/*": [
-        "./apps/advertiser-web/src/*"
+        "./src/*"
       ]
     },
     "types": [

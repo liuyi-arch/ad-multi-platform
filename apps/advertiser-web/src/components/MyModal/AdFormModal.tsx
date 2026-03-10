@@ -15,7 +15,7 @@ export const AdFormModal: React.FC<{
         description: ad?.description || '',
         category: ad?.category || '电子商务',
         bid: (typeof ad?.bid === 'string')
-            ? parseFloat((ad.bid as string).replace('¥', '').replace(',', ''))
+            ? parseFloat((ad.bid as string).replace(/[¥,]/g, ''))
             : (ad?.bid || 0),
         imageUrl: ad?.imageUrl || '',
         videoUrls: ad?.videoUrls || [],

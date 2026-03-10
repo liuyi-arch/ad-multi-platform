@@ -32,6 +32,7 @@ export const formatDate = (date: string | Date): string => {
  * 格式化价格（货币符号 + 两位小数）
  */
 export const formatPrice = (value: number): string => {
+  if (value === null || value === undefined || typeof value !== 'number' || isNaN(value)) return '¥0.00';
   return `¥${value.toFixed(2)}`;
 };
 
@@ -39,6 +40,7 @@ export const formatPrice = (value: number): string => {
  * 格式化热度（k单位转化）
  */
 export const formatHeat = (value: number | string): string => {
+  if (value === undefined || value === null) return '0';
   const numValue = typeof value === 'string' ? parseFloat(value) : value;
   if (isNaN(numValue)) return '0';
   if (numValue >= 1000) {
