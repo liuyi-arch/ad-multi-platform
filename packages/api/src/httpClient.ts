@@ -7,7 +7,7 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 const API_BASE_URL = typeof window !== 'undefined'
     ? (window as any).__API_BASE_URL__ || (import.meta as any).env?.VITE_API_URL || '/api'
-    : process.env.VITE_API_URL || 'http://localhost:3000/api';
+    : (typeof process !== 'undefined' ? process.env?.VITE_API_URL : null) || 'http://localhost:3000/api';
 
 const httpClient: AxiosInstance = axios.create({
     baseURL: API_BASE_URL,
