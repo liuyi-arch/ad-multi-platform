@@ -5,7 +5,7 @@
     "moduleResolution": "bundler",
     "paths": {
       "@/*": [
-        "./apps/admin-web/src/*"
+        "./src/*"
       ]
     },
     "types": [

@@ -5,7 +5,7 @@
     "moduleResolution": "bundler",
     "paths": {
       "@/*": [
-        "./apps/advertiser-web/src/*"
+        "./src/*"
       ]
     },
     "types": [
