@@ -24,7 +24,13 @@ interface UseWebSocketOptions {
  */
 export const useWebSocket = (options: UseWebSocketOptions = {}) => {
     const {
-        url = (importMetaEnv?.VITE_WS_URL as string) || `ws://${window.location.hostname}:3000/ws`,
+        url = (() => {
+            if (importMetaEnv?.VITE_WS_URL) return importMetaEnv.VITE_WS_URL as string;
+            // 自动根据当前协议生成 ws:// 或 wss://，并使用相同的 host（含端口）
+            // 这样 production 下会通过 Nginx 网关的 /ws 转发，而不是直接访问 :3000
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            return `${protocol}//${window.location.host}/ws`;
+        })(),
         onMessage,
         reconnectInterval = 3000,
         maxReconnectAttempts = 10,
