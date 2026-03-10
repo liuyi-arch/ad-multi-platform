@@ -6,7 +6,7 @@ import Router from 'koa-router';
 import adController from '../modules/ad/ad.controller';
 import { authenticate } from '../middlewares/auth';
 
-const router = new Router({ prefix: '/ads' });
+const router = new Router(); // 移除 prefix，由父级路由指定
 
 // 获取广告列表
 router.get('/', adController.list);

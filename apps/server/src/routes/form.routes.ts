@@ -6,7 +6,7 @@ import Router from 'koa-router';
 import formController from '../modules/form/form.controller';
 import { authenticate, authorize } from '../middlewares';
 
-const router = new Router({ prefix: '/forms' });
+const router = new Router(); // 移除 prefix，由父级路由指定
 
 // 获取表单配置
 router.get('/:formId', formController.getConfig);

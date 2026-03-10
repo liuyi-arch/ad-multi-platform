@@ -6,7 +6,7 @@ import Router from 'koa-router';
 import authController from '../modules/auth/auth.controller';
 import { authenticate } from '../middlewares';
 
-const router = new Router({ prefix: '/auth' }); // 规范化前缀为 /auth
+const router = new Router(); // 移除 prefix，由父级路由指定
 
 // 用户登录
 router.post('/login', authController.login);

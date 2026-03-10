@@ -6,7 +6,7 @@ import Router from 'koa-router';
 import uploadController from '../modules/upload/upload.controller';
 import { authenticate } from '../middlewares';
 
-const router = new Router({ prefix: '/upload' });
+const router = new Router(); // 移除 prefix，由父级路由指定
 
 // ─────────── 原有路由 ───────────
 

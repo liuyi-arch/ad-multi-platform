@@ -20,11 +20,11 @@ router.get('/health', (ctx) => {
 });
 
 // 注册各模块路由
-router.use(adRoutes.routes(), adRoutes.allowedMethods());
-router.use(approvalRoutes.routes(), approvalRoutes.allowedMethods());
-router.use(uploadRoutes.routes(), uploadRoutes.allowedMethods());
-router.use(formRoutes.routes(), formRoutes.allowedMethods());
-router.use(authRoutes.routes(), authRoutes.allowedMethods());
-router.use(ssrRoutes.routes(), ssrRoutes.allowedMethods());
+router.use('/ads', adRoutes.routes(), adRoutes.allowedMethods());
+router.use('/approvals', approvalRoutes.routes(), approvalRoutes.allowedMethods());
+router.use('/upload', uploadRoutes.routes(), uploadRoutes.allowedMethods());
+router.use('/forms', formRoutes.routes(), formRoutes.allowedMethods());
+router.use('/auth', authRoutes.routes(), authRoutes.allowedMethods());
+router.use('/ssr', ssrRoutes.routes(), ssrRoutes.allowedMethods());
 
 export default router;
