@@ -1,12 +1,12 @@
 
 import React from 'react';
 import { Navigate, RouteObject, useNavigate } from 'react-router-dom';
-import DashboardPage from '@/pages/dashboard';
-import AdManagementPage from '@/pages/ads';
-import MediaPage from '@/pages/media';
-import AnalyticsPage from '@/pages/analytics';
-import AccessControlPage from '@/pages/access';
-import AuthPage from '@/pages/auth';
+import DashboardPage from '@/pages/dashboard/index';
+import AdManagementPage from '@/pages/ads/index';
+import MediaPage from '@/pages/media/index';
+import AnalyticsPage from '@/pages/analytics/index';
+import AccessControlPage from '@/pages/access/index';
+import AuthPage from '@/pages/auth/index';
 import { RequireAuth } from '@repo/ui-components';
 
 export const getRoutes = (): RouteObject[] => [
