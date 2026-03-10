@@ -8,7 +8,7 @@ FROM base AS builder
 WORKDIR /app
 COPY . .
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
-RUN pnpm run build --filter=server...
+RUN pnpm turbo run build --filter=server...
 
 FROM base AS runner
 WORKDIR /app

@@ -11,7 +11,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 # 构建应用 (Vite 需要在构建时注入 API 地址)
 ARG VITE_API_URL
 ARG VITE_WS_URL
-RUN VITE_API_URL=$VITE_API_URL VITE_WS_URL=$VITE_WS_URL pnpm run build --filter=admin-web...
+RUN VITE_API_URL=$VITE_API_URL VITE_WS_URL=$VITE_WS_URL pnpm turbo run build --filter=admin-web...
 
 # 运行阶段
 FROM nginx:stable-alpine
