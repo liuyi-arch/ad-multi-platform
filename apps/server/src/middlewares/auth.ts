@@ -13,43 +13,38 @@ export const authenticate = async (ctx: ExtendedContext, next: Next) => {
     const authHeader = ctx.headers.authorization;
     if (!authHeader) {
         ctx.status = HttpStatus.UNAUTHORIZED;
-        ctx.body = {
-            code: BusinessStatus.UNAUTHORIZED,
-            message: ErrorMessages.UNAUTHORIZED,
-        };
+        ctx.body = { code: BusinessStatus.UNAUTHORIZED, message: ErrorMessages.UNAUTHORIZED };
         return;
     }
 
-    // 兼容大小写不敏感的 Bearer 前缀并去除多余空格
     const token = authHeader.replace(new RegExp(`^${AUTH_CONFIG.HEADER_PREFIX}`, 'i'), '').trim();
-
     if (!token) {
         ctx.status = HttpStatus.UNAUTHORIZED;
-        ctx.body = {
-            code: BusinessStatus.UNAUTHORIZED,
-            message: ErrorMessages.UNAUTHORIZED,
-        };
+        ctx.body = { code: BusinessStatus.UNAUTHORIZED, message: ErrorMessages.UNAUTHORIZED };
         return;
     }
 
+    // 1. JWT 验证逻辑（必须独立 Catch，防止捕获下游业务错误）
+    let decoded;
     try {
-        // 增加 clockTolerance 处理客户端与服务器之间可能的微小时钟偏移（60秒）
-        const decoded = jwt.verify(token, appConfig.jwt.secret, { clockTolerance: 60 }) as UserPayload;
-        ctx.user = decoded;
-
-        await next();
+        decoded = jwt.verify(token, appConfig.jwt.secret, { clockTolerance: 60 }) as UserPayload;
     } catch (err: any) {
-        // 生产环境下通过控制台记录详细错误，方便通过 docker logs 排查
-        console.error(`[Auth] JWT Verification Failed for ${ctx.path}:`, err.message);
-
+        // 只有 JWT 验证失败才进入这里
+        console.error(`[Auth Middleware] Token Verification Failed: ${err.message}`);
         ctx.status = HttpStatus.UNAUTHORIZED;
         ctx.body = {
             code: BusinessStatus.UNAUTHORIZED,
             message: ErrorMessages.AUTH_TOKEN_INVALID,
-            // 仅在非生产环境输出具体错误信息给前端，生产环境保持模糊以保安全
             debug: appConfig.env === 'development' ? err.message : undefined
         };
+        return;
     }
+
+    // 2. 注入用户信息
+    ctx.user = decoded;
+
+    // 3. 执行下一步（保证在 try-catch 外部，防止误捕获业务错误）
+    await next();
 };
 
 /**

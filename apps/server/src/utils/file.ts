@@ -47,7 +47,19 @@ export const moveFile = async (
     await ensureDir(uploadDir);
 
     const targetPath = path.join(uploadDir, filename);
-    await fs.rename(tempPath, targetPath);
+
+    try {
+        // 首先尝试重命名 (跨分区可能失败)
+        await fs.rename(tempPath, targetPath);
+    } catch (err: any) {
+        if (err.code === 'EXDEV') {
+            // 跨分区错误：回退到复制 + 删除逻辑
+            await fs.copyFile(tempPath, targetPath);
+            await fs.unlink(tempPath);
+        } else {
+            throw err;
+        }
+    }
 
     return `${uploadConfig.storage.staticPath}/${subDir ? subDir + '/' : ''}${filename}`;
 };
