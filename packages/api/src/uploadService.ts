@@ -125,7 +125,6 @@ async function uploadFileInChunks(
 
     await httpClient.post('/upload/chunk', formData, {
       signal: abortSignal,
-      headers: { 'Content-Type': 'multipart/form-data' },
     });
 
     completedChunks++;
@@ -201,9 +200,6 @@ export const uploadService = {
         }
       },
       signal: options?.abortSignal,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
     };
 
     const endpoint = type === 'video' ? '/upload/video' : '/upload/image';

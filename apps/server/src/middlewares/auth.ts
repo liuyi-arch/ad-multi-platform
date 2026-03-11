@@ -33,15 +33,21 @@ export const authenticate = async (ctx: ExtendedContext, next: Next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, appConfig.jwt.secret) as UserPayload;
+        // 增加 clockTolerance 处理客户端与服务器之间可能的微小时钟偏移（60秒）
+        const decoded = jwt.verify(token, appConfig.jwt.secret, { clockTolerance: 60 }) as UserPayload;
         ctx.user = decoded;
 
         await next();
-    } catch (err) {
+    } catch (err: any) {
+        // 生产环境下通过控制台记录详细错误，方便通过 docker logs 排查
+        console.error(`[Auth] JWT Verification Failed for ${ctx.path}:`, err.message);
+
         ctx.status = HttpStatus.UNAUTHORIZED;
         ctx.body = {
             code: BusinessStatus.UNAUTHORIZED,
             message: ErrorMessages.AUTH_TOKEN_INVALID,
+            // 仅在非生产环境输出具体错误信息给前端，生产环境保持模糊以保安全
+            debug: appConfig.env === 'development' ? err.message : undefined
         };
     }
 };
