@@ -9,20 +9,45 @@ const AuthPage: React.FC = () => {
         role,
         setRole,
         mode,
-        switchMode,
+        setMode,
         handleSubmit,
         formData,
         handleInputChange,
         showPassword,
         togglePasswordVisibility,
-        loading
+        loading,
+        switchMode
     } = useAuthStore();
 
-    // Advertiser 端默认角色应该是 ADVERTISER
+    // 1. 初始挂载：从路径同步模式和角色
     useEffect(() => {
-        setRole('ADVERTISER');
-    }, [setRole]);
+        const path = window.location.pathname;
+        const subPath = path.split('/').pop()?.toUpperCase();
 
+        // 同步模式
+        if (path.includes('/register')) {
+            setMode('REGISTER');
+        } else {
+            setMode('LOGIN');
+        }
+
+        // 同步角色 (从 /login/admin 等路径提取)
+        if (subPath === 'ADMIN' || subPath === 'ADVERTISER') {
+            setRole(subPath as any);
+        } else {
+            // 默认广告主端进入应为 ADVERTISER
+            setRole('ADVERTISER');
+        }
+    }, [setMode, setRole]);
+
+    // 2. 身份切换逻辑：同步更新 URL
+    const handleRoleChange = (newRole: any) => {
+        setRole(newRole);
+        const base = mode === 'REGISTER' ? '/register' : '/login';
+        navigate(`${base}/${newRole.toLowerCase()}`);
+    };
+
+    // 3. 提交逻辑
     const handleAuthSubmit = async (e: React.FormEvent) => {
         await handleSubmit(e, {
             onNotify: (msg, type) => toast.show(msg, type),
@@ -31,14 +56,18 @@ const AuthPage: React.FC = () => {
                     if (userRole === 'ADVERTISER') {
                         navigate('/home');
                     } else {
-                        // 如果是管理人员在广告主端登录，跳转到管理端
                         window.location.href = ((import.meta as any).env.VITE_ADMIN_URL as string) || '/admin';
                     }
                 } else {
-                    switchMode('LOGIN');
+                    handleModeSwitch('LOGIN');
                 }
             }
         });
+    };
+
+    const handleModeSwitch = (newMode: 'LOGIN' | 'REGISTER') => {
+        switchMode(newMode);
+        navigate(newMode === 'LOGIN' ? '/login' : '/register');
     };
 
     const authProps = {
@@ -53,20 +82,20 @@ const AuthPage: React.FC = () => {
         <AuthLayout title={role === 'ADMIN' ? 'Admin' : 'Advertiser'}>
             <AuthTabs
                 currentRole={role}
-                onRoleChange={setRole}
+                onRoleChange={handleRoleChange}
                 mode={mode}
             />
             {mode === 'LOGIN' ? (
                 <LoginForm
                     {...authProps}
                     handleSubmit={handleAuthSubmit}
-                    onSwitchToRegister={() => switchMode('REGISTER')}
+                    onSwitchToRegister={() => handleModeSwitch('REGISTER')}
                 />
             ) : (
                 <RegisterForm
                     {...authProps}
                     handleSubmit={handleAuthSubmit}
-                    onSwitchToLogin={() => switchMode('LOGIN')}
+                    onSwitchToLogin={() => handleModeSwitch('LOGIN')}
                 />
             )}
         </AuthLayout>

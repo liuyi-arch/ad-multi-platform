@@ -16,6 +16,14 @@ export const getRoutes = (): RouteObject[] => [
     element: <AuthPage />,
   },
   {
+    path: '/login/:role',
+    element: <AuthPage />,
+  },
+  {
+    path: '/register/:role',
+    element: <AuthPage />,
+  },
+  {
     path: '/',
     element: <Navigate to="/home" replace />,
   },

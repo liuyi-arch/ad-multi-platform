@@ -83,7 +83,14 @@ export const useAdsStore = create<AdsState>((set, get) => ({
     try {
       const newAd = await adService.createAd(payload);
       const formattedAd = formatAd(newAd);
-      set((state) => ({ ads: [formattedAd, ...state.ads] }));
+      set((state) => {
+        // 关键修复：防重复检查。
+        // 如果 WebSocket 已经先一步 handleCreated 了这个广告，则不再重复添加。
+        if (state.ads.some(a => a.id === formattedAd.id)) {
+          return state;
+        }
+        return { ads: [formattedAd, ...state.ads] };
+      });
       return formattedAd;
     } catch (err: any) {
       console.error('Failed to create ad:', err);
