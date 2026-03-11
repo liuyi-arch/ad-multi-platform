@@ -5,9 +5,10 @@
 
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
+const isDev = (import.meta as any).env.DEV;
 const API_BASE_URL = (import.meta as any).env.VITE_API_URL ||
     (typeof window !== 'undefined'
-        ? (window as any).__API_BASE_URL__ || '/api'
+        ? (window as any).__API_BASE_URL__ || (isDev ? 'http://localhost:3000/api' : '/api')
         : 'http://localhost:3000/api');
 
 const httpClient: AxiosInstance = axios.create({
