@@ -13,10 +13,10 @@ const API_BASE_URL = (import.meta as any).env.VITE_API_URL ||
 
 const httpClient: AxiosInstance = axios.create({
     baseURL: API_BASE_URL,
-    timeout: 600000, // 增加到 10 分钟以支持大文件上传
-    headers: {
-        'Content-Type': 'application/json',
-    },
+    timeout: 100000,
+    // 重要：不要在这里全局设置 Content-Type。
+    // 手动设置 'application/json' 会导致所有请求强制以此格式发送，
+    // 在上传视频时会造成 boundary 丢失，导致后端解析不到文件。
 });
 
 // 请求拦截器
