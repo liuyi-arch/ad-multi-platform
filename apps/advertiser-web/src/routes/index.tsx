@@ -12,11 +12,11 @@ export const getRoutes = (): RouteObject[] => [
     element: <AuthPage />,
   },
   {
-    path: '/register',
+    path: '/login/:role',
     element: <AuthPage />,
   },
   {
-    path: '/login/:role',
+    path: '/register',
     element: <AuthPage />,
   },
   {
@@ -25,18 +25,22 @@ export const getRoutes = (): RouteObject[] => [
   },
   {
     path: '/',
-    element: <Navigate to="/home" replace />,
+    element: <Navigate to="/advertiser/home" replace />,
   },
   {
-    path: '/home',
+    path: '/advertiser',
+    element: <Navigate to="/advertiser/home" replace />,
+  },
+  {
+    path: '/advertiser/home',
     element: <RequireAuth><Home /></RequireAuth>,
   },
   {
-    path: '/my-ads',
+    path: '/advertiser/my-ads',
     element: <RequireAuth><MyAd /></RequireAuth>,
   },
   {
     path: '*',
-    element: <Navigate to="/home" replace />,
+    element: <Navigate to="/advertiser/home" replace />,
   },
 ];

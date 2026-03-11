@@ -29,11 +29,27 @@ export const AdFormModal: React.FC<{ ad: AdItem | null; formMode: 'CREATE' | 'ED
         }, 1000);
     };
 
+    const handleConfirmSubmit = () => {
+        if (!formData.title.trim()) {
+            alert('请输入广告标题');
+            return;
+        }
+        if (!formData.description.trim()) {
+            alert('请输入内容文案');
+            return;
+        }
+        if (formData.bid <= 0) {
+            alert('请输入大于 0 的有效出价');
+            return;
+        }
+        onConfirm(formData);
+    };
+
     return (
         <Modal
             title={formMode === 'EDIT' ? '编辑广告' : '投放新广告'}
             onClose={onClose}
-            onConfirm={() => onConfirm(formData)}
+            onConfirm={handleConfirmSubmit}
             variant="primary"
             confirmLabel={formMode === 'EDIT' ? '保存修改' : '立即创建'}
             cancelLabel="取消"

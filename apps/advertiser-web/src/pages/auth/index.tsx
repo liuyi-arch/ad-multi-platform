@@ -22,7 +22,7 @@ const AuthPage: React.FC = () => {
     // 1. 初始挂载：从路径同步模式和角色
     useEffect(() => {
         const path = window.location.pathname;
-        const subPath = path.split('/').pop()?.toUpperCase();
+        const subPath = path.split('/').filter(Boolean).pop()?.toUpperCase();
 
         // 同步模式
         if (path.includes('/register')) {
@@ -54,7 +54,7 @@ const AuthPage: React.FC = () => {
             onSuccess: (userRole, authMode) => {
                 if (authMode === 'LOGIN') {
                     if (userRole === 'ADVERTISER') {
-                        navigate('/home');
+                        navigate('/advertiser/home');
                     } else {
                         window.location.href = ((import.meta as any).env.VITE_ADMIN_URL as string) || '/admin';
                     }

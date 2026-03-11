@@ -33,7 +33,7 @@ const Home: React.FC = () => {
   };
 
   const handleViewChange = (v: ViewType) => {
-    const path = v === 'GALLERY' ? '/home' : '/my-ads';
+    const path = v === 'GALLERY' ? '/advertiser/home' : '/advertiser/my-ads';
     navigate(path);
   };
 
