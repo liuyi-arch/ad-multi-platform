@@ -18,6 +18,9 @@ services:
       - MONGODB_URI=mongodb://mongodb:27017/advertise-wall
       - PORT=3000
       - NODE_ENV=production
+    volumes:
+      - ./apps/server/uploads:/app/apps/server/uploads
+      - ./apps/server/temp:/app/apps/server/temp
     depends_on:
       - mongodb
 
