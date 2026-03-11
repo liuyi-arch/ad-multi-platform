@@ -10,7 +10,18 @@ import { appConfig } from '../config';
  * 从请求头中提取 token 并验证
  */
 export const authenticate = async (ctx: ExtendedContext, next: Next) => {
-    const token = ctx.headers.authorization?.replace(AUTH_CONFIG.HEADER_PREFIX, '');
+    const authHeader = ctx.headers.authorization;
+    if (!authHeader) {
+        ctx.status = HttpStatus.UNAUTHORIZED;
+        ctx.body = {
+            code: BusinessStatus.UNAUTHORIZED,
+            message: ErrorMessages.UNAUTHORIZED,
+        };
+        return;
+    }
+
+    // 兼容大小写不敏感的 Bearer 前缀并去除多余空格
+    const token = authHeader.replace(new RegExp(`^${AUTH_CONFIG.HEADER_PREFIX}`, 'i'), '').trim();
 
     if (!token) {
         ctx.status = HttpStatus.UNAUTHORIZED;
