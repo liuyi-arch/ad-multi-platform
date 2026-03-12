@@ -76,16 +76,21 @@ export const useWebSocket = (options: UseWebSocketOptions = {}) => {
                 setIsConnected(false);
                 wsRef.current = null;
 
-                // 自动重连（指数退避）
+                // 自动重连（使用指数避退算法）
                 if (isMounted.current && reconnectAttemptsRef.current < maxReconnectAttempts) {
-                    const delay = reconnectInterval * Math.pow(1.5, reconnectAttemptsRef.current);
+                    const delay = Math.min(reconnectInterval * Math.pow(1.5, reconnectAttemptsRef.current), 30000); // 最高 30s
                     reconnectAttemptsRef.current += 1;
-                    reconnectTimerRef.current = setTimeout(connect, delay);
+
+                    if (reconnectTimerRef.current) clearTimeout(reconnectTimerRef.current);
+                    reconnectTimerRef.current = setTimeout(() => {
+                        if (isMounted.current) connect();
+                    }, delay);
                 }
             };
 
             ws.onerror = () => {
-                // 移除通用报错日志
+                // onerror 通常伴随着 onclose，但在此显式置空引用并依靠 onclose 触发重连
+                ws.close();
             };
 
             wsRef.current = ws;

@@ -3,16 +3,38 @@ import { AdItem } from '../../types/index';
 import { Modal, VideoUploader } from '@repo/ui-components';
 
 export const AdFormModal: React.FC<{ ad: AdItem | null; formMode: 'CREATE' | 'EDIT'; onClose: () => void; onConfirm: (data: any) => void }> = ({ ad, formMode, onClose, onConfirm }) => {
-    const [formData, setFormData] = useState({
-        title: ad?.title || '',
-        publisher: ad?.publisher || '',
-        description: ad?.description || '',
-        landingPage: ad?.landingPage || '',
-        bid: (typeof ad?.bid === 'string')
-            ? parseFloat((ad.bid as string).replace('¥', '').replace(',', ''))
-            : (ad?.bid || 0),
-        videoUrls: ad?.videoUrls || [],
+    const STORAGE_KEY = 'admin_ad_form_temp_data';
+
+    const [formData, setFormData] = useState(() => {
+        if (formMode === 'CREATE') {
+            const saved = sessionStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    return JSON.parse(saved);
+                } catch (e) {
+                    console.error('Failed to parse saved admin form data', e);
+                }
+            }
+        }
+
+        return {
+            title: ad?.title || '',
+            publisher: ad?.publisher || '',
+            description: ad?.description || '',
+            landingPage: ad?.landingPage || '',
+            bid: (typeof ad?.bid === 'string')
+                ? parseFloat((ad.bid as string).replace('¥', '').replace(',', ''))
+                : (ad?.bid || 0),
+            videoUrls: ad?.videoUrls || [],
+        };
     });
+
+    // 自动暂存
+    React.useEffect(() => {
+        if (formMode === 'CREATE') {
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+        }
+    }, [formData, formMode]);
 
     const [aiLoading, setAiLoading] = useState(false);
 
@@ -24,7 +46,7 @@ export const AdFormModal: React.FC<{ ad: AdItem | null; formMode: 'CREATE' | 'ED
         setAiLoading(true);
         // Mocking AI service
         setTimeout(() => {
-            setFormData(prev => ({ ...prev, description: "这是一个经过 AI 优化的高端广告文案，旨在提升点击率和转化。" }));
+            setFormData((prev: any) => ({ ...prev, description: "这是一个经过 AI 优化的高端广告文案，旨在提升点击率和转化。" }));
             setAiLoading(false);
         }, 1000);
     };
@@ -43,6 +65,9 @@ export const AdFormModal: React.FC<{ ad: AdItem | null; formMode: 'CREATE' | 'ED
             return;
         }
         onConfirm(formData);
+        if (formMode === 'CREATE') {
+            sessionStorage.removeItem(STORAGE_KEY);
+        }
     };
 
     return (

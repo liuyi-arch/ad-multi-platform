@@ -23,7 +23,10 @@ const httpClient: AxiosInstance = axios.create({
 httpClient.interceptors.request.use(
     (config) => {
         if (typeof window !== 'undefined') {
-            const token = localStorage.getItem('auth_token');
+            // 从 Cookie 获取 Token
+            const match = document.cookie.match(/(^|;)\s*auth_token=([^;]+)/);
+            const token = match ? match[2] : null;
+
             if (token) {
                 config.headers.Authorization = `Bearer ${token}`;
             }

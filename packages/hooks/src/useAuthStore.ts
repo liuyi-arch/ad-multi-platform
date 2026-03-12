@@ -94,11 +94,13 @@ export const useAuthStore = create<AuthState>()(
       },
       login: (user, token) => {
         set({ user, token, isAuthenticated: true });
-        localStorage.setItem('auth_token', token);
+        // 将 Token 存入 Cookie，设置 7 天有效期和全路径可见
+        document.cookie = `auth_token=${token}; path=/; max-age=${7 * 24 * 60 * 60}; SameSite=Lax`;
       },
       logout: () => {
         set({ user: null, token: null, isAuthenticated: false });
-        localStorage.removeItem('auth_token');
+        // 清除 Cookie
+        document.cookie = 'auth_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
       },
       switchMode: (mode) => set({
         mode,
@@ -107,12 +109,20 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: 'auth-storage',
+      storage: {
+        getItem: (name) => {
+          const val = sessionStorage.getItem(name);
+          return val ? JSON.parse(val) : null;
+        },
+        setItem: (name, value) => sessionStorage.setItem(name, JSON.stringify(value)),
+        removeItem: (name) => sessionStorage.removeItem(name),
+      },
       partialize: (state) => ({
         user: state.user,
         token: state.token,
         role: state.role,
         isAuthenticated: state.isAuthenticated
-      }),
+      } as any),
     }
   )
 );
