@@ -18,9 +18,9 @@ const MyModal: React.FC<{
   switch (type) {
     case 'DETAIL': return ad ? <AdDetailModal ad={ad} onClose={onClose} /> : null;
     case 'DELETE': return ad ? <DeleteConfirmModal ad={ad} onClose={onClose} onConfirm={onConfirm} /> : null;
-    case 'REJECT_ACTION': return <RejectActionModal ad={ad} onClose={onClose} onConfirm={onConfirm} />;
+    case 'REJECT_ACTION': return <RejectActionModal onClose={onClose} onConfirm={onConfirm} />;
     case 'APPROVE_ACTION': return <ApproveConfirmModal onClose={onClose} onConfirm={onConfirm} />;
-    case 'REJECT_REASON': return <RejectReasonModal ad={ad} onClose={onClose} onConfirm={onConfirm} />;
+    case 'REJECT_REASON': return <RejectReasonModal initialReason={ad?.rejectionReason} onClose={onClose} onConfirm={onConfirm} />;
     case 'FORM': return <AdFormModal ad={ad} formMode={formMode} onClose={onClose} onConfirm={onConfirm} />;
     default: return null;
   }
