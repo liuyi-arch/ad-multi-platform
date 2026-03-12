@@ -22,7 +22,12 @@ export const sortAds = <T extends HasStatus & { bid: number; heat: any; createDa
   const data = [...ads];
   switch (sortBy) {
     case 'bid_desc':
-      return data.sort((a, b) => b.bid - a.bid);
+      const getBid = (b: any) => {
+        if (typeof b === 'number') return b;
+        const cleaned = String(b).replace(/[^\d.]/g, '');
+        return parseFloat(cleaned) || 0;
+      };
+      return data.sort((a, b) => getBid(b.bid) - getBid(a.bid));
     case 'heat_desc':
       const getHeat = (h: any) => typeof h === 'number' ? h : parseFloat(String(h)) || 0;
       return data.sort((a, b) => getHeat(b.heat) - getHeat(a.heat));
