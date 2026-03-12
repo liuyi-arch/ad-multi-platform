@@ -15,7 +15,7 @@ interface AdsState {
   addAd: (payload: Partial<Ad>) => Promise<Ad | null>;
   updateAd: (id: string, payload: Partial<Ad>) => Promise<void>;
   deleteAd: (id: string) => Promise<void>;
-  updateAdStatus: (id: string, status: AdStatus) => Promise<void>;
+  updateAdStatus: (id: string, status: AdStatus, rejectionReason?: string) => Promise<void>;
   incrementHeat: (id: string) => Promise<void>;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
@@ -130,9 +130,9 @@ export const useAdsStore = create<AdsState>((set, get) => ({
   /**
    * 更新广告审核状态
    */
-  updateAdStatus: async (id, status) => {
+  updateAdStatus: async (id, status, rejectionReason) => {
     try {
-      const updated = await adService.updateAd(id, { status });
+      const updated = await adService.updateAd(id, { status, rejectionReason });
       const formattedAd = formatAd(updated);
       set((state) => ({
         ads: state.ads.map((ad) => (ad.id === id ? formattedAd : ad))

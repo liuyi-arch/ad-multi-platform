@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Modal } from '@repo/ui-components';
 
-export const RejectActionModal: React.FC<{ onClose: () => void; onConfirm: (reason: string) => void }> = ({ onClose, onConfirm }) => {
-    const [reason, setReason] = useState('');
+export const RejectActionModal: React.FC<{ ad: any; onClose: () => void; onConfirm: (reason: string) => void }> = ({ ad, onClose, onConfirm }) => {
+    const [reason, setReason] = useState(ad?.rejectionReason || '');
     return (
         <Modal
             title="驳回理由"
