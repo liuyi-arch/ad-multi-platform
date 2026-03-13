@@ -1,26 +1,28 @@
 
 
+import { lazy, Suspense } from 'react';
 import { Navigate, RouteObject } from 'react-router-dom';
-import DashboardPage from '@/pages/dashboard/index';
-import AdManagementPage from '@/pages/ads/index';
-import MediaPage from '@/pages/media/index';
-import AnalyticsPage from '@/pages/analytics/index';
-import AccessControlPage from '@/pages/access/index';
-import AuthPage from '@/pages/auth/index';
 import { RequireAuth } from '@repo/ui-components';
+
+const DashboardPage = lazy(() => import('@/pages/dashboard/index'));
+const AdManagementPage = lazy(() => import('@/pages/ads/index'));
+const MediaPage = lazy(() => import('@/pages/media/index'));
+const AnalyticsPage = lazy(() => import('@/pages/analytics/index'));
+const AccessControlPage = lazy(() => import('@/pages/access/index'));
+const AuthPage = lazy(() => import('@/pages/auth/index'));
 
 export const getRoutes = (): RouteObject[] => [
   {
     path: '/login',
-    element: <AuthPage />,
+    element: <Suspense fallback={<Loading />}><AuthPage /></Suspense>,
   },
   {
     path: '/register',
-    element: <AuthPage />,
+    element: <Suspense fallback={<Loading />}><AuthPage /></Suspense>,
   },
   {
     path: '/',
-    element: <RequireAuth><DashboardPage /></RequireAuth>,
+    element: <RequireAuth><Suspense fallback={<Loading />}><DashboardPage /></Suspense></RequireAuth>,
   },
   {
     path: '/dashboard',
@@ -28,19 +30,19 @@ export const getRoutes = (): RouteObject[] => [
   },
   {
     path: '/ads',
-    element: <RequireAuth><AdManagementPage /></RequireAuth>,
+    element: <RequireAuth><Suspense fallback={<Loading />}><AdManagementPage /></Suspense></RequireAuth>,
   },
   {
     path: '/media',
-    element: <RequireAuth><MediaPage /></RequireAuth>,
+    element: <RequireAuth><Suspense fallback={<Loading />}><MediaPage /></Suspense></RequireAuth>,
   },
   {
     path: '/analytics',
-    element: <RequireAuth><AnalyticsPage /></RequireAuth>,
+    element: <RequireAuth><Suspense fallback={<Loading />}><AnalyticsPage /></Suspense></RequireAuth>,
   },
   {
     path: '/access',
-    element: <RequireAuth><AccessControlPage /></RequireAuth>,
+    element: <RequireAuth><Suspense fallback={<Loading />}><AccessControlPage /></Suspense></RequireAuth>,
   },
   {
     path: '*',

@@ -1,27 +1,29 @@
 
 
+import { lazy, Suspense } from 'react';
 import { Navigate, RouteObject } from 'react-router-dom';
-import Home from '@/pages/home/index';
-import MyAd from '@/pages/myAd/index';
-import AuthPage from '@/pages/auth/index';
 import { RequireAuth } from '@repo/ui-components';
+
+const Home = lazy(() => import('@/pages/home/index'));
+const MyAd = lazy(() => import('@/pages/myAd/index'));
+const AuthPage = lazy(() => import('@/pages/auth/index'));
 
 export const getRoutes = (): RouteObject[] => [
   {
     path: '/login',
-    element: <AuthPage />,
+    element: <Suspense fallback={<Loading />}><AuthPage /></Suspense>,
   },
   {
     path: '/login/:role',
-    element: <AuthPage />,
+    element: <Suspense fallback={<Loading />}><AuthPage /></Suspense>,
   },
   {
     path: '/register',
-    element: <AuthPage />,
+    element: <Suspense fallback={<Loading />}><AuthPage /></Suspense>,
   },
   {
     path: '/register/:role',
-    element: <AuthPage />,
+    element: <Suspense fallback={<Loading />}><AuthPage /></Suspense>,
   },
   {
     path: '/',
@@ -33,11 +35,11 @@ export const getRoutes = (): RouteObject[] => [
   },
   {
     path: '/advertiser/home',
-    element: <RequireAuth><Home /></RequireAuth>,
+    element: <RequireAuth><Suspense fallback={<Loading />}><Home /></Suspense></RequireAuth>,
   },
   {
     path: '/advertiser/my-ads',
-    element: <RequireAuth><MyAd /></RequireAuth>,
+    element: <RequireAuth><Suspense fallback={<Loading />}><MyAd /></Suspense></RequireAuth>,
   },
   {
     path: '*',
