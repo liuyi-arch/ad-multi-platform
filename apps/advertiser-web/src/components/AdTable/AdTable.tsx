@@ -32,7 +32,7 @@ const AdTable: React.FC<AdTableProps> = ({ ads, onOpenEdit, onOpenDelete, onOpen
                 <VideoPreview
                   videoUrl={ad.videoUrls?.[0]}
                   posterUrl={ad.imageUrl}
-                  className="h-14 w-20 rounded-xl flex-shrink-0 shadow-sm border border-slate-200"
+                  className="h-14 w-20 rounded-xl shrink-0 shadow-sm border border-slate-200"
                   onClick={() => onOpenDetail(ad)}
                 />
                 <div className="flex-1 min-w-0 max-w-[240px]">

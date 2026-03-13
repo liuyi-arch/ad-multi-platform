@@ -1,0 +1,55 @@
+# 视频上传 401 报错深度复盘与排除报告
+
+## 1. 现象描述
+- **Localhost (成功)**: `http://localhost:4173/advertiser/home` 上传视频正常。
+- **生产环境 (失败)**: `http://121.40.134.147/advertiser/home` 报错 `401 Unauthorized`，伴随 `Token 无效或已过期`。
+
+---
+
+## 2. 核心原因拆解
+
+这个问题是一个典型的“连锁感应”错误，由前端协议、后端逻辑、系统分区三个维度的缺陷共同导致：
+
+### 维度 A：前端协议缺陷 (Multipart Boundary 丢失)
+- **原因**：在 [httpClient.ts](file:///Users/liuliu/Projects/advertise-wall/monorepo/packages/api/src/httpClient.ts) 中全局设置了 `Content-Type: application/json`。
+- **后果**：这导致 Axios 在发送视频 `FormData` 时，无法自动生成带 `boundary` 分隔符的请求头。
+- **现状**：后端无法识别没有分隔符的文件流，导致解析出的文件对象为空。
+
+### 维度 B：后端逻辑漏洞 (错误“遮掩”机制)
+- **原因**：认证中间件 [authenticate](file:///Users/liuliu/Projects/advertise-wall/monorepo/apps/server/src/middlewares/auth.ts#8-49) 将 `await next()`（即下游业务代码执行）放在了自身的 `try-catch` 块内。
+- **后果**：下游业务抛出的**任何错误**（如文件找不到、磁盘写满、逻辑错误等）都会被认证中间件捕获，并统一伪装成 `401 Token 无效` 返回。
+- **结论**：这就是为什么我们一直看到 401，但实际上 Token 是合法的。
+
+### 维度 C：系统物理限制 (EXDEV 跨分区移动) —— **最终真相**
+- **原因**：Docker 容器内部，`koa-body` 的临时存储目录（`/app/apps/server/temp`）与挂载的视频存储目录（`uploads/video`）位于**不同的分区块/卷**上。
+- **后果**：原代码使用 `fs.rename` 移动文件，在物理分区不同时会抛出 `EXDEV: cross-device link not permitted` 错误。
+- **结论**：这个 `EXDEV` 异常被中间件捕获并转换成了 401，导致我们绕了很大一圈去排查认证。
+
+---
+
+## 3. 为什么 Localhost 能成功？
+1. **环境差异**：本地测试环境通常没有挂载复杂的 Docker 卷，或者临时目录与目标目录在同一个磁盘分区，因此 `fs.rename` 不会报错。
+2. **缓存残留**：服务器由于 Docker 构建缓存机制，在执行 `git pull` 后若未执行强制重建，可能一直在运行带有“错误遮掩逻辑”的旧版中间件镜像。
+
+---
+
+## 4. 解决方案
+
+### [后端修复] 应用物理层加固 (commit: `c20800f`)
+- **Move 逻辑重构**：将 [utils/file.ts](file:///Users/liuliu/Projects/advertise-wall/monorepo/apps/server/src/utils/file.ts) 中的 [moveFile](file:///Users/liuliu/Projects/advertise-wall/monorepo/apps/server/src/utils/file.ts#38-66) 逻辑从原生 `rename` 升级为 **`copyFile + unlink`**。这能确保文件在不同磁盘分区间正常穿梭。
+- **认证逻辑解耦**：重载了 [middlewares/auth.ts](file:///Users/liuliu/Projects/advertise-wall/monorepo/apps/server/src/middlewares/auth.ts)，将 `await next()` 移出 `try-catch` 范围。**现在报错会各司其职**：Token 坏了报 401，磁盘满了报 500。
+
+### [前端修复] 协议层松绑 (commit: `f7ae767`)
+- **Header 灵活化**：移除了 [httpClient.ts](file:///Users/liuliu/Projects/advertise-wall/monorepo/packages/api/src/httpClient.ts) 的全局 JSON 限制，允许浏览器和 Axios 自动控制 `Content-Type` 及其 `boundary`。
+
+---
+
+## 5. 最终验证指令
+为了确保上述物理层的代码彻底覆盖旧缓存，请务必在服务器执行：
+
+```bash
+docker compose down --rmi all
+docker system prune -f
+docker compose build --no-cache
+docker compose up -d
+```
