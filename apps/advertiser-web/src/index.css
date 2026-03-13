@@ -1,3 +1,9 @@
+@import "tailwindcss";
+@config "../tailwind.config.cjs";
+
+@plugin "@tailwindcss/forms";
+@plugin "@tailwindcss/container-queries";
+
 @font-face {
     font-family: 'Inter';
     font-style: normal;
@@ -61,12 +67,6 @@
     font-display: swap;
     src: url('/fonts/material-symbols-outlined.ttf') format('truetype');
 }
-
-@import "tailwindcss";
-@config "../tailwind.config.cjs";
-
-@plugin "@tailwindcss/forms";
-@plugin "@tailwindcss/container-queries";
 
 @theme {
     --color-primary: #2563eb;
