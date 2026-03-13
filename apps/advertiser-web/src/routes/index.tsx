@@ -11,19 +11,19 @@ const AuthPage = lazy(() => import('@/pages/auth/index'));
 export const getRoutes = (): RouteObject[] => [
   {
     path: '/login',
-    element: <Suspense fallback={<Loading />}><AuthPage /></Suspense>,
+    element: <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><AuthPage /></Suspense>,
   },
   {
     path: '/login/:role',
-    element: <Suspense fallback={<Loading />}><AuthPage /></Suspense>,
+    element: <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><AuthPage /></Suspense>,
   },
   {
     path: '/register',
-    element: <Suspense fallback={<Loading />}><AuthPage /></Suspense>,
+    element: <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><AuthPage /></Suspense>,
   },
   {
     path: '/register/:role',
-    element: <Suspense fallback={<Loading />}><AuthPage /></Suspense>,
+    element: <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><AuthPage /></Suspense>,
   },
   {
     path: '/',
@@ -35,11 +35,11 @@ export const getRoutes = (): RouteObject[] => [
   },
   {
     path: '/advertiser/home',
-    element: <RequireAuth><Suspense fallback={<Loading />}><Home /></Suspense></RequireAuth>,
+    element: <RequireAuth><Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><Home /></Suspense></RequireAuth>,
   },
   {
     path: '/advertiser/my-ads',
-    element: <RequireAuth><Suspense fallback={<Loading />}><MyAd /></Suspense></RequireAuth>,
+    element: <RequireAuth><Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><MyAd /></Suspense></RequireAuth>,
   },
   {
     path: '*',

@@ -14,15 +14,15 @@ const AuthPage = lazy(() => import('@/pages/auth/index'));
 export const getRoutes = (): RouteObject[] => [
   {
     path: '/login',
-    element: <Suspense fallback={<Loading />}><AuthPage /></Suspense>,
+    element: <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><AuthPage /></Suspense>,
   },
   {
     path: '/register',
-    element: <Suspense fallback={<Loading />}><AuthPage /></Suspense>,
+    element: <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><AuthPage /></Suspense>,
   },
   {
     path: '/',
-    element: <RequireAuth><Suspense fallback={<Loading />}><DashboardPage /></Suspense></RequireAuth>,
+    element: <RequireAuth><Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><DashboardPage /></Suspense></RequireAuth>,
   },
   {
     path: '/dashboard',
@@ -30,19 +30,19 @@ export const getRoutes = (): RouteObject[] => [
   },
   {
     path: '/ads',
-    element: <RequireAuth><Suspense fallback={<Loading />}><AdManagementPage /></Suspense></RequireAuth>,
+    element: <RequireAuth><Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><AdManagementPage /></Suspense></RequireAuth>,
   },
   {
     path: '/media',
-    element: <RequireAuth><Suspense fallback={<Loading />}><MediaPage /></Suspense></RequireAuth>,
+    element: <RequireAuth><Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><MediaPage /></Suspense></RequireAuth>,
   },
   {
     path: '/analytics',
-    element: <RequireAuth><Suspense fallback={<Loading />}><AnalyticsPage /></Suspense></RequireAuth>,
+    element: <RequireAuth><Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><AnalyticsPage /></Suspense></RequireAuth>,
   },
   {
     path: '/access',
-    element: <RequireAuth><Suspense fallback={<Loading />}><AccessControlPage /></Suspense></RequireAuth>,
+    element: <RequireAuth><Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><AccessControlPage /></Suspense></RequireAuth>,
   },
   {
     path: '*',
