@@ -24,6 +24,8 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
 }) => {
     const {
         videoRef,
+        containerRef,
+        isVisible,
         isHovering,
         handleMouseEnter,
         handleMouseLeave,
@@ -31,10 +33,13 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
     } = useVideoPreview();
 
     const hasVideo = !!videoUrl;
-    const shouldShowVideo = hasVideo && (isHovering || !posterUrl);
+    // 仅当视频在视口内（或曾经进入过视口）且满足原有逻辑时才加载视频
+    const shouldLoadVideo = hasVideo && isVisible;
+    const shouldShowVideo = shouldLoadVideo && (isHovering || !posterUrl);
 
     return (
         <div
+            ref={containerRef as React.RefObject<HTMLDivElement>}
             className={`relative overflow-hidden bg-slate-100 ${className}`}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
@@ -46,12 +51,13 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
                 <img
                     src={posterUrl}
                     alt="preview"
-                    className={`w-full h-full object-cover absolute inset-0 transition-opacity duration-300 ${isHovering && hasVideo ? 'opacity-0' : 'opacity-100'}`}
+                    loading="lazy"
+                    className={`w-full h-full object-cover absolute inset-0 transition-opacity duration-300 ${isHovering && shouldLoadVideo ? 'opacity-0' : 'opacity-100'}`}
                 />
             )}
 
-            {/* 视频层 */}
-            {hasVideo && (
+            {/* 视频层 - 仅在可见时才挂载或设置 src */}
+            {shouldLoadVideo && (
                 <video
                     ref={videoRef}
                     src={videoUrl}
@@ -59,7 +65,7 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
                     muted
                     playsInline
                     loop
-                    preload="metadata"
+                    preload="auto"
                     poster={posterUrl || undefined}
                     onCanPlay={handleCanPlay}
                 />
