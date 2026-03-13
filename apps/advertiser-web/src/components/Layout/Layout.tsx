@@ -22,7 +22,7 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children, currentView, onViewCh
           <div className="flex items-center gap-10">
             <div className="flex items-center gap-3">
               <div className="size-9 bg-[#2563eb] rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
-                <span className="material-symbols-outlined text-xl">campaign</span>
+                <span className="material-symbols-outlined !text-2xl">campaign</span>
               </div>
               <h1 className="text-[#1e293b] text-xl font-bold tracking-tight">AdWall</h1>
             </div>

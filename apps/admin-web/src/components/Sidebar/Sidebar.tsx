@@ -49,7 +49,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
                 } ${isCollapsed ? 'justify-center' : ''}`}
               title={isCollapsed ? item.label : ''}
             >
-              <span className="material-symbols-outlined text-[22px] shrink-0">{item.icon}</span>
+              <span className="material-symbols-outlined !text-[26px] shrink-0">{item.icon}</span>
               {!isCollapsed && (
                 <p className="text-sm font-medium whitespace-nowrap animate-in fade-in slide-in-from-left-2 duration-300">{item.label}</p>
               )}
@@ -63,7 +63,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
           className={`flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:text-white hover:bg-white/10 transition-all duration-200 cursor-pointer ${isCollapsed ? 'justify-center' : ''}`}
           title={isCollapsed ? '设置' : ''}
         >
-          <span className="material-symbols-outlined text-[22px] shrink-0">settings</span>
+          <span className="material-symbols-outlined !text-[26px] shrink-0">settings</span>
           {!isCollapsed && <p className="text-sm font-medium whitespace-nowrap animate-in fade-in slide-in-from-left-2 duration-300">设置</p>}
         </div>
         <div
@@ -71,7 +71,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onViewChange }) => {
           className={`flex items-center gap-3 px-4 py-3 rounded-xl text-rose-400 hover:bg-rose-500/10 hover:text-rose-500 cursor-pointer transition-colors ${isCollapsed ? 'justify-center' : ''}`}
           title={isCollapsed ? '退出登录' : ''}
         >
-          <span className="material-symbols-outlined text-[22px] shrink-0">logout</span>
+          <span className="material-symbols-outlined !text-[26px] shrink-0">logout</span>
           {!isCollapsed && <p className="text-sm font-medium whitespace-nowrap animate-in fade-in slide-in-from-left-2 duration-300">退出登录</p>}
         </div>
       </div>

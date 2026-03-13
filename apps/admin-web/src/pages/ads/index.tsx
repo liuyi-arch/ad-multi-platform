@@ -51,7 +51,7 @@ const AdManagementPage: React.FC = () => {
       onClick={() => openModal('FORM', null, 'CREATE')}
       className="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-2 hover:bg-blue-700 transition-colors shadow-sm"
     >
-      <span className="material-symbols-outlined text-lg">add</span>
+      <span className="material-symbols-outlined !text-xl">add</span>
       创建新广告
     </button>
   );

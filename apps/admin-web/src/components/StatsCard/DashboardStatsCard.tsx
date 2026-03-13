@@ -6,7 +6,7 @@ export const DashboardStatsCard: React.FC<{ stat: StatItem }> = ({ stat }) => (
         <div className="flex justify-between items-start mb-4">
             <p className="text-text-muted text-sm font-medium">{stat.label}</p>
             <div className={`p-2 rounded-lg ${stat.colorClass}`}>
-                <span className="material-symbols-outlined text-xl">{stat.icon}</span>
+                <span className="material-symbols-outlined !text-3xl">{stat.icon}</span>
             </div>
         </div>
         <p className="text-3xl font-bold tracking-tight text-text-main">{stat.value}</p>
