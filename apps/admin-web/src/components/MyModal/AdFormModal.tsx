@@ -82,7 +82,7 @@ export const AdFormModal: React.FC<{ ad: AdItem | null; formMode: 'CREATE' | 'ED
         >
             <div className="space-y-7">
                 <div className="space-y-2">
-                    <label className="block text-sm font-bold text-[#1e293b]">广告标题</label>
+                    <label className="block text-sm font-bold text-text-main">广告标题</label>
                     <input
                         className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400"
                         placeholder="请输入广告标题"
@@ -92,7 +92,7 @@ export const AdFormModal: React.FC<{ ad: AdItem | null; formMode: 'CREATE' | 'ED
                     />
                 </div>
                 <div className="space-y-2">
-                    <label className="block text-sm font-bold text-[#1e293b]">发布人</label>
+                    <label className="block text-sm font-bold text-text-main">发布人</label>
                     <input
                         className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400"
                         placeholder="请输入发布人姓名"
@@ -102,7 +102,7 @@ export const AdFormModal: React.FC<{ ad: AdItem | null; formMode: 'CREATE' | 'ED
                     />
                 </div>
                 <div className="space-y-2">
-                    <label className="block text-sm font-bold text-[#1e293b]">内容文案</label>
+                    <label className="block text-sm font-bold text-text-main">内容文案</label>
                     <div className="relative group">
                         <textarea
                             className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all text-sm placeholder:text-slate-400 resize-none"
@@ -129,7 +129,7 @@ export const AdFormModal: React.FC<{ ad: AdItem | null; formMode: 'CREATE' | 'ED
                 />
 
                 <div className="space-y-2">
-                    <label className="block text-sm font-bold text-[#1e293b]">落地页</label>
+                    <label className="block text-sm font-bold text-text-main">落地页</label>
                     <div className="relative">
                         <span className="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-lg">link</span>
                         <input
@@ -142,7 +142,7 @@ export const AdFormModal: React.FC<{ ad: AdItem | null; formMode: 'CREATE' | 'ED
                     </div>
                 </div>
                 <div className="space-y-2">
-                    <label className="block text-sm font-bold text-[#1e293b]">出价 (CNY)</label>
+                    <label className="block text-sm font-bold text-text-main">出价 (CNY)</label>
                     <div className="relative">
                         <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 font-bold text-sm">¥</span>
                         <input

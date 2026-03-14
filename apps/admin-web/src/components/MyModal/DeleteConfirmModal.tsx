@@ -14,8 +14,8 @@ export const DeleteConfirmModal: FC<{ ad: AdItem; onClose: () => void; onConfirm
         maxWidth="max-w-[480px]"
     >
         <div>
-            <p className="text-[#1e293b] font-bold text-base mb-2">您确定要删除广告 "{ad.title}" 吗？</p>
-            <p className="text-[#64748b] text-[15px] leading-relaxed">删除后将无法恢复。此项操作将永久从数据库中移除该广告及其关联数据。</p>
+            <p className="text-text-main font-bold text-base mb-2">您确定要删除广告 "{ad.title}" 吗？</p>
+            <p className="text-text-muted text-[15px] leading-relaxed">删除后将无法恢复。此项操作将永久从数据库中移除该广告及其关联数据。</p>
         </div>
     </Modal>
 );

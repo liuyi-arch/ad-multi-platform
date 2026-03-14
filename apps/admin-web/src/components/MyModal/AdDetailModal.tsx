@@ -16,29 +16,29 @@ export const AdDetailModal: React.FC<{ ad: AdItem; onClose: () => void }> = ({ a
                     const rawUrl = (ad.videoUrls && ad.videoUrls.length > 0) ? ad.videoUrls[0] : (ad.imageUrl || ad.thumbnail || '');
                     return <VideoPlayer src={rawUrl} />;
                 })()}
-                <h3 className="text-2xl font-bold text-[#1e293b]">{ad.title}</h3>
+                <h3 className="text-2xl font-bold text-text-main">{ad.title}</h3>
                 <div className="grid grid-cols-2 gap-4">
                     <div className="bg-blue-50 rounded-xl p-4 flex flex-col gap-1 border border-blue-100">
                         <div className="flex items-center gap-2 text-primary">
                             <span className="material-symbols-outlined text-lg">payments</span>
                             <span className="text-xs font-bold uppercase tracking-wider">广告出价</span>
                         </div>
-                        <p className="text-lg font-bold text-[#1e293b]">{ad.bid}</p>
+                        <p className="text-lg font-bold text-text-main">{ad.bid}</p>
                     </div>
                     <div className="bg-orange-50 rounded-xl p-4 flex flex-col gap-1 border border-orange-100">
                         <div className="flex items-center gap-2 text-orange-600">
                             <span className="material-symbols-outlined text-lg">local_fire_department</span>
                             <span className="text-xs font-bold uppercase tracking-wider">广告热度</span>
                         </div>
-                        <p className="text-lg font-bold text-[#1e293b]">{ad.heat}</p>
+                        <p className="text-lg font-bold text-text-main">{ad.heat}</p>
                     </div>
                 </div>
                 <div className="space-y-3">
                     <div className="flex items-center gap-2">
                         <div className="w-1 h-4 bg-primary rounded-full"></div>
-                        <h4 className="text-sm font-bold text-[#1e293b]">广告文案</h4>
+                        <h4 className="text-sm font-bold text-text-main">广告文案</h4>
                     </div>
-                    <div className="space-y-4 text-[#64748b]">
+                    <div className="space-y-4 text-text-muted">
                         <p className="text-sm leading-relaxed">{ad.description}</p>
                     </div>
                 </div>
