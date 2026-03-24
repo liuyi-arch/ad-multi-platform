@@ -10,29 +10,41 @@ import { appConfig } from '../config';
  * 从请求头中提取 token 并验证
  */
 export const authenticate = async (ctx: ExtendedContext, next: Next) => {
-    const token = ctx.headers.authorization?.replace(AUTH_CONFIG.HEADER_PREFIX, '');
-
-    if (!token) {
+    const authHeader = ctx.headers.authorization;
+    if (!authHeader) {
         ctx.status = HttpStatus.UNAUTHORIZED;
-        ctx.body = {
-            code: BusinessStatus.UNAUTHORIZED,
-            message: ErrorMessages.UNAUTHORIZED,
-        };
+        ctx.body = { code: BusinessStatus.UNAUTHORIZED, message: ErrorMessages.UNAUTHORIZED };
         return;
     }
 
-    try {
-        const decoded = jwt.verify(token, appConfig.jwt.secret) as UserPayload;
-        ctx.user = decoded;
+    const token = authHeader.replace(new RegExp(`^${AUTH_CONFIG.HEADER_PREFIX}`, 'i'), '').trim();
+    if (!token) {
+        ctx.status = HttpStatus.UNAUTHORIZED;
+        ctx.body = { code: BusinessStatus.UNAUTHORIZED, message: ErrorMessages.UNAUTHORIZED };
+        return;
+    }
 
-        await next();
-    } catch (err) {
+    // 1. JWT 验证逻辑（必须独立 Catch，防止捕获下游业务错误）
+    let decoded;
+    try {
+        decoded = jwt.verify(token, appConfig.jwt.secret, { clockTolerance: 60 }) as UserPayload;
+    } catch (err: any) {
+        // 只有 JWT 验证失败才进入这里
+        console.error(`[Auth Middleware] Token Verification Failed: ${err.message}`);
         ctx.status = HttpStatus.UNAUTHORIZED;
         ctx.body = {
             code: BusinessStatus.UNAUTHORIZED,
             message: ErrorMessages.AUTH_TOKEN_INVALID,
+            debug: appConfig.env === 'development' ? err.message : undefined
         };
+        return;
     }
+
+    // 2. 注入用户信息
+    ctx.user = decoded;
+
+    // 3. 执行下一步（保证在 try-catch 外部，防止误捕获业务错误）
+    await next();
 };
 
 /**

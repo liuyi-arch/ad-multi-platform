@@ -14,15 +14,11 @@ export const adService = {
      */
     getAds: async (params?: AdListParams): Promise<PaginatedResponse<Ad>> => {
         const res = await httpClient.get<ApiResult<PaginatedResponse<Ad>>>('/ads', { params });
-        const data = res.data?.data;
-        if (!data) {
-            return { items: [], total: 0, page: 1, pageSize: 10, totalPages: 0 };
-        }
-        const items = Array.isArray(data.items) ? data.items : [];
+        const data = res.data.data;
         const apiBaseUrl = getApiBaseUrl();
         return {
             ...data,
-            items: items.map(ad => normalizeAdAssets(ad, apiBaseUrl)),
+            items: data.items.map(ad => normalizeAdAssets(ad, apiBaseUrl)),
         };
     },
 

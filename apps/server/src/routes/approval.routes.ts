@@ -5,7 +5,7 @@
 import Router from 'koa-router';
 import approvalController from '../modules/approval/approval.controller';
 
-const router = new Router({ prefix: '/approvals' });
+const router = new Router(); // 移除 prefix，由父级路由指定
 
 // 获取待审批列表 (TODO: 后续加回认证 + admin 权限)
 router.get('/pending', approvalController.getPendingList);

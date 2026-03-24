@@ -12,8 +12,8 @@ interface AdTableProps {
 }
 
 const AdTable: React.FC<AdTableProps> = ({ ads, onOpenEdit, onOpenDelete, onOpenRejection, onOpenDetail }) => (
-  <div className="overflow-x-auto">
-    <table className="w-full text-left min-w-[1200px]">
+  <div className="overflow-x-auto w-full">
+    <table className="w-full text-left min-w-[1240px]">
       <thead>
         <tr className="border-b border-slate-50">
           <th className="px-8 py-5 text-slate-500 text-xs font-bold uppercase tracking-wider">广告ID</th>
@@ -32,7 +32,7 @@ const AdTable: React.FC<AdTableProps> = ({ ads, onOpenEdit, onOpenDelete, onOpen
                 <VideoPreview
                   videoUrl={ad.videoUrls?.[0]}
                   posterUrl={ad.imageUrl}
-                  className="h-14 w-20 rounded-xl flex-shrink-0 shadow-sm border border-slate-200"
+                  className="h-14 w-20 rounded-xl shrink-0 shadow-sm border border-slate-200"
                   onClick={() => onOpenDetail(ad)}
                 />
                 <div className="flex-1 min-w-0 max-w-[240px]">

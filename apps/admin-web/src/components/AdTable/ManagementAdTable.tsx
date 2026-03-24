@@ -46,7 +46,7 @@ export const ManagementAdTable: React.FC<ManagementAdTableProps> = ({
                                     <VideoPreview
                                         videoUrl={ad.videoUrls?.[0]}
                                         posterUrl={ad.thumbnail}
-                                        className="size-10 rounded-lg flex-shrink-0 border border-border-light"
+                                        className="size-10 rounded-lg shrink-0 border border-border-light"
                                     />
                                     <div className="min-w-0 overflow-hidden">
                                         <p className="text-sm font-bold truncate text-text-main">{ad.title}</p>

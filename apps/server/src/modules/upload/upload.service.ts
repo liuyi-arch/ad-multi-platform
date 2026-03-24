@@ -56,7 +56,16 @@ export class UploadService {
         await ensureDir(chunkDir);
 
         const chunkPath = path.join(chunkDir, `${index}`);
-        await fs.rename(chunkFilePath, chunkPath);
+        try {
+            await fs.rename(chunkFilePath, chunkPath);
+        } catch (err: any) {
+            if (err.code === 'EXDEV') {
+                await fs.copyFile(chunkFilePath, chunkPath);
+                await fs.unlink(chunkFilePath);
+            } else {
+                throw err;
+            }
+        }
 
         // 初始化并记录进度
         uploadStore.initChunkRecord(hash, total, filename, type);

@@ -1,0 +1,53 @@
+# 生产环境运行时错误修复与排查总结
+
+我已成功定位并解决了公网 IP 访问时出现的 **`/home` 页面白屏**以及 **API 404** 等一系列核心问题。
+
+## 1. 核心问题原因总结
+
+### A. 页面白屏 (Runtime Crash) ⚠️
+- **现象**：`login` 正常，但 `home` 和 `admin` 白屏。
+- **根因**：**React Router 版本冲突 (v6 vs v7)**。
+  - `advertiser-web` 主应用使用了 `react-router-dom@7.13`。
+  - 内部包 `@repo/hooks` 和 `@repo/ui-components` 却锁定了 `v6.0.0`。
+  - 这导致在使用跨包 Hook（如 `useNavigate`）时，由于 Context 隔离，程序抛出了未捕获的异常，阻塞了 React 的首屏渲染。
+- **解决**：统一全栈依赖为 `^7.13.0`，并重新同步依赖。
+
+### B. API 连接失败 (Hardcoding / Proxy) 🌐
+- **原因 1**：`httpClient.ts` 原先硬编码了 `localhost:3000`，公网外网环境下无法通过前端直接访问该地址。
+- **原因 2**：本地预览环境 (`pnpm preview`) 缺少反向代理，导致请求 `/api` 直接报 404。
+- **解决**：
+  - 修改 `httpClient` 支持环境变量注入，生产环境默认指向相对路径 `/api`（由 Nginx 处理）。
+  - 在 `vite.config.ts` 中增加 `preview.proxy` 配置。
+
+### C. 数据稳定性保护 🛡️
+- **原因**：`formatPrice` 函数未处理空值，在处理非规范数据时会导致组件渲染崩溃。
+- **解决**：在工具函数中增加了防御性代码，确保即使数据后端异常，界面也不会挂掉。
+
+## 2. 如何执行 Source Map 排查？
+
+我们利用 Source Map 将压缩后的二进制代码映射回了原始 TypeScript 源码：
+
+1.  **开启配置**：在 `vite.config.ts` 中设置 `build.sourcemap: true`。
+2.  **生成资产**：构建后会在 `dist/assets` 生成 `.map` 文件。
+3.  **浏览器定位**：
+    - 当页面报错时，浏览器会自动根据 `.map` 文件将混淆后的堆栈还原。
+    - 在开发者工具 (F12) 的 **Sources** 面板中，可以直接查看原始的 `.tsx` 源码。
+    - **实战案例**：此前通过子代理捕获了 `index-b55363fd.js:51:373` 的错误，在开启 Sourcemap 后直接关联到了 `RequireAuth.tsx` 的 Context 缺失问题。
+
+## 3. 下一步操作：服务器部署
+
+既然本地 `http://localhost:4173` 已经展示正常，您现在可以安全地在服务器执行部署：
+
+```bash
+# 进入项目根目录
+git pull origin perf/init
+
+# 重建镜像（强制不使用缓存以确保依赖更新）
+docker compose build --no-cache
+
+# 重新启动
+docker compose up -d
+```
+
+---
+**提示**：如果在服务器部署后仍有白屏，请检查 Nginx 是否正确转发了 `/api` 和 `/ws`。

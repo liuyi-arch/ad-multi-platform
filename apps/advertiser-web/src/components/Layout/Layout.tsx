@@ -16,15 +16,15 @@ const PageLayout: React.FC<PageLayoutProps> = ({ children, currentView, onViewCh
   const { handleLogout } = useLoginOut();
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#f8fafc]">
+    <div className="flex flex-col min-h-screen bg-background-base">
       <header className="sticky top-0 z-40 w-full bg-white border-b border-slate-100 px-4 lg:px-20 py-3 shadow-sm">
         <div className="max-w-[1920px] mx-auto flex items-center justify-between">
           <div className="flex items-center gap-10">
             <div className="flex items-center gap-3">
-              <div className="size-9 bg-[#2563eb] rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
-                <span className="material-symbols-outlined text-xl">campaign</span>
+              <div className="size-9 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+                <span className="material-symbols-outlined text-2xl!">campaign</span>
               </div>
-              <h1 className="text-[#1e293b] text-xl font-bold tracking-tight">AdWall</h1>
+              <h1 className="text-text-main text-xl font-bold tracking-tight">AdWall</h1>
             </div>
             <Nav currentView={currentView} onViewChange={onViewChange} />
           </div>

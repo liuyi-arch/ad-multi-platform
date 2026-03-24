@@ -42,7 +42,7 @@ async function computeFileHash(file: File): Promise<string> {
  */
 function getResumeState(hash: string): number[] {
   try {
-    const raw = localStorage.getItem(RESUME_KEY(hash));
+    const raw = sessionStorage.getItem(RESUME_KEY(hash));
     return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
@@ -54,7 +54,7 @@ function getResumeState(hash: string): number[] {
  */
 function saveResumeState(hash: string, uploadedChunks: number[]): void {
   try {
-    localStorage.setItem(RESUME_KEY(hash), JSON.stringify(uploadedChunks));
+    sessionStorage.setItem(RESUME_KEY(hash), JSON.stringify(uploadedChunks));
   } catch {
     /* 静默失败 */
   }
@@ -65,7 +65,7 @@ function saveResumeState(hash: string, uploadedChunks: number[]): void {
  */
 function clearResumeState(hash: string): void {
   try {
-    localStorage.removeItem(RESUME_KEY(hash));
+    sessionStorage.removeItem(RESUME_KEY(hash));
   } catch {
     /* 静默失败 */
   }
@@ -125,7 +125,6 @@ async function uploadFileInChunks(
 
     await httpClient.post('/upload/chunk', formData, {
       signal: abortSignal,
-      headers: { 'Content-Type': 'multipart/form-data' },
     });
 
     completedChunks++;
@@ -201,9 +200,6 @@ export const uploadService = {
         }
       },
       signal: options?.abortSignal,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
     };
 
     const endpoint = type === 'video' ? '/upload/video' : '/upload/image';

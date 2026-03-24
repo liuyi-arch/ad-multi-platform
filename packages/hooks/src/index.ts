@@ -9,4 +9,5 @@ export * from './useAuthStore';
 export * from './useAdsStore';
 export * from './useModalStore';
 export * from './useWebSocket';
+export * from './useIntersectionObserver';
 

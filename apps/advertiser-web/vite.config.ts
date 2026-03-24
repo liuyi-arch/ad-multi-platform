@@ -5,12 +5,16 @@ import react from '@vitejs/plugin-react';
 export default defineConfig(({ mode }) => {
     const env = loadEnv(mode, '.', '');
     return {
-        base: '/advertiser/',
+        base: '/',
         server: {
             port: 3003,
             host: '0.0.0.0',
             proxy: {
                 '/api': {
+                    target: 'http://localhost:3000',
+                    changeOrigin: true,
+                },
+                '/uploads': {
                     target: 'http://localhost:3000',
                     changeOrigin: true,
                 },
@@ -25,6 +29,26 @@ export default defineConfig(({ mode }) => {
             alias: {
                 '@': path.resolve(__dirname, './src'),
             }
+        },
+        preview: {
+            port: 4173,
+            proxy: {
+                '/api': {
+                    target: 'http://localhost:3000',
+                    changeOrigin: true,
+                },
+                '/uploads': {
+                    target: 'http://localhost:3000',
+                    changeOrigin: true,
+                },
+                '/ws': {
+                    target: 'ws://localhost:3000',
+                    ws: true,
+                },
+            },
+        },
+        build: {
+            sourcemap: true,
         }
     };
 });

@@ -2,7 +2,6 @@ services:
   mongodb:
     image: mongo:latest
     container_name: adwall-mongodb
-    restart: unless-stopped
     ports:
       - "27017:27017"
     volumes:
@@ -13,13 +12,15 @@ services:
       context: .
       dockerfile: apps/server/Dockerfile
     container_name: adwall-server
-    restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
       - MONGODB_URI=mongodb://mongodb:27017/advertise-wall
       - PORT=3000
       - NODE_ENV=production
+    volumes:
+      - ./apps/server/uploads:/app/apps/server/uploads
+      - ./apps/server/temp:/app/apps/server/temp
     depends_on:
       - mongodb
 
@@ -31,7 +32,6 @@ services:
         - VITE_API_URL=/api
         - VITE_WS_URL=/ws
     container_name: adwall-admin-web
-    restart: unless-stopped
     # 改为内部访问，不映射到宿主机端口
     expose:
       - "80"
@@ -47,7 +47,6 @@ services:
         - VITE_WS_URL=/ws
         - VITE_ADMIN_URL=/admin
     container_name: adwall-advertiser-web
-    restart: unless-stopped
     expose:
       - "80"
     depends_on:
@@ -56,7 +55,6 @@ services:
   gateway:
     image: nginx:stable-alpine
     container_name: adwall-gateway
-    restart: unless-stopped
     ports:
       - "80:80"
     volumes:

@@ -11,6 +11,6 @@ export const ApproveConfirmModal: React.FC<{ onClose: () => void; onConfirm: () 
         cancelLabel="取消"
         maxWidth="max-w-[480px]"
     >
-        <p className="text-base text-[#1e293b]">您确定要通过该广告申请吗？通过后广告将正式投放展示。</p>
+        <p className="text-base text-text-main">您确定要通过该广告申请吗？通过后广告将正式投放展示。</p>
     </Modal>
 );

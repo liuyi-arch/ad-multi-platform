@@ -12,11 +12,11 @@ interface ModalState {
   // Actions
   openModal: (type: ModalType, ad?: Ad | null, formMode?: FormMode) => void;
   closeModal: () => void;
-  handleConfirm: (payload: any, actions: { 
-    addAd: (p: any) => Promise<any>; 
+  handleConfirm: (payload: any, actions: {
+    addAd: (p: any) => Promise<any>;
     updateAd: (id: string, p: any) => Promise<void>;
     deleteAd: (id: string) => Promise<void>;
-    updateAdStatus: (id: string, s: AdStatus) => Promise<void>;
+    updateAdStatus: (id: string, s: AdStatus, reason?: string) => Promise<void>;
   }) => Promise<void>;
 }
 
@@ -52,7 +52,7 @@ export const useModalStore = create<ModalState>((set, get) => ({
         break;
       case 'REJECT_ACTION':
       case 'REJECT_REASON':
-        if (ad) await actions.updateAdStatus(ad.id, AdStatus.REJECTED);
+        if (ad) await actions.updateAdStatus(ad.id, AdStatus.REJECTED, typeof payload === 'string' ? payload : undefined);
         break;
       case 'FORM': {
         if (formMode === 'EDIT' && ad) {

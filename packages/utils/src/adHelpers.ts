@@ -8,11 +8,8 @@ interface HasStatus {
 /**
  * 将中文日期字符串转换为时间戳用于比较
  */
-export const parseChineseDate = (dateStr: any): number => {
-  if (typeof dateStr !== 'string') return 0;
-  const normalized = dateStr.replace('年', '-').replace('月', '-').replace('日', '');
-  const date = new Date(normalized);
-  return isNaN(date.getTime()) ? 0 : date.getTime();
+export const parseChineseDate = (dateStr: string): number => {
+  return new Date(dateStr.replace('年', '-').replace('月', '-').replace('日', '')).getTime();
 };
 
 /**
@@ -27,19 +24,12 @@ export const sortAds = <T extends HasStatus & { bid: number; heat: any; createDa
     case 'bid_desc':
       const getBid = (b: any) => {
         if (typeof b === 'number') return b;
-        const clean = String(b || '').replace('¥', '').replace(/,/g, '');
-        return parseFloat(clean) || 0;
+        const cleaned = String(b).replace(/[^\d.]/g, '');
+        return parseFloat(cleaned) || 0;
       };
       return data.sort((a, b) => getBid(b.bid) - getBid(a.bid));
     case 'heat_desc':
-      const getHeat = (h: any) => {
-        if (typeof h === 'number') return h;
-        const str = String(h || '');
-        if (str.toLowerCase().endsWith('k')) {
-          return (parseFloat(str) || 0) * 1000;
-        }
-        return parseFloat(str) || 0;
-      };
+      const getHeat = (h: any) => typeof h === 'number' ? h : parseFloat(String(h)) || 0;
       return data.sort((a, b) => getHeat(b.heat) - getHeat(a.heat));
     case 'time':
     default:

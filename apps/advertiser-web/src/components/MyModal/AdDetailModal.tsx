@@ -41,6 +41,17 @@ export const AdDetailModal: React.FC<{ ad: Ad; onClose: () => void }> = ({ ad, o
                     <p className="text-sm leading-relaxed">{ad.description}</p>
                 </div>
             </div>
+            {ad.status === 'REJECTED' && ad.rejectionReason && (
+                <div className="bg-rose-50 border border-rose-100 rounded-xl p-5 space-y-2">
+                    <div className="flex items-center gap-2 text-rose-600">
+                        <span className="material-symbols-outlined text-lg">error</span>
+                        <h4 className="text-sm font-bold uppercase tracking-wider">驳回原因</h4>
+                    </div>
+                    <p className="text-sm text-rose-500 font-medium bg-white/50 p-3 rounded-lg border border-rose-50">
+                        {ad.rejectionReason}
+                    </p>
+                </div>
+            )}
             {ad.landingPage && (
                 <a
                     href={ad.landingPage}

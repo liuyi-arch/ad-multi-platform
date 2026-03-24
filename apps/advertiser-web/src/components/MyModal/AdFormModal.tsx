@@ -9,18 +9,48 @@ export const AdFormModal: React.FC<{
     onClose: () => void;
     onSave: (data: Partial<Ad>) => void
 }> = ({ mode, ad, onClose, onSave }) => {
-    const [formData, setFormData] = useState({
-        title: ad?.title || '',
-        publisher: ad?.publisher || '',
-        description: ad?.description || '',
-        category: ad?.category || '电子商务',
-        bid: (typeof ad?.bid === 'string')
-            ? parseFloat((ad.bid as string).replace(/[¥,]/g, ''))
-            : (ad?.bid || 0),
-        imageUrl: ad?.imageUrl || '',
-        videoUrls: ad?.videoUrls || [],
-        landingPage: ad?.landingPage || '',
+    const STORAGE_KEY = 'ad_form_temp_data';
+
+    const [formData, setFormData] = useState(() => {
+        // 优先从 sessionStorage 恢复
+        if (mode === 'CREATE') {
+            const saved = sessionStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try {
+                    return JSON.parse(saved);
+                } catch (e) {
+                    console.error('Failed to parse saved form data', e);
+                }
+            }
+        }
+
+        return {
+            title: ad?.title || '',
+            publisher: ad?.publisher || '',
+            description: ad?.description || '',
+            category: ad?.category || '电子商务',
+            bid: (typeof ad?.bid === 'string')
+                ? parseFloat((ad.bid as string).replace('¥', '').replace(',', ''))
+                : (ad?.bid || 0),
+            imageUrl: ad?.imageUrl || '',
+            videoUrls: ad?.videoUrls || [],
+            landingPage: ad?.landingPage || '',
+        };
     });
+
+    // 自动暂存到 sessionStorage
+    React.useEffect(() => {
+        if (mode === 'CREATE') {
+            sessionStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+        }
+    }, [formData, mode]);
+
+    const handleConfirmSave = () => {
+        onSave(formData);
+        if (mode === 'CREATE') {
+            sessionStorage.removeItem(STORAGE_KEY);
+        }
+    };
 
     const [aiLoading, setAiLoading] = useState(false);
 
@@ -31,7 +61,7 @@ export const AdFormModal: React.FC<{
         }
         setAiLoading(true);
         const suggestion = await generateAdCopySuggestion(`${formData.title} - ${formData.description}`);
-        setFormData(prev => ({ ...prev, description: suggestion }));
+        setFormData((prev: any) => ({ ...prev, description: suggestion }));
         setAiLoading(false);
     };
 
@@ -39,7 +69,7 @@ export const AdFormModal: React.FC<{
         <Modal
             title={mode === 'CREATE' ? '投放新广告' : '编辑广告'}
             onClose={onClose}
-            onConfirm={() => onSave(formData)}
+            onConfirm={handleConfirmSave}
             variant="primary"
             confirmLabel={mode === 'CREATE' ? '创建广告' : '保存修改'}
             cancelLabel="取消"

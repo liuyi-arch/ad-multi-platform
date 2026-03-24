@@ -15,7 +15,7 @@ interface AdsState {
   addAd: (payload: Partial<Ad>) => Promise<Ad | null>;
   updateAd: (id: string, payload: Partial<Ad>) => Promise<void>;
   deleteAd: (id: string) => Promise<void>;
-  updateAdStatus: (id: string, status: AdStatus) => Promise<void>;
+  updateAdStatus: (id: string, status: AdStatus, rejectionReason?: string) => Promise<void>;
   incrementHeat: (id: string) => Promise<void>;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
@@ -31,23 +31,11 @@ interface AdsState {
 /**
  * 统一的数据格式化逻辑，处理金额和热度的显示
  */
-const formatAd = (ad: Ad): Ad => {
-  // 将 bid 转换为纯数字：处理 "¥100.00" 已格式化字符串、纯数字字符串、以及原生 number
-  const rawBid = ad.bid as any;
-  let numericBid: number;
-  if (typeof rawBid === 'number') {
-    numericBid = rawBid;
-  } else if (typeof rawBid === 'string') {
-    numericBid = parseFloat(String(rawBid).replace(/[¥,]/g, '')) || 0;
-  } else {
-    numericBid = 0;
-  }
-  return {
-    ...ad,
-    bid: formatPrice(numericBid) as any,
-    heat: formatHeat(ad.heat) as any,
-  };
-};
+const formatAd = (ad: Ad): Ad => ({
+  ...ad,
+  bid: formatPrice(ad.bid as any as number) as any,
+  heat: formatHeat(ad.heat) as any
+});
 
 /**
  * 广告数据管理 Store
@@ -78,9 +66,8 @@ export const useAdsStore = create<AdsState>((set, get) => ({
     set({ loading: true, error: null });
     try {
       const response = await adService.getAds({ pageSize: 100 });
-      const items = Array.isArray(response?.items) ? response.items : [];
       set({
-        ads: items.map(formatAd),
+        ads: response.items.map(formatAd),
         loading: false,
         lastFetched: Date.now()
       });
@@ -96,7 +83,14 @@ export const useAdsStore = create<AdsState>((set, get) => ({
     try {
       const newAd = await adService.createAd(payload);
       const formattedAd = formatAd(newAd);
-      set((state) => ({ ads: [formattedAd, ...state.ads] }));
+      set((state) => {
+        // 关键修复：防重复检查。
+        // 如果 WebSocket 已经先一步 handleCreated 了这个广告，则不再重复添加。
+        if (state.ads.some(a => a.id === formattedAd.id)) {
+          return state;
+        }
+        return { ads: [formattedAd, ...state.ads] };
+      });
       return formattedAd;
     } catch (err: any) {
       console.error('Failed to create ad:', err);
@@ -136,9 +130,9 @@ export const useAdsStore = create<AdsState>((set, get) => ({
   /**
    * 更新广告审核状态
    */
-  updateAdStatus: async (id, status) => {
+  updateAdStatus: async (id, status, rejectionReason) => {
     try {
-      const updated = await adService.updateAd(id, { status });
+      const updated = await adService.updateAd(id, { status, rejectionReason });
       const formattedAd = formatAd(updated);
       set((state) => ({
         ads: state.ads.map((ad) => (ad.id === id ? formattedAd : ad))

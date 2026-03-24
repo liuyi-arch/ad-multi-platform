@@ -1,34 +1,48 @@
 
 
+import { lazy, Suspense } from 'react';
 import { Navigate, RouteObject } from 'react-router-dom';
-import Home from '@/pages/home/index';
-import MyAd from '@/pages/myAd/index';
-import AuthPage from '@/pages/auth/index';
 import { RequireAuth } from '@repo/ui-components';
+
+const Home = lazy(() => import('@/pages/home/index'));
+const MyAd = lazy(() => import('@/pages/myAd/index'));
+const AuthPage = lazy(() => import('@/pages/auth/index'));
 
 export const getRoutes = (): RouteObject[] => [
   {
     path: '/login',
-    element: <AuthPage />,
+    element: <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><AuthPage /></Suspense>,
+  },
+  {
+    path: '/login/:role',
+    element: <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><AuthPage /></Suspense>,
   },
   {
     path: '/register',
-    element: <AuthPage />,
+    element: <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><AuthPage /></Suspense>,
+  },
+  {
+    path: '/register/:role',
+    element: <Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><AuthPage /></Suspense>,
   },
   {
     path: '/',
-    element: <Navigate to="/home" replace />,
+    element: <Navigate to="/advertiser/home" replace />,
   },
   {
-    path: '/home',
-    element: <RequireAuth><Home /></RequireAuth>,
+    path: '/advertiser',
+    element: <Navigate to="/advertiser/home" replace />,
   },
   {
-    path: '/my-ads',
-    element: <RequireAuth><MyAd /></RequireAuth>,
+    path: '/advertiser/home',
+    element: <RequireAuth><Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><Home /></Suspense></RequireAuth>,
+  },
+  {
+    path: '/advertiser/my-ads',
+    element: <RequireAuth><Suspense fallback={<div className="flex items-center justify-center min-h-screen text-slate-500">正在加载...</div>}><MyAd /></Suspense></RequireAuth>,
   },
   {
     path: '*',
-    element: <Navigate to="/home" replace />,
+    element: <Navigate to="/advertiser/home" replace />,
   },
 ];

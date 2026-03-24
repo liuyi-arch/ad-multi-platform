@@ -13,7 +13,12 @@ export class UploadController {
      * 上传视频（原有功能，保留不变）
      */
     async uploadVideo(ctx: Context) {
-        const file = (ctx.request as any).files?.video;
+        // 调试日志：排查生产环境文件丢失问题
+        const files = (ctx.request as any).files;
+        console.log(`[Upload Debug] Header Content-Type: ${ctx.headers['content-type']}`);
+        console.log(`[Upload Debug] Received File Keys: ${files ? Object.keys(files).join(', ') : 'null'}`);
+
+        const file = files?.video;
         if (!file) {
             throw new Error('未发现视频文件');
         }
